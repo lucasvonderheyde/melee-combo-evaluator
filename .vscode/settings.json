@@ -1,0 +1,9 @@
+{
+    "python.pythonPath": "Library/Developer/CommandLineTools/usr/bin/python3",
+    "python.autoComplete.extraPaths": [
+        "/usr/local/lib/python3.11/site-packages/pandas/__init__.py"
+    ],
+    "python.analysis.extraPaths": [
+        "/usr/local/lib/python3.11/site-packages/pandas/__init__.py"
+    ]
+}
