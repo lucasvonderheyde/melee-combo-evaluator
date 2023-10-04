@@ -9,6 +9,9 @@ const settingsFilePath = "settings.json";
 fs.writeFileSync(settingsFilePath, JSON.stringify(settings));
 console.log(`Settings saved to ${settingsFilePath}`);
 
+lowerPortPlayer = settings.players[0].playerIndex
+higherPortPlayer =settings.players[1].playerIndex
+
 // Get metadata - start time, platform played on, etc
 const metadata = game.getMetadata();
 const metadataFilePath = "metadata.json";
@@ -29,11 +32,11 @@ while (frameIndex < lastFrame) {
     const frame = frames[frameIndex];
     
     // Extract "post" frames for player 2 and player 3
-    const player2PostFrame = frame.players[2].post;
-    const player3PostFrame = frame.players[3].post;
+    const lowerPortPlayerPostFrame = frame.players[lowerPortPlayer].post;
+    const higherPortPlayerPostFrame = frame.players[higherPortPlayer].post;
 
     // Push the "post" frames to the array
-    allPostFrames.push({ player2: player2PostFrame, player3: player3PostFrame });
+    allPostFrames.push({ lowerPortPlayerPostFrame: lowerPortPlayerPostFrame, higherPortPlayerPostFrame: higherPortPlayerPostFrame });
 
     frameIndex++;
 }

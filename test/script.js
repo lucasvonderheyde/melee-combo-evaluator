@@ -4,7 +4,7 @@ const game = new SlippiGame("test.slp");
 
 // Get game settings – stage, characters, etc
 const settings = game.getSettings();
-console.log(settings);
+console.log(settings.players[1].playerIndex);
 
 // Get metadata - start time, platform played on, etc
 const metadata = game.getMetadata();
