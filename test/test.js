@@ -1,7 +1,7 @@
 const { SlippiGame } = require("@slippi/slippi-js");
 const fs = require("fs");
 
-const game = new SlippiGame("./slp_files/Stream-Game_20220828T205441.slp");
+const game = new SlippiGame("./slp_files/test.slp");
 
 // Generate a unique folder name using a timestamp (Added)
 const outputDir = `./jsondb/output_folder_${Date.now()}`;  // (Added)
