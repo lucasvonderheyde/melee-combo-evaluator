@@ -1,6 +1,6 @@
 const { SlippiGame } = require("@slippi/slippi-js");
 
-const game = new SlippiGame("test.slp");
+const game = new SlippiGame("./slp_files/Day 3-Game_20210718T093842.slp");
 
 // Get game settings – stage, characters, etc
 const settings = game.getSettings();
@@ -16,12 +16,12 @@ const stats = game.getStats();
 
 // Get frames – animation state, inputs, etc
 // This is used to compute your own stats or get more frame-specific info (advanced)
-// const frames = game.getFrames();
-// console.log(frames[0].players); // Print frame when timer starts counting downs
+const frames = game.getFrames();
+console.log(frames[0].players); // Print frame when timer starts counting downs
 
-// let frame = 0;
+let frame = 0;
 
-// while (frame < 12034){
-//     console.log(frames[frame].players)
-//     frame++
-// }
+while (frame < 12034){
+    console.log(frames[frame].players)
+    frame++
+}
