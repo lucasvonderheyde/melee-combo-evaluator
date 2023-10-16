@@ -4,12 +4,14 @@ import pandas as pd
 from sqlalchemy import create_engine
 from constants import internal_character_ids
 import uuid
+import pdb
 
 
 def main():
     pd.set_option('display.max_colwidth', None)
     pd.set_option('display.width', 1000)
     pd.set_option('display.max_columns', 35)
+    game_id = uuid.uuid4()
 
     settings_df, post_frames_df, metadata_df = get_slippi_game_output_data("../test/jsondb/output_folder_1697054420015")
 
@@ -17,11 +19,10 @@ def main():
     filtered_settings_data = {key: value for key, value in settings_df.items() if not isinstance(value, (dict, list))}
     settings_top_level_df = pd.DataFrame([filtered_settings_data]) 
 
-    df_game_info = pd.DataFrame([settings_df.get('gameInfoBlock', {})])
-    df_match_info = pd.DataFrame([settings_df.get('matchInfo', {})])
-    df_players_info = pd.DataFrame(settings_df.get('players', []))
+    game_info_df = pd.DataFrame([settings_df.get('gameInfoBlock', {})])
+    match_info_df = pd.DataFrame([settings_df.get('matchInfo', {})])
+    players_info_df = pd.DataFrame(settings_df.get('players', []))
     
-
     filtered_metadata_df = metadata_df[['startAt', 'lastFrame', 'playedOn']].copy()
 
     lower_port_player_df = pd.json_normalize(post_frames_df['lowerPortPlayerPostFrame'])
@@ -34,9 +35,22 @@ def main():
 
     filtered_higher_port_player_df = remove_is_follower_higher_port(higher_port_player_df)
     filtered_higher_port_player_df.drop("currentComboCount", axis=1, inplace=True)
+    
+    engine = create_engine('postgresql://lucasvonderheyde:ArnoldA1!@localhost/Melee_Combo_Library')
 
-    print(filtered_higher_port_player_df)
-#### this is where all of the posting logic will go still hase to be refactoreed##
+    alphabetical_sort_into_matchup = sorted([get_lower_port_character_name_for_sorting(filtered_lower_port_player_df), get_lower_port_character_name_for_sorting(filtered_higher_port_player_df)])
+
+    schema_name = f"{alphabetical_sort_into_matchup[0]}_vs_{alphabetical_sort_into_matchup[1]}"
+
+    post_higher_port_df(filtered_higher_port_player_df, game_id, engine, schema_name)
+    post_lower_port_df(filtered_lower_port_player_df, game_id, engine, schema_name)
+    post_metadata_df(filtered_metadata_df, game_id, engine, schema_name)
+    post_settings_top_level_df(settings_top_level_df, game_id, engine, schema_name)
+    post_game_info_df( game_info_df, game_id, engine, schema_name)
+    post_match_info_df(match_info_df, game_id, engine, schema_name)
+    post_players_info_df(players_info_df, game_id, engine, schema_name)
+
+
 
 def get_slippi_game_output_data(directory_path):
     settings_df = pd.DataFrame()
@@ -105,44 +119,50 @@ def get_does_player_have_follower(is_follower_first_value, player_df):
 
     else:
         pass
-    
+
     return player_df
 
 
 
+def get_lower_port_character_name_for_sorting(filtered_lower_port_player_df):
+    lower_port_character_id = filtered_lower_port_player_df['internalCharacterId'].iloc[0]
+    
+    return internal_character_ids.get(lower_port_character_id, "Unknown")
+    
 
-# game_id = uuid.uuid4()
+def get_lower_port_character_name_for_sorting(filtered_higher_port_player_df):
+    higher_port_character_id = filtered_higher_port_player_df['internalCharacterId'].iloc[0]
+    
+    return internal_character_ids.get(higher_port_character_id, "Unknown")
 
-# # Find character names based on their IDs
-# lower_port_character_id = filtered_lower_port_player_df['internalCharacterId'].iloc[0]
-# higher_port_character_id = filtered_higher_port_player_df['internalCharacterId'].iloc[0]
 
-# lower_port_character_name = internal_character_ids.get(lower_port_character_id, "Unknown")
-# higher_port_character_name = internal_character_ids.get(higher_port_character_id, "Unknown")
+def post_higher_port_df(filtered_higher_port_player_df, game_id, engine, schema_name):
+    filtered_higher_port_player_df['game_id'] = game_id
+    filtered_higher_port_player_df.to_sql(name=f"higher_port_player {game_id}", con=engine, if_exists="replace", index=True, schema=schema_name)
 
-# # Sorting character names for consistent schema naming
-# list_to_sort_character_names = sorted([lower_port_character_name, higher_port_character_name])
+def post_lower_port_df(filtered_lower_port_player_df, game_id, engine, schema_name):
+    filtered_lower_port_player_df['game_id'] = game_id
+    filtered_lower_port_player_df.to_sql(name=f"lower_port_player {game_id}", con=engine, if_exists="replace", index=True, schema=schema_name)
 
-# # Form the schema name
-# schema_name = f"{list_to_sort_character_names[0]}_vs_{list_to_sort_character_names[1]}"
+def post_metadata_df(filtered_metadata_df, game_id, engine, schema_name):
+    filtered_metadata_df['game_id'] = game_id
+    filtered_metadata_df.to_sql(name=f"metadata {game_id}", con=engine, if_exists="replace", index=True, schema=schema_name)
 
-# # Add the unique game_id to each DataFrame
-# filtered_higher_port_player_df['game_id'] = game_id
-# filtered_lower_port_player_df['game_id'] = game_id
-# filtered_metadata_df['game_id'] = game_id
-# settings_top_level_df['game_id'] = game_id
-# df_game_info['game_id'] = game_id
-# df_players_info['game_id'] = game_id
-# df_match_info['game_id'] = game_id
+def post_settings_top_level_df(settings_top_level_df, game_id, engine, schema_name):
+    settings_top_level_df['game_id'] = game_id
+    settings_top_level_df.to_sql(name=f"settings {game_id}", con=engine, if_exists="replace", index=True, schema=schema_name)
 
-# # Send DataFrames to the database under the defined schema
-# filtered_higher_port_player_df.to_sql(name=f"higher_port_player {game_id}", con=engine, if_exists="replace", index=True, schema=schema_name)
-# filtered_lower_port_player_df.to_sql(name=f"lower_port_player {game_id}", con=engine, if_exists="replace", index=True, schema=schema_name)
-# filtered_metadata_df.to_sql(name=f"metadata {game_id}", con=engine, if_exists="replace", index=True, schema=schema_name)
-# settings_top_level_df.to_sql(name=f"settings {game_id}", con=engine, if_exists="replace", index=True, schema=schema_name)
-# df_game_info.to_sql(name=f"game_info {game_id}", con=engine, if_exists="replace", index=True, schema=schema_name)
-# df_players_info.to_sql(name=f"players_info {game_id}", con=engine, if_exists="replace", index=True, schema=schema_name)
-# df_match_info.to_sql(name=f"match_info {game_id}", con=engine, if_exists="replace", index=True, schema=schema_name)
+def post_game_info_df( game_info_df, game_id, engine, schema_name):
+    game_info_df['game_id'] = game_id
+    game_info_df.to_sql(name=f"game_info {game_id}", con=engine, if_exists="replace", index=True, schema=schema_name)
+
+def post_match_info_df(match_info_df, game_id, engine, schema_name):
+    match_info_df['game_id'] = game_id
+    match_info_df.to_sql(name=f"match_info {game_id}", con=engine, if_exists="replace", index=True, schema=schema_name)
+
+def post_players_info_df(players_info_df, game_id, engine, schema_name):
+    players_info_df['game_id'] = game_id
+    players_info_df.to_sql(name=f"players_info {game_id}", con=engine, if_exists="replace", index=True, schema=schema_name)
 
 if __name__ == "__main__":
     main()
