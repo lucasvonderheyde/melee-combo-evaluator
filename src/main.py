@@ -1,3 +1,4 @@
+from models import Metadata, GameInfo, MatchInfo, PlayersInfo, Settings, HigherPortPlayer, LowerPortPlayer
 import json
 import os
 import pandas as pd
@@ -36,7 +37,7 @@ def main():
     filtered_higher_port_player_df = remove_is_follower_higher_port(higher_port_player_df)
     filtered_higher_port_player_df.drop("currentComboCount", axis=1, inplace=True)
     
-    engine = create_engine('postgresql://lucasvonderheyde:ArnoldA1!@localhost/Melee_Combo_Library')
+    engine = create_engine('postgresql://lucasvonderheyde:ArnoldA1!@localhost/Melee_Combo_Database')
 
     alphabetical_sort_into_matchup = sorted([get_lower_port_character_name_for_sorting(filtered_lower_port_player_df), get_lower_port_character_name_for_sorting(filtered_higher_port_player_df)])
 
@@ -122,12 +123,10 @@ def get_does_player_have_follower(is_follower_first_value, player_df):
 
     return player_df
 
-
 def get_lower_port_character_name_for_sorting(filtered_lower_port_player_df):
     lower_port_character_id = filtered_lower_port_player_df['internalCharacterId'].iloc[0]
     
-    return internal_character_ids.get(lower_port_character_id, "Unknown")
-    
+    return internal_character_ids.get(lower_port_character_id, "Unknown")    
 
 def get_lower_port_character_name_for_sorting(filtered_higher_port_player_df):
     higher_port_character_id = filtered_higher_port_player_df['internalCharacterId'].iloc[0]
