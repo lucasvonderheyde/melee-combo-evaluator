@@ -2,6 +2,7 @@ from sqlalchemy import Column, String, Integer, ForeignKey, Float, Boolean, Uniq
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import create_engine
+from database_info import username, password
 
 
 Base = declarative_base()
@@ -69,6 +70,6 @@ class LowerPortPlayer(Base):
 
 
 
-engine = create_engine('postgresql://lucasvonderheyde:ArnoldA1!@localhost/Melee_Combo_Database')
+engine = create_engine(f'postgresql://{username}:{password}@localhost/Melee_Combo_Database')
 
 Base.metadata.create_all(engine)

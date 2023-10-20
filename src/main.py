@@ -6,6 +6,7 @@ from sqlalchemy import create_engine
 from constants import internal_character_ids
 import uuid
 import pdb
+from database_info import username, password
 
 
 def main():
@@ -37,7 +38,7 @@ def main():
     filtered_higher_port_player_df = remove_is_follower_higher_port(higher_port_player_df)
     filtered_higher_port_player_df.drop("currentComboCount", axis=1, inplace=True)
     
-    engine = create_engine('postgresql://lucasvonderheyde:ArnoldA1!@localhost/Melee_Combo_Database')
+    engine = create_engine(f'postgresql://{username}:{password}@localhost/Melee_Combo_Database')
 
     alphabetical_sort_into_matchup = sorted([get_lower_port_character_name_for_sorting(filtered_lower_port_player_df), get_lower_port_character_name_for_sorting(filtered_higher_port_player_df)])
 
