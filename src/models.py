@@ -28,16 +28,34 @@ class GameInfo(Base):
     __tablename__ = 'game_info'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    game_bit_field_1 = Column(Integer)
+    game_bit_field_2 = Column(Integer)
+    game_bit_field_3 = Column(Integer)
+    game_bit_field_4 = Column(Integer)
+    bomb_rain_enabled = Column(Boolean)
+    item_spawn_behavior = Column(Integer)
+    self_destruct_score_value = Column(Integer)
+    item_spawn_bit_field_1 = Column(Integer)
+    item_spawn_bit_field_2 = Column(Integer)
+    item_spawn_bit_field_3 = Column(Integer)
+    item_spawn_bit_field_4 = Column(Integer)
+    item_spawn_bit_field_5 = Column(Integer)
+    damage_ratio = Column(Integer)
     game_id = Column(String, ForeignKey('melee_metadata.game_id'))
+
     metadata_relationship = relationship("Metadata", back_populates="game_info")
-    auto_index = Column(Integer, autoincrement=True, unique=True)
+    
     
 
 class MatchInfo(Base):
     __tablename__ = 'match_info'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    match_id = Column(String)
+    game_number = Column(Integer)
+    tiebreaker_number = Column(Integer)
     game_id = Column(String, ForeignKey('melee_metadata.game_id'))
+
     metadata_relationship = relationship("Metadata", back_populates="match_info")
 
 
@@ -45,6 +63,32 @@ class PlayersInfo(Base):
     __tablename__ = 'players_info'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    player_index = Column(Integer)
+    port = Column(Integer)
+    character_id = Column(Integer)
+    type
+    start_stocks = Column(Integer)
+    character_color = Column(Integer)
+    team_shade = Column(Integer)
+    handicap = Column(Integer)
+    team_id = Column(Integer)
+    stamina_mode = Column(Boolean)
+    silent_character = Column(Boolean)
+    low_gravity = Column(Boolean)
+    invisible = Column(Boolean)
+    black_stock_icon = Column(Boolean)
+    metal = Column(Boolean)
+    start_on_angel_platform = Column(Boolean)
+    rumble_enabled = Column(Boolean)
+    cpu_level = Column(Integer)
+    offense_ratio = Column(Integer)
+    defense_ratio = Column(Integer)
+    model_scale = Column(Integer)
+    controller_fix = Column(String)
+    name_tag = Column(String)
+    display_name = Column(String)
+    connect_code = Column(String)
+    user_id = Column(String)
     game_id = Column(String, ForeignKey('melee_metadata.game_id'))
     metadata_relationship = relationship("Metadata", back_populates="players_info")
     

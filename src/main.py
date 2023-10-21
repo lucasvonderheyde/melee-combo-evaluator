@@ -45,6 +45,8 @@ def main():
     session.add(game_metadata)
     session.commit()
 
+    
+
 
 
     # lower_port_player_df = pd.json_normalize(post_frames_df['lowerPortPlayerPostFrame'])
