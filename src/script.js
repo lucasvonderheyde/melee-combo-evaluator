@@ -1,17 +1,17 @@
 const { SlippiGame } = require("@slippi/slippi-js");
 const fs = require("fs");
 
-const game = new SlippiGame("./slp_files/Game_20230927T210616.slp");
+const game = new SlippiGame("../data/slp_files/Day 3-Game_20210718T093842.slp");
 
 // Generate a unique folder name using a timestamp (Added)
-const outputDir = `./jsondb/output_folder_${Date.now()}`;  // (Added)
+const outputDir = `../data/temp_json_data/output_folder_${Date.now()}`;  // (Added)
 
 // Create the new folder (Added)
 if (!fs.existsSync(outputDir)){ // (Added)
     fs.mkdirSync(outputDir); // (Added)
 }
 
-// Get game settings – stage, characters, etc
+// Get game settings stage, characters, etc
 const settings = game.getSettings();
 const settingsFilePath = `${outputDir}/settings.json`; // (Modified)
 fs.writeFileSync(settingsFilePath, JSON.stringify(settings));
@@ -30,7 +30,7 @@ console.log(`Metadata saved to ${metadataFilePath}`);
 // Extract the last frame from the metadata
 const lastFrame = metadata.lastFrame;
 
-// Get frames – animation state, inputs, etc
+// Get frames  animation state, inputs, etc
 const frames = game.getFrames();
 
 const allPostFrames = [];

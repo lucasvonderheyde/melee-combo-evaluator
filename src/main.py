@@ -1,19 +1,26 @@
-from models import Metadata, GameInfo, MatchInfo, PlayersInfo, Settings, HigherPortPlayer, LowerPortPlayer
 import json
+import uuid
 import os
+import pdb
+
 import pandas as pd
 from sqlalchemy import create_engine
-from constants import internal_character_ids
-import uuid
-import pdb
-from database_info import username, password
+from sqlalchemy.orm import sessionmaker
 
+from database_info import username, password
+from models import Metadata, GameInfo, MatchInfo, PlayersInfo, Settings, HigherPortPlayer, LowerPortPlayer
+from constants import internal_character_ids
 
 def main():
     pd.set_option('display.max_colwidth', None)
     pd.set_option('display.width', 1000)
     pd.set_option('display.max_columns', 35)
+
     game_id = uuid.uuid4()
+    engine = create_engine(f'postgresql://{username}:{password}@localhost/Melee_Combo_Database')
+
+    Session = sessionmaker(bind=engine)
+    session = Session() 
 
     settings_df, post_frames_df, metadata_df = get_slippi_game_output_data("../test/jsondb/output_folder_1697054420015")
 
@@ -27,30 +34,35 @@ def main():
     
     filtered_metadata_df = metadata_df[['startAt', 'lastFrame', 'playedOn']].copy()
 
-    lower_port_player_df = pd.json_normalize(post_frames_df['lowerPortPlayerPostFrame'])
 
-    filtered_lower_port_player_df = remove_is_follower_lower_port(lower_port_player_df)
-    filtered_lower_port_player_df.drop("currentComboCount", axis=1)
+    game_metadata = Metadata()
+
+    game_metadata.game_id = str(game_id)
+    game_metadata.start_at = filtered_metadata_df['startAt'].iloc[0]
+    game_metadata.last_frame = int(filtered_metadata_df['lastFrame'].iloc[0])
+    game_metadata.played_on = filtered_metadata_df['playedOn'].iloc[0] 
+
+    session.add(game_metadata)
+    session.commit()
 
 
-    higher_port_player_df = pd.json_normalize(post_frames_df['higherPortPlayerPostFrame'])
 
-    filtered_higher_port_player_df = remove_is_follower_higher_port(higher_port_player_df)
-    filtered_higher_port_player_df.drop("currentComboCount", axis=1, inplace=True)
+    # lower_port_player_df = pd.json_normalize(post_frames_df['lowerPortPlayerPostFrame'])
+
+    # filtered_lower_port_player_df = remove_is_follower_lower_port(lower_port_player_df)
+    # filtered_lower_port_player_df.drop("currentComboCount", axis=1)
+
+
+    # higher_port_player_df = pd.json_normalize(post_frames_df['higherPortPlayerPostFrame'])
+
+    # filtered_higher_port_player_df = remove_is_follower_higher_port(higher_port_player_df)
+    # filtered_higher_port_player_df.drop("currentComboCount", axis=1, inplace=True)
     
-    engine = create_engine(f'postgresql://{username}:{password}@localhost/Melee_Combo_Database')
 
-    alphabetical_sort_into_matchup = sorted([get_lower_port_character_name_for_sorting(filtered_lower_port_player_df), get_lower_port_character_name_for_sorting(filtered_higher_port_player_df)])
+    # alphabetical_sort_into_matchup = sorted([get_lower_port_character_name_for_sorting(filtered_lower_port_player_df), get_lower_port_character_name_for_sorting(filtered_higher_port_player_df)])
 
-    schema_name = f"{alphabetical_sort_into_matchup[0]}_vs_{alphabetical_sort_into_matchup[1]}"
+    # schema_name = f"{alphabetical_sort_into_matchup[0]}_vs_{alphabetical_sort_into_matchup[1]}"
 
-    post_df(filtered_higher_port_player_df, "higher_port_player", game_id, engine, schema_name)
-    post_df(filtered_lower_port_player_df, "lower_port_player", game_id, engine, schema_name)
-    post_df(filtered_metadata_df, "metadata", game_id, engine, schema_name)
-    post_df(settings_top_level_df, "settings", game_id, engine, schema_name)
-    post_df(game_info_df, "game_info", game_id, engine, schema_name)
-    post_df(match_info_df, "match_info", game_id, engine, schema_name)
-    post_df(players_info_df, "players_info", game_id, engine, schema_name)
 
 
 
