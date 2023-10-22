@@ -66,7 +66,7 @@ class PlayersInfo(Base):
     player_index = Column(Integer)
     port = Column(Integer)
     character_id = Column(Integer)
-    type
+    player_type = Column(Integer)
     start_stocks = Column(Integer)
     character_color = Column(Integer)
     team_shade = Column(Integer)
@@ -97,15 +97,60 @@ class Settings(Base):
     __tablename__ = 'settings'
 
     id = Column(Integer, primary_key=True, autoincrement=True)   
+    slp_version = Column(String)
+    timer_type = Column(Integer)
+    in_game_mode = Column(Integer)
+    friendly_fire_enabled = Column(Boolean)
+    is_teams = Column(Boolean)
+    item_spawn_behavior = Column(Integer)
+    stage_id = Column(Integer)
+    starting_timer_seconds = Column(Integer)
+    enabled_items = Column(Integer)
+    scene = Column(Integer)
+    game_mode = Column(Integer)
+    language = Column(Integer)
+    random_seed = Column(Integer)
+    is_pal = Column(Boolean)
+    is_frozen_ps = Column(Boolean)
     game_id = Column(String, ForeignKey('melee_metadata.game_id'))
+
+
     metadata_relationship = relationship("Metadata", back_populates="settings")
 
 class HigherPortPlayer(Base):
     __tablename__ = "higher_port_player"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    game_id = Column(String, ForeignKey('melee_metadata.game_id'))
     frame = Column(Integer)
+    player_index = Column(Integer)
+    internal_character_id = Column(Integer)
+    action_state_id = Column(Integer)
+    position_x = Column(Float)
+    position_y = Column(Float)
+    facing_direction = Column(Integer)
+    percent = Column(Float)
+    shield_size = Column(Float)
+    last_attack_landed = Column(Integer)
+    last_hit_by = Column(Integer)
+    stocks_remaining = Column(Integer)
+    action_state_counter = Column(Float)
+    misc_action_state = Column(Float)
+    is_airborne = Column(Boolean)
+    last_ground_id = Column(Integer)
+    jumps_remaining = Column(Integer)
+    l_cancel_status = Column(Integer)
+    hurtbox_collision_state = Column(Integer)
+    hitlag_remaining = Column(Integer)
+    animation_index = Column(Integer)
+    self_induced_speeds_air_x = Column(Float)
+    self_induced_speeds_y = Column(Float)
+    self_induced_speed_attack_x = Column(Float)
+    self_induced_speed_attack_y = Column(Float)
+    self_induced_speed_ground_x = Column(Float)
+    game_id = Column(String, ForeignKey('melee_metadata.game_id'))
+    
+
+
     metadata_relationship = relationship("Metadata", back_populates="higher_port_player")
     __table_args__ = (UniqueConstraint('game_id', 'frame', name='uix_1'),)
 
@@ -113,8 +158,36 @@ class LowerPortPlayer(Base):
     __tablename__ = "lower_port_player"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    game_id = Column(String, ForeignKey('melee_metadata.game_id'))
     frame = Column(Integer)
+    player_index = Column(Integer)
+    internal_character_id = Column(Integer)
+    action_state_id = Column(Integer)
+    position_x = Column(Float)
+    position_y = Column(Float)
+    facing_direction = Column(Integer)
+    percent = Column(Float)
+    shield_size = Column(Float)
+    last_attack_landed = Column(Integer)
+    last_hit_by = Column(Integer)
+    stocks_remaining = Column(Integer)
+    action_state_counter = Column(Float)
+    misc_action_state = Column(Float)
+    is_airborne = Column(Boolean)
+    last_ground_id = Column(Integer)
+    jumps_remaining = Column(Integer)
+    l_cancel_status = Column(Integer)
+    hurtbox_collision_state = Column(Integer)
+    hitlag_remaining = Column(Integer)
+    animation_index = Column(Integer)
+    self_induced_speeds_air_x = Column(Float)
+    self_induced_speeds_y = Column(Float)
+    self_induced_speed_attack_x = Column(Float)
+    self_induced_speed_attack_y = Column(Float)
+    self_induced_speed_ground_x = Column(Float)
+    game_id = Column(String, ForeignKey('melee_metadata.game_id'))
+    
+
+
     metadata_relationship = relationship("Metadata", back_populates="lower_port_player")
     __table_args__ = (UniqueConstraint('game_id', 'frame', name='uix_2'),)
 

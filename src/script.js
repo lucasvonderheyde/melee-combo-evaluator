@@ -1,56 +1,72 @@
 const { SlippiGame } = require("@slippi/slippi-js");
 const fs = require("fs");
+const path = require('path');
 
-const game = new SlippiGame("../data/slp_files/Day 3-Game_20210718T093842.slp");
+const slippiFilePath = "data/slp_files/Day 3-Game_20210718T094215.slp"
 
-// Generate a unique folder name using a timestamp (Added)
-const outputDir = `../data/temp_json_data/output_folder_${Date.now()}`;  // (Added)
+const game = new SlippiGame(`../${slippiFilePath}`);
 
-// Create the new folder (Added)
-if (!fs.existsSync(outputDir)){ // (Added)
-    fs.mkdirSync(outputDir); // (Added)
+const outputDir = `../data/temp_json_data/output_folder_${Date.now()}`;
+
+// Debugging: Print out the absolute path
+console.log("Absolute path: ", path.resolve(__dirname, outputDir));
+
+// Debugging: Check if parent directory exists
+console.log("Does parent directory exist?", fs.existsSync('../data/temp_json_data'));
+
+// Create the new folder
+try {
+  if (!fs.existsSync(outputDir)){
+    fs.mkdirSync(outputDir);
+    console.log(`Directory created at ${outputDir}`);
+  }
+} catch (e) {
+  console.error("Could not create directory", e);
 }
 
-// Get game settings stage, characters, etc
 const settings = game.getSettings();
-const settingsFilePath = `${outputDir}/settings.json`; // (Modified)
+const settingsFilePath = `${outputDir}/settings.json`;
 fs.writeFileSync(settingsFilePath, JSON.stringify(settings));
 console.log(`Settings saved to ${settingsFilePath}`);
 
-// Your existing variable declarations here...
-lowerPortPlayer = settings.players[0].playerIndex;
-higherPortPlayer = settings.players[1].playerIndex;
+const lowerPortPlayer = settings.players[0].playerIndex;
+const higherPortPlayer = settings.players[1].playerIndex;
 
-// Get metadata - start time, platform played on, etc
 const metadata = game.getMetadata();
-const metadataFilePath = `${outputDir}/metadata.json`; // (Modified)
+const metadataFilePath = `${outputDir}/metadata.json`;
 fs.writeFileSync(metadataFilePath, JSON.stringify(metadata));
 console.log(`Metadata saved to ${metadataFilePath}`);
 
-// Extract the last frame from the metadata
 const lastFrame = metadata.lastFrame;
-
-// Get frames  animation state, inputs, etc
 const frames = game.getFrames();
 
 const allPostFrames = [];
+const allPreFrames = [];  // New array for "pre" frames
 
 let frameIndex = 0;
 
-while (frameIndex < lastFrame) {
+while (frameIndex <= lastFrame) {
     const frame = frames[frameIndex];
     
-    // Extract "post" frames for player 2 and player 3
     const lowerPortPlayerPostFrame = frame.players[lowerPortPlayer].post;
     const higherPortPlayerPostFrame = frame.players[higherPortPlayer].post;
 
-    // Push the "post" frames to the array
-    allPostFrames.push({ lowerPortPlayerPostFrame: lowerPortPlayerPostFrame, higherPortPlayerPostFrame: higherPortPlayerPostFrame });
+    allPostFrames.push({ lowerPortPlayerPostFrame, higherPortPlayerPostFrame });
+
+    // New code for "pre" frames
+    const lowerPortPlayerPreFrame = frame.players[lowerPortPlayer].pre;
+    const higherPortPlayerPreFrame = frame.players[higherPortPlayer].pre;
+
+    allPreFrames.push({ lowerPortPlayerPreFrame, higherPortPlayerPreFrame });
 
     frameIndex++;
 }
 
-// Specify the output file where all "post" frame data will be saved
-const postFrameDataFilePath = `${outputDir}/all_post_frames.json`; // (Modified)
+const postFrameDataFilePath = `${outputDir}/all_post_frames.json`;
 fs.writeFileSync(postFrameDataFilePath, JSON.stringify(allPostFrames));
 console.log(`All "post" frame data saved to ${postFrameDataFilePath}`);
+
+// New code to save "pre" frames
+const preFrameDataFilePath = `${outputDir}/all_pre_frames.json`;
+fs.writeFileSync(preFrameDataFilePath, JSON.stringify(allPreFrames));
+console.log(`All "pre" frame data saved to ${preFrameDataFilePath}`);
