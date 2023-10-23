@@ -21,7 +21,7 @@ def main():
     Session = sessionmaker(bind=engine)
     session = Session() 
 
-    settings_df, post_frames_df, metadata_df = get_slippi_game_output_data("../test/jsondb/output_folder_1697054420015")
+    settings_df, post_frames_df, pre_frames_df, metadata_df = get_slippi_game_output_data("../data/temp_json_data/output_folder_1698097200272")
 
 
     filtered_settings_data = {key: value for key, value in settings_df.items() if not isinstance(value, (dict, list))}
@@ -32,7 +32,16 @@ def main():
     players_info_df = pd.DataFrame(settings_df.get('players', []))
     
     filtered_metadata_df = metadata_df[['startAt', 'lastFrame', 'playedOn']].copy()
-    
+
+    lower_port_player_post_frames_df = pd.json_normalize(post_frames_df['lowerPortPlayerPostFrame'])
+    lower_port_player_post_frames_df.drop("currentComboCount", axis=1)
+
+    higher_port_player_post_frames_df = pd.json_normalize(post_frames_df['higherPortPlayerPostFrame'])
+    higher_port_player_post_frames_df.drop("currentComboCount", axis=1, inplace=True)
+
+    lower_port_player_pre_frames_df = pd.json_normalize(pre_frames_df['lowerPortPlayerPreFrame'])
+    higher_port_player_pre_frames_df = pd.json_normalize(pre_frames_df['higherPortPlayerPreFrame'])
+
 
     game_metadata = Metadata(
 
@@ -64,6 +73,26 @@ def main():
         match_id = str(match_info_df['matchId'].iloc[0]),
         game_number = int(match_info_df['gameNumber'].iloc[0]),
         tiebreaker_number = int(match_info_df['tiebreakerNumber'].iloc[0]),
+        game_id = str(game_id)
+    )
+
+    settings_info = Settings(
+    
+        slp_version = str(settings_top_level_df['slpVersion'].iloc[0]),
+        timer_type = int(settings_top_level_df['timerType'].iloc[0]),
+        in_game_mode = int(settings_top_level_df['inGameMode'].iloc[0]),
+        friendly_fire_enabled = bool(settings_top_level_df['friendlyFireEnabled'].iloc[0]),
+        is_teams = bool(settings_top_level_df['isTeams'].iloc[0]),
+        item_spawn_behavior = int(settings_top_level_df['itemSpawnBehavior'].iloc[0]),
+        stage_id = int(settings_top_level_df['stageId'].iloc[0]),
+        starting_timer_seconds = int(settings_top_level_df['startingTimerSeconds'].iloc[0]),
+        enabled_items = int(settings_top_level_df['enabledItems'].iloc[0]),
+        scene = int(settings_top_level_df['scene'].iloc[0]),
+        game_mode = int(settings_top_level_df['gameMode'].iloc[0]),
+        language = int(settings_top_level_df['language'].iloc[0]),
+        random_seed = int(settings_top_level_df['randomSeed'].iloc[0]),
+        is_pal = bool(settings_top_level_df['isPAL'].iloc[0]),
+        is_frozen_ps = bool(settings_top_level_df['isFrozenPS'].iloc[0]),
         game_id = str(game_id)
     )
 
@@ -99,6 +128,130 @@ def main():
         )
         session.add(players_info)
 
+    for index, row in lower_port_player_post_frames_df.iterrows():
+        lower_port_player_post_frames_info = LowerPortPlayerPostFrames(
+
+            frame = int(row['frame']),
+            player_index = int(row['playerIndex']),
+            is_follower = bool(row['isFollower']),
+            internal_character_id = int(row['internalCharacterId']),
+            action_state_id = int(row['actionStateId']),
+            position_x = float(row['positionX']),
+            position_y = float(row['positionY']),
+            facing_direction = int(row['facingDirection']),
+            percent = float(row['percent']),
+            shield_size = float(row['shieldSize']),
+            last_attack_landed = int(row['lastAttackLanded']),
+            last_hit_by = int(row['lastHitBy']),
+            stocks_remaining = int(row['stocksRemaining']),
+            action_state_counter = float(row['actionStateCounter']),
+            misc_action_state = float(row['miscActionState']),
+            is_airborne = bool(row['isAirborne']),
+            last_ground_id = int(row['lastGroundId']),
+            jumps_remaining = int(row['jumpsRemaining']),
+            l_cancel_status = int(row['lCancelStatus']),
+            hurtbox_collision_state = int(row['hurtboxCollisionState']),
+            hitlag_remaining = int(row['hitlagRemaining']),
+            animation_index = int(row['animationIndex']),
+            self_induced_speeds_air_x = float(row['selfInducedSpeeds.airX']),
+            self_induced_speeds_y = float(row['selfInducedSpeeds.y']),
+            self_induced_speeds_attack_x = float(row['selfInducedSpeeds.attackX']),
+            self_induced_speeds_attack_y = float(row['selfInducedSpeeds.attackY']),
+            self_induced_speeds_ground_x = float(row['selfInducedSpeeds.groundX']),
+            game_id = str(game_id)
+        )
+        session.add(lower_port_player_post_frames_info)
+
+    for index, row in higher_port_player_post_frames_df.iterrows():
+        higher_port_player_post_frames_info = HigherPortPlayerPostFrames(
+
+            frame = int(row['frame']),
+            player_index = int(row['playerIndex']),
+            is_follower = bool(row['isFollower']),
+            internal_character_id = int(row['internalCharacterId']),
+            action_state_id = int(row['actionStateId']),
+            position_x = float(row['positionX']),
+            position_y = float(row['positionY']),
+            facing_direction = int(row['facingDirection']),
+            percent = float(row['percent']),
+            shield_size = float(row['shieldSize']),
+            last_attack_landed = int(row['lastAttackLanded']),
+            last_hit_by = int(row['lastHitBy']),
+            stocks_remaining = int(row['stocksRemaining']),
+            action_state_counter = float(row['actionStateCounter']),
+            misc_action_state = float(row['miscActionState']),
+            is_airborne = bool(row['isAirborne']),
+            last_ground_id = int(row['lastGroundId']),
+            jumps_remaining = int(row['jumpsRemaining']),
+            l_cancel_status = int(row['lCancelStatus']),
+            hurtbox_collision_state = int(row['hurtboxCollisionState']),
+            hitlag_remaining = int(row['hitlagRemaining']),
+            animation_index = int(row['animationIndex']),
+            self_induced_speeds_air_x = float(row['selfInducedSpeeds.airX']),
+            self_induced_speeds_y = float(row['selfInducedSpeeds.y']),
+            self_induced_speeds_attack_x = float(row['selfInducedSpeeds.attackX']),
+            self_induced_speeds_attack_y = float(row['selfInducedSpeeds.attackY']),
+            self_induced_speeds_ground_x = float(row['selfInducedSpeeds.groundX']),
+            game_id = str(game_id)
+        )
+        session.add(higher_port_player_post_frames_info)
+
+
+    for index, row in lower_port_player_pre_frames_df.iterrows():
+        lower_port_player_pre_frames_info = LowerPortPlayerPreFrames(
+
+            frame = int(row['frame']),
+            player_index = int(row['playerIndex']),
+            is_follower = bool(row['isFollower']),
+            seed = int(row['seed']),
+            action_state_id = int(row['actionStateId']),
+            position_x = float(row['positionX']),
+            position_y = float(row['positionY']),
+            facing_direction = int(row['facingDirection']),
+            joy_stick_x = float(row['joystickX']),
+            joy_stick_y = float(row['joystickY']),
+            c_stick_x = float(row['cStickX']),
+            c_stick_y = float(row['cStickY']),
+            trigger = float(row['trigger']),
+            buttons = int(row['buttons']),
+            physical_buttons = int(row['physicalButtons']),
+            physical_l_trigger = float(row['physicalLTrigger']),
+            physical_r_trigger = float(row['physicalRTrigger']),
+            raw_joy_stick_x = int(row['rawJoystickX']),
+            percent = float(row['percent']),
+            game_id = str(game_id)
+        )
+        session.add(lower_port_player_pre_frames_info)
+
+
+    for index, row in higher_port_player_pre_frames_df.iterrows():
+        higher_port_player_pre_frames_info = HigherPortPlayerPreFrames(
+
+            frame = int(row['frame']),
+            player_index = int(row['playerIndex']),
+            is_follower = bool(row['isFollower']),
+            seed = int(row['seed']),
+            action_state_id = int(row['actionStateId']),
+            position_x = float(row['positionX']),
+            position_y = float(row['positionY']),
+            facing_direction = int(row['facingDirection']),
+            joy_stick_x = float(row['joystickX']),
+            joy_stick_y = float(row['joystickY']),
+            c_stick_x = float(row['cStickX']),
+            c_stick_y = float(row['cStickY']),
+            trigger = float(row['trigger']),
+            buttons = int(row['buttons']),
+            physical_buttons = int(row['physicalButtons']),
+            physical_l_trigger = float(row['physicalLTrigger']),
+            physical_r_trigger = float(row['physicalRTrigger']),
+            raw_joy_stick_x = int(row['rawJoystickX']),
+            percent = float(row['percent']),
+            game_id = str(game_id)
+    )
+    session.add(higher_port_player_pre_frames_info)
+
+
+    session.add(settings_info)
     session.add(match_info)
     session.add(game_info)
     session.add(game_metadata)
@@ -108,16 +261,6 @@ def main():
 
 
 
-    # lower_port_player_df = pd.json_normalize(post_frames_df['lowerPortPlayerPostFrame'])
-
-    # filtered_lower_port_player_df = remove_is_follower_lower_port(lower_port_player_df)
-    # filtered_lower_port_player_df.drop("currentComboCount", axis=1)
-
-
-    # higher_port_player_df = pd.json_normalize(post_frames_df['higherPortPlayerPostFrame'])
-
-    # filtered_higher_port_player_df = remove_is_follower_higher_port(higher_port_player_df)
-    # filtered_higher_port_player_df.drop("currentComboCount", axis=1, inplace=True)
     
 
     # alphabetical_sort_into_matchup = sorted([get_lower_port_character_name_for_sorting(filtered_lower_port_player_df), get_lower_port_character_name_for_sorting(filtered_higher_port_player_df)])
@@ -130,8 +273,9 @@ def main():
 def get_slippi_game_output_data(directory_path):
     settings_df = pd.DataFrame()
     post_frames_df =  pd.DataFrame()
+    pre_frames_df = pd.DataFrame()
     metadata_df =  pd.DataFrame()
-
+    
     for filename in os.listdir(directory_path):
 
         if filename.endswith(".json"):
@@ -146,8 +290,11 @@ def get_slippi_game_output_data(directory_path):
                 
             elif "metadata" in filename:
                 metadata_df = pd.read_json(filepath)
+
+            elif "all_pre_frames" in filename:
+                pre_frames_df = pd.read_json(filepath)
     
-    return settings_df, post_frames_df, metadata_df
+    return settings_df, post_frames_df, pre_frames_df, metadata_df
 
 
 def normalize_top_level_settings_data(settings_df):
@@ -173,29 +320,6 @@ def filter_metadata(df_metadata):
 
     return filtered_metadata_df
    
-
-def remove_is_follower_lower_port(lower_port_player_df):
-    
-    is_follower_first_value = lower_port_player_df['isFollower'].iloc[0]
-
-    return get_does_player_have_follower(is_follower_first_value, lower_port_player_df)
-
-
-def remove_is_follower_higher_port(higher_port_player_df):
-
-    is_follower_first_value = higher_port_player_df['isFollower'].iloc[0]
-
-    return get_does_player_have_follower(is_follower_first_value, higher_port_player_df)
-
-
-def get_does_player_have_follower(is_follower_first_value, player_df):
-    if is_follower_first_value == False:
-        player_df.drop('isFollower', axis=1, inplace=True)
-
-    else:
-        pass
-
-    return player_df
 
 def get_lower_port_character_name_for_sorting(filtered_lower_port_player_df):
     lower_port_character_id = filtered_lower_port_player_df['internalCharacterId'].iloc[0]

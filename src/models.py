@@ -116,7 +116,6 @@ class Settings(Base):
     is_frozen_ps = Column(Boolean)
     game_id = Column(String, ForeignKey('melee_metadata.game_id'))
 
-
     metadata_relationship = relationship("Metadata", back_populates="settings")
 
 class HigherPortPlayerPostFrames(Base):
@@ -147,9 +146,9 @@ class HigherPortPlayerPostFrames(Base):
     animation_index = Column(Integer)
     self_induced_speeds_air_x = Column(Float)
     self_induced_speeds_y = Column(Float)
-    self_induced_speed_attack_x = Column(Float)
-    self_induced_speed_attack_y = Column(Float)
-    self_induced_speed_ground_x = Column(Float)
+    self_induced_speeds_attack_x = Column(Float)
+    self_induced_speeds_attack_y = Column(Float)
+    self_induced_speeds_ground_x = Column(Float)
     game_id = Column(String, ForeignKey('melee_metadata.game_id'))
     
 
@@ -185,9 +184,9 @@ class LowerPortPlayerPostFrames(Base):
     animation_index = Column(Integer)
     self_induced_speeds_air_x = Column(Float)
     self_induced_speeds_y = Column(Float)
-    self_induced_speed_attack_x = Column(Float)
-    self_induced_speed_attack_y = Column(Float)
-    self_induced_speed_ground_x = Column(Float)
+    self_induced_speeds_attack_x = Column(Float)
+    self_induced_speeds_attack_y = Column(Float)
+    self_induced_speeds_ground_x = Column(Float)
     game_id = Column(String, ForeignKey('melee_metadata.game_id'))
 
     metadata_relationship = relationship("Metadata", back_populates="lower_port_player_post_frames")

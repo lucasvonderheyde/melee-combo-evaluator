@@ -2,7 +2,7 @@ const { SlippiGame } = require("@slippi/slippi-js");
 const fs = require("fs");
 const path = require('path');
 
-const slippiFilePath = "data/slp_files/Day 3-Game_20210718T094215.slp"
+const slippiFilePath = "data/slp_files/Game_20231003T225126.slp"
 
 const game = new SlippiGame(`../${slippiFilePath}`);
 
