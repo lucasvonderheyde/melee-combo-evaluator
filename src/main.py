@@ -8,8 +8,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from database_info import username, password
-from models import Metadata, GameInfo, MatchInfo, PlayersInfo, Settings, HigherPortPlayer, LowerPortPlayer
-from constants import internal_character_ids
+from models import Metadata, GameInfo, MatchInfo, PlayersInfo, Settings, HigherPortPlayerPostFrames, LowerPortPlayerPostFrames, HigherPortPlayerPreFrames, LowerPortPlayerPreFrames
 
 def main():
     pd.set_option('display.max_colwidth', None)
@@ -35,17 +34,42 @@ def main():
     filtered_metadata_df = metadata_df[['startAt', 'lastFrame', 'playedOn']].copy()
 
 
-    game_metadata = Metadata()
+    game_metadata = Metadata(
 
-    game_metadata.game_id = str(game_id)
-    game_metadata.start_at = filtered_metadata_df['startAt'].iloc[0]
-    game_metadata.last_frame = int(filtered_metadata_df['lastFrame'].iloc[0])
-    game_metadata.played_on = filtered_metadata_df['playedOn'].iloc[0] 
+        game_id = str(game_id),
+        start_at = filtered_metadata_df['startAt'].iloc[0],
+        last_frame = int(filtered_metadata_df['lastFrame'].iloc[0]),
+        played_on = filtered_metadata_df['playedOn'].iloc[0] 
+    )
+
+    game_info = GameInfo(
+
+        game_bit_field_1 = int(game_info_df['gameBitfield1'].iloc[0]),
+        game_bit_field_2 = int(game_info_df['gameBitfield2'].iloc[0]),
+        game_bit_field_3 = int(game_info_df['gameBitfield3'].iloc[0]),
+        game_bit_field_4 = int(game_info_df['gameBitfield4'].iloc[0]),
+        bomb_rain_enabled = bool(game_info_df['bombRainEnabled'].iloc[0]),
+        item_spawn_behavior = int(game_info_df['itemSpawnBehavior'].iloc[0]),
+        self_destruct_score_value = int(game_info_df['selfDestructScoreValue'].iloc[0]),
+        item_spawn_bit_field_1 = int(game_info_df['itemSpawnBitfield1'].iloc[0]),
+        item_spawn_bit_field_2 = int(game_info_df['itemSpawnBitfield2'].iloc[0]),
+        item_spawn_bit_field_3 = int(game_info_df['itemSpawnBitfield3'].iloc[0]),
+        item_spawn_bit_field_4 = int(game_info_df['itemSpawnBitfield4'].iloc[0]),
+        item_spawn_bit_field_5 = int(game_info_df['itemSpawnBitfield5'].iloc[0]),
+        damage_ratio = int(game_info_df['damageRatio'].iloc[0]),
+        game_id = str(game_id)
+    )
+
+
+    game_metadata.game_info = [game_info]
+
+
+
 
     session.add(game_metadata)
     session.commit()
 
-    
+
 
 
 

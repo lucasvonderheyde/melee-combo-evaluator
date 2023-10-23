@@ -20,9 +20,10 @@ class Metadata(Base):
     match_info = relationship("MatchInfo", back_populates="metadata_relationship")
     players_info = relationship("PlayersInfo", back_populates="metadata_relationship")
     settings = relationship("Settings", back_populates="metadata_relationship")
-    higher_port_player = relationship("HigherPortPlayer", back_populates="metadata_relationship")
-    lower_port_player = relationship("LowerPortPlayer", back_populates="metadata_relationship")
-
+    higher_port_player_post_frames = relationship("HigherPortPlayerPostFrames", back_populates="metadata_relationship")
+    lower_port_player_post_frames = relationship("LowerPortPlayerPostFrames", back_populates="metadata_relationship")
+    higher_port_player_pre_frames = relationship("HigherPortPlayerPreFrames", back_populates="metadata_relationship")
+    lower_port_player_pre_frames = relationship("LowerPortPlayerPreFrames", back_populates="metadata_relationship")
 
 class GameInfo(Base):
     __tablename__ = 'game_info'
@@ -117,12 +118,13 @@ class Settings(Base):
 
     metadata_relationship = relationship("Metadata", back_populates="settings")
 
-class HigherPortPlayer(Base):
-    __tablename__ = "higher_port_player"
+class HigherPortPlayerPostFrames(Base):
+    __tablename__ = "higher_port_player_post_frames"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     frame = Column(Integer)
     player_index = Column(Integer)
+    is_follower = Column(Boolean)
     internal_character_id = Column(Integer)
     action_state_id = Column(Integer)
     position_x = Column(Float)
@@ -151,15 +153,16 @@ class HigherPortPlayer(Base):
     
 
 
-    metadata_relationship = relationship("Metadata", back_populates="higher_port_player")
-    __table_args__ = (UniqueConstraint('game_id', 'frame', name='uix_1'),)
+    metadata_relationship = relationship("Metadata", back_populates="higher_port_player_post_frames")
+    __table_args__ = (UniqueConstraint('game_id', 'frame', name='higher_port_post_frames_to_metadata'),)
 
-class LowerPortPlayer(Base):
-    __tablename__ = "lower_port_player"
+class LowerPortPlayerPostFrames(Base):
+    __tablename__ = "lower_port_player_post_frames"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     frame = Column(Integer)
     player_index = Column(Integer)
+    is_follower = Column(Boolean)
     internal_character_id = Column(Integer)
     action_state_id = Column(Integer)
     position_x = Column(Float)
@@ -185,13 +188,66 @@ class LowerPortPlayer(Base):
     self_induced_speed_attack_y = Column(Float)
     self_induced_speed_ground_x = Column(Float)
     game_id = Column(String, ForeignKey('melee_metadata.game_id'))
-    
+
+    metadata_relationship = relationship("Metadata", back_populates="lower_port_player_post_frames")
+    __table_args__ = (UniqueConstraint('game_id', 'frame', name='lower_port_player_post_frames_to_metadata'),)
+
+class HigherPortPlayerPreFrames(Base):
+    __tablename__ = "higher_port_player_pre_frames"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    frame = Column(Integer)
+    player_index = Column(Integer)
+    is_follower = Column(Boolean)
+    seed = Column(Integer)
+    action_state_id = Column(Integer)
+    position_x = Column(Float)
+    position_y = Column(Float)
+    facing_direction = Column(Integer)
+    joy_stick_x = Column(Float)
+    joy_stick_y = Column(Float)
+    c_stick_x = Column(Float)
+    c_stick_y = Column(Float)
+    trigger = Column(Float)
+    buttons = Column(Integer)
+    physical_buttons = Column(Integer)
+    physical_l_trigger = Column(Float)
+    physical_r_trigger = Column(Float)
+    raw_joy_stick_x = Column(Integer)
+    percent = Column(Float)
+    game_id = Column(String, ForeignKey('melee_metadata.game_id'))
+
+    metadata_relationship = relationship("Metadata", back_populates="higher_port_player_pre_frames")
+    __table_args__ = (UniqueConstraint('game_id', 'frame', name='higher_port_pre_frames_to_metadata'),)
 
 
-    metadata_relationship = relationship("Metadata", back_populates="lower_port_player")
-    __table_args__ = (UniqueConstraint('game_id', 'frame', name='uix_2'),)
+class LowerPortPlayerPreFrames(Base):
+    __tablename__ = "lower_port_player_pre_frames"
 
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    frame = Column(Integer)
+    player_index = Column(Integer)
+    is_follower = Column(Boolean)
+    seed = Column(Integer)
+    action_state_id = Column(Integer)
+    position_x = Column(Float)
+    position_y = Column(Float)
+    facing_direction = Column(Integer)
+    joy_stick_x = Column(Float)
+    joy_stick_y = Column(Float)
+    c_stick_x = Column(Float)
+    c_stick_y = Column(Float)
+    trigger = Column(Float)
+    buttons = Column(Integer)
+    physical_buttons = Column(Integer)
+    physical_l_trigger = Column(Float)
+    physical_r_trigger = Column(Float)
+    raw_joy_stick_x = Column(Integer)
+    percent = Column(Float)
+    game_id = Column(String, ForeignKey('melee_metadata.game_id'))
 
+    metadata_relationship = relationship("Metadata", back_populates="lower_port_player_pre_frames")
+    __table_args__ = (UniqueConstraint('game_id', 'frame', name='lower_port_pre_frames_to_metadata'),)
 
 engine = create_engine(f'postgresql://{username}:{password}@localhost/Melee_Combo_Database')
 
