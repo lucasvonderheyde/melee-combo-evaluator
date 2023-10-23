@@ -91,6 +91,7 @@ class PlayersInfo(Base):
     connect_code = Column(String)
     user_id = Column(String)
     game_id = Column(String, ForeignKey('melee_metadata.game_id'))
+    
     metadata_relationship = relationship("Metadata", back_populates="players_info")
     
 

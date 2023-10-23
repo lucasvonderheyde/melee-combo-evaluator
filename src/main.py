@@ -32,7 +32,7 @@ def main():
     players_info_df = pd.DataFrame(settings_df.get('players', []))
     
     filtered_metadata_df = metadata_df[['startAt', 'lastFrame', 'playedOn']].copy()
-
+    
 
     game_metadata = Metadata(
 
@@ -60,12 +60,47 @@ def main():
         game_id = str(game_id)
     )
 
+    match_info = MatchInfo(
+        match_id = str(match_info_df['matchId'].iloc[0]),
+        game_number = int(match_info_df['gameNumber'].iloc[0]),
+        tiebreaker_number = int(match_info_df['tiebreakerNumber'].iloc[0]),
+        game_id = str(game_id)
+    )
 
-    game_metadata.game_info = [game_info]
+    for index, row in players_info_df.iterrows():
+        players_info = PlayersInfo(
+            player_index = int(row['playerIndex']),
+            port = int(row['port']),
+            character_id = int(row['characterId']),
+            player_type = int(row['type']),
+            start_stocks = int(row['startStocks']),
+            character_color = int(row['characterColor']),
+            team_shade = int(row['teamShade']),
+            handicap = int(row['handicap']),
+            team_id = int(row['teamId']),
+            stamina_mode = int(row['staminaMode']),
+            silent_character = int(row['silentCharacter']),
+            low_gravity = bool(row['lowGravity']),
+            invisible = bool(row['invisible']),
+            black_stock_icon = bool(row['blackStockIcon']),
+            metal = bool(row['metal']),
+            start_on_angel_platform = bool(row['startOnAngelPlatform']),
+            rumble_enabled = bool(row['rumbleEnabled']),
+            cpu_level = int(row['cpuLevel']),
+            offense_ratio = int(row['offenseRatio']),
+            defense_ratio = int(row['defenseRatio']),
+            model_scale = int(row['modelScale']),
+            controller_fix = str(row['controllerFix']),
+            name_tag = str(row['nametag']),
+            display_name = str(row['displayName']),
+            connect_code = str(row['connectCode']),
+            user_id = str(row['userId']),
+            game_id = str(game_id)
+        )
+        session.add(players_info)
 
-
-
-
+    session.add(match_info)
+    session.add(game_info)
     session.add(game_metadata)
     session.commit()
 
