@@ -21,7 +21,7 @@ def main():
     Session = sessionmaker(bind=engine)
     session = Session() 
 
-    settings_df, post_frames_df, pre_frames_df, metadata_df = get_slippi_game_output_data("../data/temp_json_data/output_folder_1698097200272")
+    settings_df, post_frames_df, pre_frames_df, metadata_df = get_slippi_game_output_data("../data/temp_json_data/output_folder_1698097257304")
 
 
     filtered_settings_data = {key: value for key, value in settings_df.items() if not isinstance(value, (dict, list))}
@@ -42,6 +42,8 @@ def main():
     lower_port_player_pre_frames_df = pd.json_normalize(pre_frames_df['lowerPortPlayerPreFrame'])
     higher_port_player_pre_frames_df = pd.json_normalize(pre_frames_df['higherPortPlayerPreFrame'])
 
+    batch_size = 2000
+    batch = []
 
     game_metadata = Metadata(
 
@@ -50,6 +52,9 @@ def main():
         last_frame = int(filtered_metadata_df['lastFrame'].iloc[0]),
         played_on = filtered_metadata_df['playedOn'].iloc[0] 
     )
+
+    session.add(game_metadata)
+    session.commit()
 
     game_info = GameInfo(
 
@@ -160,7 +165,13 @@ def main():
             self_induced_speeds_ground_x = float(row['selfInducedSpeeds.groundX']),
             game_id = str(game_id)
         )
-        session.add(lower_port_player_post_frames_info)
+        batch.append(lower_port_player_post_frames_info)
+        if len(batch) >= batch_size:
+            session.add_all(batch)
+            session.commit()
+            batch = []
+
+    add_batch(session, batch)
 
     for index, row in higher_port_player_post_frames_df.iterrows():
         higher_port_player_post_frames_info = HigherPortPlayerPostFrames(
@@ -194,8 +205,13 @@ def main():
             self_induced_speeds_ground_x = float(row['selfInducedSpeeds.groundX']),
             game_id = str(game_id)
         )
-        session.add(higher_port_player_post_frames_info)
+        batch.append(higher_port_player_post_frames_info)
+        if len(batch) >= batch_size:
+            session.add_all(batch)
+            session.commit()
+            batch = []
 
+    add_batch(session, batch)
 
     for index, row in lower_port_player_pre_frames_df.iterrows():
         lower_port_player_pre_frames_info = LowerPortPlayerPreFrames(
@@ -221,8 +237,14 @@ def main():
             percent = float(row['percent']),
             game_id = str(game_id)
         )
-        session.add(lower_port_player_pre_frames_info)
 
+        batch.append(lower_port_player_pre_frames_info)
+        if len(batch) >= batch_size:
+            session.add_all(batch)
+            session.commit()
+            batch = []
+
+    add_batch(session, batch)
 
     for index, row in higher_port_player_pre_frames_df.iterrows():
         higher_port_player_pre_frames_info = HigherPortPlayerPreFrames(
@@ -247,27 +269,25 @@ def main():
             raw_joy_stick_x = int(row['rawJoystickX']),
             percent = float(row['percent']),
             game_id = str(game_id)
-    )
-    session.add(higher_port_player_pre_frames_info)
+        )
+    
+        batch.append(higher_port_player_pre_frames_info)
+        if len(batch) >= batch_size:
+            session.add_all(batch)
+            session.commit()
+            batch = []
 
+    add_batch(session, batch)
 
     session.add(settings_info)
     session.add(match_info)
     session.add(game_info)
     session.add(game_metadata)
     session.commit()
-
-
-
-
-
     
-
     # alphabetical_sort_into_matchup = sorted([get_lower_port_character_name_for_sorting(filtered_lower_port_player_df), get_lower_port_character_name_for_sorting(filtered_higher_port_player_df)])
 
     # schema_name = f"{alphabetical_sort_into_matchup[0]}_vs_{alphabetical_sort_into_matchup[1]}"
-
-
 
 
 def get_slippi_game_output_data(directory_path):
@@ -331,9 +351,25 @@ def get_lower_port_character_name_for_sorting(filtered_higher_port_player_df):
     
     return internal_character_ids.get(higher_port_character_id, "Unknown")
 
-def post_df(df, df_name, game_id, engine, schema_name):
-    df['game_id'] = game_id
-    df.to_sql(name=f"{df_name} {game_id}", con=engine, if_exists="replace", index=True, schema=schema_name)
+def insert_in_batches(df, table_name, engine, batch_size=1000):
+    start_index = 0
+    end_index = batch_size
+
+    while start_index < len(df):
+
+        df_slice = df.iloc[start_index:end_index]
+
+        df_slice.to_sql(name= table_name, con=engine, if_exists="append", index=False)
+
+        start_index += batch_size
+        end_index += batch_size
+
+def add_batch(session, batch):
+     if batch:
+        session.add_all(batch)
+        session.commit()
+        batch = []
+        return batch
 
 if __name__ == "__main__":
     main()
