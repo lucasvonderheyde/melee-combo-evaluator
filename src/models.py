@@ -2,7 +2,7 @@ from sqlalchemy import Column, String, Integer, ForeignKey, Float, Boolean, Uniq
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import create_engine
-from database_info import username, password
+from database_info import database
 
 
 Base = declarative_base()
@@ -249,6 +249,6 @@ class LowerPortPlayerPreFrames(Base):
     metadata_relationship = relationship("Metadata", back_populates="lower_port_player_pre_frames")
     __table_args__ = (UniqueConstraint('game_id', 'frame', name='lower_port_pre_frames_to_metadata'),)
 
-engine = create_engine(f'postgresql://{username}:{password}@localhost/Melee_Combo_Database')
+engine = create_engine(database)
 
 Base.metadata.create_all(engine)

@@ -7,7 +7,7 @@ import pandas as pd
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from database_info import username, password
+from database_info import database
 from models import Metadata, GameInfo, MatchInfo, PlayersInfo, Settings, HigherPortPlayerPostFrames, LowerPortPlayerPostFrames, HigherPortPlayerPreFrames, LowerPortPlayerPreFrames
 
 def main():
@@ -16,7 +16,7 @@ def main():
     pd.set_option('display.max_columns', 35)
 
     game_id = uuid.uuid4()
-    engine = create_engine(f'postgresql://{username}:{password}@localhost/Melee_Combo_Database')
+    engine = create_engine('postgresql://lucasvonderheyde:ArnoldA1!@localhost/Melee_Combo_Database')
 
     Session = sessionmaker(bind=engine)
     session = Session() 
