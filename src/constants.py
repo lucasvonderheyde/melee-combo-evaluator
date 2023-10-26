@@ -8,5 +8,5 @@ internal_character_ids = {
 }
 
 stage_ids ={
-
+    31: "Battlefield"
 }
