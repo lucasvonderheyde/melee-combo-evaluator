@@ -1,10 +1,7 @@
 import pandas as pd
-from sqlalchemy import create_engine
-from database_info import database
+from database_info import database, game_id
 from constants import stage_ids
 import psycopg2
-
-game_id = '482f5df9-00da-4363-a390-9547bb9fb8c6'
 
 def move_combo_data_to_proper_stage():
     
