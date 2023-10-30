@@ -129,10 +129,10 @@ def move_combo_data_to_proper_stage():
                 LEFT JOIN lower_port_player_pre_frames ON higher_port_player_post_frames.frame = lower_port_player_pre_frames.frame AND higher_port_player_post_frames.game_id = lower_port_player_pre_frames.game_id
                 WHERE higher_port_player_post_frames.game_id = %s
                 AND (higher_port_player_post_frames.action_state_id 
-                IN (0, 1, 2, 4, 8, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 181, 213, 214, 215, 216, 227, 228)
+                IN (0, 1, 2, 4, 8, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 181, 227, 228, 238, 239, 240, 241, 242)
                 OR higher_port_player_post_frames.hitlag_remaining > 0) 
                 OR (lower_port_player_post_frames.action_state_id 
-                IN (0, 1, 2, 4, 8, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 181, 213, 214, 215, 216, 227, 228)
+                IN (0, 1, 2, 4, 8, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 181, 227, 228, 238, 239, 240, 241, 242)
                 OR lower_port_player_post_frames.hitlag_remaining > 0)
             ''', [game_id])
         
