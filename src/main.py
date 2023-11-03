@@ -21,7 +21,9 @@ def main():
     Session = sessionmaker(bind=engine)
     session = Session() 
 
-    settings_df, post_frames_df, pre_frames_df, metadata_df = get_slippi_game_output_data("../data/temp_json_data/output_folder_1698097257304")
+    slippi_temp_file = 'data/temp_json_data/output_folder_1699020967987'
+
+    settings_df, post_frames_df, pre_frames_df, metadata_df = get_slippi_game_output_data(f"../{slippi_temp_file}")
 
 
     filtered_settings_data = {key: value for key, value in settings_df.items() if not isinstance(value, (dict, list))}
