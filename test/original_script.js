@@ -1,6 +1,6 @@
 const { SlippiGame } = require("@slippi/slippi-js");
 
-const game = new SlippiGame("./slp_files/Day 3-Game_20210718T093842.slp");
+const game = new SlippiGame("test/slp_files/Game_20230911T191324.slp");
 
 // Get game settings – stage, characters, etc
 const settings = game.getSettings();
