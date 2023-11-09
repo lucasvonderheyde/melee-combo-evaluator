@@ -12,6 +12,8 @@ data.fillna(-999, inplace=True)
 columns_to_drop = ['higher_post_game_id', 'lower_post_game_id', 'humanlabel', 'higher_pre_game_id', 'lower_pre_game_id']
 
 data['game_id_encoded'] = data['higher_post_game_id'].astype('category').cat.codes
+data = data.map(lambda x: int(x) if isinstance(x, bool) else x)
+
 
 
 features = [
@@ -54,7 +56,7 @@ for (game_id, combo_block), combo_data in data.groupby(['combo_block_for_model',
 
     combo_features_and_labels.append((game_id, combo_block, combo_features_tensor, combo_labels_tensor))
 
-
+print(combo_features_and_labels[1])
     
 
 
