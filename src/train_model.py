@@ -12,6 +12,7 @@ data.fillna(-999, inplace=True)
 columns_to_drop = ['higher_post_game_id', 'lower_post_game_id', 'humanlabel', 'higher_pre_game_id', 'lower_pre_game_id']
 
 data['game_id_encoded'] = data['higher_post_game_id'].astype('category').cat.codes
+data = data.astype({col: 'int' for col in data.select_dtypes(['bool']).columns})
 
 
 features = [
