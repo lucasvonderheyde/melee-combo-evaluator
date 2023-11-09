@@ -14,8 +14,6 @@ columns_to_drop = ['higher_post_game_id', 'lower_post_game_id', 'humanlabel', 'h
 data['game_id_encoded'] = data['higher_post_game_id'].astype('category').cat.codes
 data = data.map(lambda x: int(x) if isinstance(x, bool) else x)
 
-
-
 features = [
     'higher_post_frame', 'higher_post_internal_character_id', 'higher_post_action_state_id', 'higher_post_position_x', 'higher_post_position_y', 'higher_post_facing_direction',
     'higher_post_percent', 'higher_post_action_state_counter', 'higher_post_misc_action_state','higher_post_last_ground_id', 'higher_post_jumps_remaining',

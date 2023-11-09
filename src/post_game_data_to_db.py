@@ -25,7 +25,6 @@ def main():
 
     settings_df, post_frames_df, pre_frames_df, metadata_df = get_slippi_game_output_data(f"../{slippi_temp_file}")
 
-
     filtered_settings_data = {key: value for key, value in settings_df.items() if not isinstance(value, (dict, list))}
     settings_top_level_df = pd.DataFrame([filtered_settings_data]) 
 
@@ -287,11 +286,6 @@ def main():
     session.add(game_metadata)
     session.commit()
     
-    # alphabetical_sort_into_matchup = sorted([get_lower_port_character_name_for_sorting(filtered_lower_port_player_df), get_lower_port_character_name_for_sorting(filtered_higher_port_player_df)])
-
-    # schema_name = f"{alphabetical_sort_into_matchup[0]}_vs_{alphabetical_sort_into_matchup[1]}"
-
-
 def get_slippi_game_output_data(directory_path):
     settings_df = pd.DataFrame()
     post_frames_df =  pd.DataFrame()

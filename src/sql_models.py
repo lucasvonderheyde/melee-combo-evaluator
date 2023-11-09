@@ -1,12 +1,10 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, Float, Boolean, UniqueConstraint, BigInteger, Double
+from sqlalchemy import Column, String, ForeignKey, Boolean, UniqueConstraint, BigInteger, Double
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import create_engine
 from database_info import database
 
-
 Base = declarative_base()
-
 
 class Metadata(Base):
     __tablename__ = 'melee_metadata'
@@ -46,8 +44,6 @@ class GameInfo(Base):
 
     metadata_relationship = relationship("Metadata", back_populates="game_info")
     
-    
-
 class MatchInfo(Base):
     __tablename__ = 'match_info'
 
@@ -58,7 +54,6 @@ class MatchInfo(Base):
     game_id = Column(String, ForeignKey('melee_metadata.game_id'))
 
     metadata_relationship = relationship("Metadata", back_populates="match_info")
-
 
 class PlayersInfo(Base):
     __tablename__ = 'players_info'
@@ -94,7 +89,6 @@ class PlayersInfo(Base):
     
     metadata_relationship = relationship("Metadata", back_populates="players_info")
     
-
 class Settings(Base):
     __tablename__ = 'settings'
 
@@ -122,7 +116,7 @@ class HigherPortPlayerPostFrames(Base):
     __tablename__ = "higher_port_player_post_frames"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    frame = Column(BigInteger)
+    frame = Column(BigInteger, nullable=False)
     player_index = Column(BigInteger)
     is_follower = Column(Boolean)
     internal_character_id = Column(BigInteger)
@@ -151,8 +145,6 @@ class HigherPortPlayerPostFrames(Base):
     self_induced_speeds_ground_x = Column(Double)
     game_id = Column(String, ForeignKey('melee_metadata.game_id'))
     
-
-
     metadata_relationship = relationship("Metadata", back_populates="higher_port_player_post_frames")
     __table_args__ = (UniqueConstraint('game_id', 'frame', name='higher_port_post_frames_to_metadata'),)
 
@@ -160,7 +152,7 @@ class LowerPortPlayerPostFrames(Base):
     __tablename__ = "lower_port_player_post_frames"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    frame = Column(BigInteger)
+    frame = Column(BigInteger, nullable=False)
     player_index = Column(BigInteger)
     is_follower = Column(Boolean)
     internal_character_id = Column(BigInteger)
@@ -196,7 +188,7 @@ class HigherPortPlayerPreFrames(Base):
     __tablename__ = "higher_port_player_pre_frames"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    frame = Column(BigInteger)
+    frame = Column(BigInteger, nullable=False)
     player_index = Column(BigInteger)
     is_follower = Column(Boolean)
     seed = Column(BigInteger)
@@ -220,12 +212,11 @@ class HigherPortPlayerPreFrames(Base):
     metadata_relationship = relationship("Metadata", back_populates="higher_port_player_pre_frames")
     __table_args__ = (UniqueConstraint('game_id', 'frame', name='higher_port_pre_frames_to_metadata'),)
 
-
 class LowerPortPlayerPreFrames(Base):
     __tablename__ = "lower_port_player_pre_frames"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    frame = Column(BigInteger)
+    frame = Column(BigInteger, nullable=False)
     player_index = Column(BigInteger)
     is_follower = Column(Boolean)
     seed = Column(BigInteger)

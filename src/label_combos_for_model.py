@@ -16,7 +16,6 @@ pd.set_option('display.max_rows', 1000)
 
 engine = create_engine(database)
 
-
 query = 'SELECT * FROM combos_for_battlefield WHERE higher_post_game_id = %s'
 query_2 = '''SELECT * FROM combos_for_battlefield WHERE higher_post_game_id = %s'''
 df = pd.read_sql(query, engine, params=(game_id,))
@@ -25,7 +24,6 @@ df_2 = pd.read_sql(query_2, engine, params=(game_id,))
 battlefield_x_axis = 228
 battlefield_y_axis_top_blastzone = 208
 battlefield_y_axis_bottom_blastzone = 113
-
 
 action_state_id_to_check_getting_hit = [0, 1, 2, 4, 8, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 181, 227, 228, 238, 239, 240, 241, 242]
 death_action_state_ids = [0, 1, 2, 4, 8]
