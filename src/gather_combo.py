@@ -12,8 +12,6 @@ def move_combo_data_to_proper_stage():
     cursor.execute(f"SELECT stage_id FROM settings WHERE game_id = %s", [game_id])
     stage_id = cursor.fetchone()[0]
 
-    print(game_id)
-    
     if cursor.rowcount == 0:
         raise ValueError("No data found to insert. Aborting operation.")
 
