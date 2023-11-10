@@ -1,12 +1,10 @@
 import pandas as pd
-from database_info import database, game_id, combo_table_columns_to_post_to_db, select_combo_data_for_table
+from database_info import database, combo_table_columns_to_post_to_db, select_combo_data_for_table
 from constants import stage_ids
 import psycopg2
 
-def move_combo_data_to_proper_stage():
+def move_combo_data_to_proper_stage(game_id, cursor):
     try:
-        connection = psycopg2.connect(database)
-        cursor = connection.cursor()
 
         cursor.execute("SELECT stage_id FROM settings WHERE game_id = %s", (game_id,))
         result = cursor.fetchone()
@@ -15,12 +13,10 @@ def move_combo_data_to_proper_stage():
             raise ValueError("No stage_id found for the given game_id. Aborting operation.")
 
         stage_id = result[0]
-        print(stage_id)
         combo_table = None
         for key, value in stage_ids.items():
             if key == stage_id:
                 combo_table = f"combos_for_{value}"
-                print(combo_table)
                 break
                 
 
@@ -248,12 +244,24 @@ def move_combo_data_to_proper_stage():
         '''
         
         cursor.execute(select_query, (game_id, game_id))
-        connection.commit()
 
     except Exception as e:
         print(f"An error occurred: {e}")
-    finally:
-        cursor.close()
-        connection.close()
+   
+connection = psycopg2.connect(database)
+cursor = connection.cursor()
 
-move_combo_data_to_proper_stage()
+get_game_ids = 'SELECT game_id FROM melee_metadata'
+cursor.execute(get_game_ids)
+rows = cursor.fetchall()
+
+ids_to_remove = ['0814bef9-6cc3-4bf9-89cc-bfcaabf4539a', '51a64c48-160f-45ef-be30-31728baf8d33']
+
+filtered_rows = [row for row in rows if row[0] not in ids_to_remove]
+
+for game_id in list(filtered_rows):
+    move_combo_data_to_proper_stage(game_id, cursor)
+    connection.commit()
+
+cursor.close()
+connection.close()

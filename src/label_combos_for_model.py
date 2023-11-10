@@ -6,7 +6,7 @@ from src.database_info import database
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-game_id = 'ce32f9f5-f640-4844-a4e9-ac932cd679ab'
+game_id = '0814bef9-6cc3-4bf9-89cc-bfcaabf4539a'
 
 pd.set_option('display.max_colwidth', None)
 pd.set_option('display.width', 1000)
