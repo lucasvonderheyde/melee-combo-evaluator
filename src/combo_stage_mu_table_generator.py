@@ -22,7 +22,7 @@ def generate_stage_table_for_database():
     if cursor.rowcount == 0:
         raise ValueError("No data found to insert. Aborting operation.")
 
-    cursor.execute(f'''CREATE TABLE {combo_table} AS {combo_table_generator} ''', [game_id])
+    cursor.execute(f'''CREATE TABLE {combo_table} AS SELECT {combo_table_generator} ''', [game_id])
 
     connection.commit()
 
