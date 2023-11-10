@@ -9,7 +9,10 @@ from sqlalchemy.orm import sessionmaker
 from database_info import database
 from sql_models import Metadata, GameInfo, MatchInfo, PlayersInfo, Settings, HigherPortPlayerPostFrames, LowerPortPlayerPostFrames, HigherPortPlayerPreFrames, LowerPortPlayerPreFrames
 
-def main():
+
+json_directories = "../data/temp_json_data"
+
+def main(slippi_json_folder):
     pd.set_option('display.max_colwidth', None)
     pd.set_option('display.width', 1000)
     pd.set_option('display.max_columns', 35)
@@ -22,7 +25,7 @@ def main():
 
     slippi_temp_file = 'data/temp_json_data/output_folder_Mango_20230911T191555.slp_1699640853897'
 
-    settings_df, post_frames_df, pre_frames_df, metadata_df = get_slippi_game_output_data(f"../{slippi_temp_file}")
+    settings_df, post_frames_df, pre_frames_df, metadata_df = get_slippi_game_output_data(slippi_json_folder)
 
 
     filtered_settings_data = {key: value for key, value in settings_df.items() if not isinstance(value, (dict, list))}
@@ -291,16 +294,16 @@ def main():
     # schema_name = f"{alphabetical_sort_into_matchup[0]}_vs_{alphabetical_sort_into_matchup[1]}"
 
 
-def get_slippi_game_output_data(directory_path):
+def get_slippi_game_output_data(slippi_json_folder):
     settings_df = pd.DataFrame()
     post_frames_df =  pd.DataFrame()
     pre_frames_df = pd.DataFrame()
     metadata_df =  pd.DataFrame()
     
-    for filename in os.listdir(directory_path):
+    for filename in os.listdir(slippi_json_folder):
 
         if filename.endswith(".json"):
-            filepath = os.path.join(directory_path, filename)
+            filepath = os.path.join(slippi_json_folder, filename)
 
             if "settings" in filename:
                 with open(filepath, "r") as incomingSettings:
@@ -373,4 +376,8 @@ def add_batch(session, batch):
         return batch
 
 if __name__ == "__main__":
-    main()
+    
+    for folder_name in os.listdir(json_directories):
+        path_to_folders = os.path.join(json_directories, folder_name)
+        if os.path.isdir(path_to_folders):
+            main(path_to_folders)
