@@ -15,7 +15,14 @@ def move_combo_data_to_proper_stage():
             raise ValueError("No stage_id found for the given game_id. Aborting operation.")
 
         stage_id = result[0]
-        combo_table = f"combos_for_{stage_ids.get(stage_id, 'default')}"
+        print(stage_id)
+        combo_table = None
+        for key, value in stage_ids.items():
+            if key == stage_id:
+                combo_table = f"combos_for_{value}"
+                print(combo_table)
+                break
+                
 
         select_query = f'''
             INSERT INTO {combo_table} (
