@@ -1,2 +1,5 @@
 database_info.py
 .env
+slp_files
+temp_json_data
+processed_data

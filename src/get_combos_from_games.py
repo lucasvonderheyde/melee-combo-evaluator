@@ -231,13 +231,13 @@ def move_combo_data_to_proper_stage(game_id, cursor):
                 WHERE 
                 higher_port_player_post_frames.game_id = %s
                 AND (
-                    higher_port_player_post_frames.action_state_id IN (0, 1, 2, 4, 8, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 181, 227, 228, 238, 239, 240, 241, 242)
+                    higher_port_player_post_frames.action_state_id IN (0, 1, 2, 4, 8, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 227, 228, 239, 240, 241, 242)
                     OR higher_port_player_post_frames.hitlag_remaining > 0
                 )
                 OR (
                     lower_port_player_post_frames.game_id = %s
                     AND (
-                        lower_port_player_post_frames.action_state_id IN (0, 1, 2, 4, 8, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 181, 227, 228, 238, 239, 240, 241, 242)
+                        lower_port_player_post_frames.action_state_id IN (0, 1, 2, 4, 8, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 227, 228, 239, 240, 241, 242)
                         OR lower_port_player_post_frames.hitlag_remaining > 0
                     )
                 )
@@ -255,11 +255,7 @@ get_game_ids = 'SELECT game_id FROM melee_metadata'
 cursor.execute(get_game_ids)
 rows = cursor.fetchall()
 
-ids_to_remove = ['0814bef9-6cc3-4bf9-89cc-bfcaabf4539a', '51a64c48-160f-45ef-be30-31728baf8d33']
-
-filtered_rows = [row for row in rows if row[0] not in ids_to_remove]
-
-for game_id in list(filtered_rows):
+for game_id in list(rows):
     move_combo_data_to_proper_stage(game_id, cursor)
     connection.commit()
 
