@@ -1,4 +1,5 @@
 import torch
+import torch.nn as nn
 import numpy as np
 from torch.utils.data import Dataset, DataLoader
 from torch.nn.utils.rnn import pad_sequence
@@ -9,9 +10,6 @@ import pandas as pd
 data = pd.read_csv('../Jupyter/falco_vs_fox_csv_battlefield')
 data.fillna(-999, inplace=True)
 
-columns_to_drop = ['higher_post_game_id', 'lower_post_game_id', 'humanlabel', 'higher_pre_game_id', 'lower_pre_game_id']
-
-data['game_id_encoded'] = data['higher_post_game_id'].astype('category').cat.codes
 data = data.astype({col: 'int' for col in data.select_dtypes(['bool']).columns})
 
 
@@ -24,7 +22,7 @@ features = [
     'lower_post_percent', 'lower_post_action_state_counter', 'lower_post_misc_action_state', 'lower_post_is_airborne', 'lower_post_last_ground_id', 'lower_post_jumps_remaining',
     'lower_post_l_cancel_status', 'lower_post_hitlag_remaining', 'lower_post_animation_index', 'lower_post_self_induced_speeds_air_x', 'lower_post_self_induced_speeds_y', 'lower_post_self_induced_speeds_attack_x',
     'lower_post_self_induced_speeds_attack_y', 'lower_post_self_induced_speeds_ground_x', 
-    'combo_block_for_model', 'character_creating_combo_for_model', 'attack_state_to_hit_in_combo_for_model', 'higher_port_damage_done_with_combo', 'lower_port_damage_done_with_combo', 'game_id_encoded'
+    'combo_block_for_model', 'character_creating_combo_for_model', 'attack_state_to_hit_in_combo_for_model', 'higher_port_damage_done_with_combo', 'lower_port_damage_done_with_combo'
 ]
 
 labels = [
@@ -34,39 +32,34 @@ labels = [
 
 combo_features_and_labels = []
 
-data.drop(columns=columns_to_drop, inplace=True)
 
-# ...
-for (game_id, combo_block), combo_data in data.groupby(['combo_block_for_model', 'game_id_encoded']):
+for combo_block, combo_data in data.groupby('combo_block_for_model'):
     
-    # Ensure all columns are numeric
     combo_features = combo_data[features].apply(pd.to_numeric, errors='coerce').fillna(-999).values
     combo_labels = combo_data[labels].apply(pd.to_numeric, errors='coerce').fillna(-999).values
 
-    # Ensure there are no NaNs or Infs
     if np.isnan(combo_features).any() or np.isinf(combo_features).any():
         raise ValueError("combo_features contains NaN or Inf.")
     if np.isnan(combo_labels).any() or np.isinf(combo_labels).any():
         raise ValueError("combo_labels contains NaN or Inf.")
 
-    # Convert to Tensor
     combo_features_tensor = torch.tensor(combo_features, dtype=torch.float32)
-    combo_labels_tensor = torch.tensor(combo_labels, dtype=torch.float32)  # This should be combo_labels, not combo_features
+    combo_labels_tensor = torch.tensor(combo_labels, dtype=torch.float32)
 
-    combo_features_and_labels.append((game_id, combo_block, combo_features_tensor, combo_labels_tensor))
+    combo_features_and_labels.append((combo_block, combo_features_tensor, combo_labels_tensor))
 
+class ComboDataset(Dataset):
+    def __init__(self, features_and_labels):
+        self.features_and_labels = features_and_labels
 
+    def __len__(self):
+        return len(self.features_and_labels)
+
+    def __getitem__(self, idx):
+        return self.features_and_labels[idx]
     
-
-
-
-
-# class FalcoVsFoxBattlefieldDataset(Dataset):
-#     def __init__(self, dataframe):
-        
-#         self.dataframe = dataframe
-
-#     def __len__(self):
-#         return len(self.labels)
+print(combo_features_and_labels[55])
     
-#     def __getitem__(self, idx)
+debug_dataset = ComboDataset(combo_features_and_labels)
+print(debug_dataset[0]) 
+ 
