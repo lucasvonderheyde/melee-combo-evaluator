@@ -6,6 +6,13 @@ from torch.nn.utils.rnn import pad_sequence
 from sklearn.model_selection import train_test_split
 import pandas as pd
 import torch.optim as optim
+import pdb
+
+def custom_loss(outputs, targets):
+    mask = (targets != -999) & (targets != -1000)
+    mse_loss = (outputs - targets) ** 2
+    masked_loss = mse_loss * mask
+    return masked_loss.mean()
 
 data = pd.read_csv('../Jupyter/falco_vs_fox_csv_battlefield')
 data.fillna(-999, inplace=True)
@@ -14,15 +21,22 @@ data = data.astype({col: 'int' for col in data.select_dtypes(['bool']).columns})
 
 
 features = [
-    'higher_post_frame', 'higher_post_internal_character_id', 'higher_post_action_state_id', 'higher_post_position_x', 'higher_post_position_y', 'higher_post_facing_direction',
-    'higher_post_percent', 'higher_post_action_state_counter', 'higher_post_misc_action_state','higher_post_last_ground_id', 'higher_post_jumps_remaining',
-    'higher_post_l_cancel_status', 'higher_post_hitlag_remaining', 'higher_post_animation_index', 'higher_post_self_induced_speeds_air_x', 'higher_post_self_induced_speeds_y', 'higher_post_self_induced_speeds_attack_x',
-    'higher_post_self_induced_speeds_attack_y', 'higher_post_self_induced_speeds_ground_x', 
-    'lower_post_frame', 'lower_post_internal_character_id', 'lower_post_action_state_id', 'lower_post_position_x', 'lower_post_position_y', 'lower_post_facing_direction',
-    'lower_post_percent', 'lower_post_action_state_counter', 'lower_post_misc_action_state', 'lower_post_is_airborne', 'lower_post_last_ground_id', 'lower_post_jumps_remaining',
-    'lower_post_l_cancel_status', 'lower_post_hitlag_remaining', 'lower_post_animation_index', 'lower_post_self_induced_speeds_air_x', 'lower_post_self_induced_speeds_y', 'lower_post_self_induced_speeds_attack_x',
+    'higher_post_frame', 'higher_post_internal_character_id', 'higher_post_action_state_id',
+    'higher_post_position_x', 'higher_post_position_y', 'higher_post_facing_direction',
+    'higher_post_percent', 'higher_post_action_state_counter', 'higher_post_misc_action_state',
+    'higher_post_last_ground_id', 'higher_post_jumps_remaining','higher_post_l_cancel_status', 
+    'higher_post_hitlag_remaining', 'higher_post_animation_index', 'higher_post_self_induced_speeds_air_x', 
+    'higher_post_self_induced_speeds_y', 'higher_post_self_induced_speeds_attack_x', 'higher_post_self_induced_speeds_attack_y', 
+    'higher_post_self_induced_speeds_ground_x',  
+    'lower_post_frame', 'lower_post_internal_character_id', 'lower_post_action_state_id', 
+    'lower_post_position_x', 'lower_post_position_y', 'lower_post_facing_direction',
+    'lower_post_percent', 'lower_post_action_state_counter', 'lower_post_misc_action_state', 
+    'lower_post_last_ground_id', 'lower_post_jumps_remaining',
+    'lower_post_l_cancel_status', 'lower_post_hitlag_remaining', 'lower_post_animation_index', 
+    'lower_post_self_induced_speeds_air_x', 'lower_post_self_induced_speeds_y', 'lower_post_self_induced_speeds_attack_x',
     'lower_post_self_induced_speeds_attack_y', 'lower_post_self_induced_speeds_ground_x', 
-    'combo_block_for_model', 'character_creating_combo_for_model', 'attack_state_to_hit_in_combo_for_model', 'higher_port_damage_done_with_combo', 'lower_port_damage_done_with_combo', 'lower_port_l_cancel_for_model', 'higher_port_l_cancel_for_model'
+    'combo_block_for_model', 'attack_state_to_hit_in_combo_for_model', 'character_creating_combo_for_model', 'lower_port_l_cancel_for_model',
+    'higher_port_l_cancel_for_model', 'lower_port_damage_done_with_combo', 'higher_port_damage_done_with_combo'
 ]
 
 labels = [
@@ -32,6 +46,7 @@ labels = [
 
 combo_features_and_labels = []
 
+feature_index = features.index('character_creating_combo_for_model')
 
 for combo_block, combo_data in data.groupby('combo_block_for_model'):
     
@@ -60,11 +75,12 @@ class ComboDataset(Dataset):
         return features_tensor, labels_tensor
     
 def collate_fn(batch):
-    # Separate features and labels
-    features, labels = zip(*batch)
-    # Pad features
+    features, all_labels = zip(*batch)
     features_padded = pad_sequence(features, batch_first=True, padding_value=-1000)
-    # Directly use labels (already tensors)
+
+    # Extract the relevant label row (e.g., the last row) from each label tensor in the batch
+    labels = torch.stack([label[-1] for label in all_labels], dim=0)
+
     return features_padded, labels
 
 # Instantiate ComboDataset with your data
@@ -89,7 +105,7 @@ test_loader = DataLoader(test_dataset, batch_size=32, collate_fn=collate_fn)
 
 
 class BidirectionalComboLSTM(nn.Module):
-    def __init__(self, input_size=46, hidden_size=50, num_layers=2, output_size=3):
+    def __init__(self, input_size=45, hidden_size=50, num_layers=2, output_size=6):
         super(BidirectionalComboLSTM, self).__init__()
         self.hidden_size = hidden_size
         self.num_layers = num_layers
@@ -101,53 +117,110 @@ class BidirectionalComboLSTM(nn.Module):
                             batch_first=True,
                             bidirectional=True)
         
-        # Doubling the output features because of bidirectionality
         self.fc = nn.Linear(hidden_size * self.num_directions, output_size)
 
     def forward(self, x):
         h0 = torch.zeros(self.num_layers * self.num_directions, x.size(0), self.hidden_size).to(x.device)
         c0 = torch.zeros(self.num_layers * self.num_directions, x.size(0), self.hidden_size).to(x.device)
 
-        output, (hn, cn) = self.lstm(x, (h0, c0))
-        # Concatenate the final forward and backward hidden state
-        hidden = torch.cat((hn[-2,:,:], hn[-1,:,:]), dim=1)
+        output, _ = self.lstm(x, (h0, c0))
+        hidden = torch.cat((output[:, -1, :self.hidden_size], output[:, 0, self.hidden_size:]), dim=1)
         out = self.fc(hidden)
+        return out
 
-
-model = BidirectionalComboLSTM(input_size=46, hidden_size=50, num_layers=2, output_size=3)
+# Instantiate the model
+model = BidirectionalComboLSTM()
 criterion = nn.MSELoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-num_epochs = 10  # This is a hyperparameter you can tune
+
+
+model = BidirectionalComboLSTM(input_size=45, hidden_size=50, num_layers=2, output_size=6)
+criterion = nn.MSELoss()
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+
+test_batch = next(iter(train_loader))
+print("Feature batch shape:", test_batch[0].shape)
+print("Label batch shape:", test_batch[1].shape)
+
+# Inside your training loop
+num_epochs = 10  # Adjust as needed
+
+num_epochs = 10  # Adjust as needed
+
+num_epochs = 10  # Adjust as needed
 
 for epoch in range(num_epochs):
     model.train()
-    running_loss = 0.0
+    total_loss = 0
+
     for batch_features, batch_labels in train_loader:
         optimizer.zero_grad()
-        outputs = model(batch_features)
-        loss = criterion(outputs, batch_labels)
+
+        outputs = model(batch_features)  # Forward pass
+
+        character_mask = batch_features[:, :, feature_index]  # Use the correct index
+        mask = torch.zeros_like(outputs)
+
+        # Adjust the mask creation to match the output dimensions
+        mask_higher_port = (character_mask[:, -1] == 1).unsqueeze(-1).expand(-1, 3)  # Last timestep, expand to 3 features
+        mask_lower_port = (character_mask[:, -1] != 1).unsqueeze(-1).expand(-1, 3)  # Last timestep, expand to 3 features
+
+        mask[:, :3] = mask_higher_port
+        mask[:, 3:] = mask_lower_port
+
+        masked_outputs = outputs * mask
+        loss = custom_loss(masked_outputs, batch_labels)
         loss.backward()
         optimizer.step()
-        running_loss += loss.item()
+        total_loss += loss.item()
 
-    print(f"Epoch {epoch+1}, Loss: {running_loss/len(train_loader)}")
+    avg_loss = total_loss / len(train_loader)
+    print(f'Epoch {epoch + 1}/{num_epochs}, Training Loss: {avg_loss:.4f}')
 
-    # Validation step
+    # Validation
     model.eval()
     val_loss = 0.0
     with torch.no_grad():
         for batch_features, batch_labels in val_loader:
             outputs = model(batch_features)
-            loss = criterion(outputs, batch_labels)
-            val_loss += loss.item()
-    print(f"Validation Loss: {val_loss/len(val_loader)}")
 
-    test_loss = 0.0
+            character_mask = batch_features[:, :, feature_index]  # Use the correct index
+            mask = torch.zeros_like(outputs)
+
+            mask_higher_port = (character_mask[:, -1] == 1).unsqueeze(-1).expand(-1, 3)
+            mask_lower_port = (character_mask[:, -1] != 1).unsqueeze(-1).expand(-1, 3)
+
+            mask[:, :3] = mask_higher_port
+            mask[:, 3:] = mask_lower_port
+
+            masked_outputs = outputs * mask
+            val_loss += custom_loss(masked_outputs, batch_labels).item()
+
+        avg_val_loss = val_loss / len(val_loader)
+        print(f'Validation Loss: {avg_val_loss:.4f}')
+
+
+# Test the model after training
+test_loss = 0.0
 model.eval()
 with torch.no_grad():
     for batch_features, batch_labels in test_loader:
         outputs = model(batch_features)
-        loss = criterion(outputs, batch_labels)
-        test_loss += loss.item()
-print(f"Test Loss: {test_loss/len(test_loader)}")
+
+        character_mask = batch_features[:, :, feature_index]  # Use the correct index
+        mask = torch.zeros_like(outputs)
+
+        mask_higher_port = (character_mask[:, -1] == 1).unsqueeze(-1).expand(-1, 3)
+        mask_lower_port = (character_mask[:, -1] != 1).unsqueeze(-1).expand(-1, 3)
+
+        mask[:, :3] = mask_higher_port
+        mask[:, 3:] = mask_lower_port
+
+        masked_outputs = outputs * mask
+        test_loss += custom_loss(masked_outputs, batch_labels).item()
+
+    avg_test_loss = test_loss / len(test_loader)
+    print(f'Test Loss: {avg_test_loss:.4f}')
+
+
