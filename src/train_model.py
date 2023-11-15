@@ -9,6 +9,7 @@ import torch.optim as optim
 import pdb
 
 def custom_loss(outputs, targets):
+
     mask = (targets != -999) & (targets != -1000)
     mse_loss = (outputs - targets) ** 2
     masked_loss = mse_loss * mask
@@ -18,7 +19,6 @@ data = pd.read_csv('../Jupyter/falco_vs_fox_csv_battlefield')
 data.fillna(-999, inplace=True)
 
 data = data.astype({col: 'int' for col in data.select_dtypes(['bool']).columns})
-
 
 features = [
     'higher_post_frame', 'higher_post_internal_character_id', 'higher_post_action_state_id',
@@ -40,8 +40,8 @@ features = [
 ]
 
 labels = [
-    'lower_port_damage_done_with_combo_model_score', 'higher_port_damage_done_with_combo_model_score', 'higher_port_x_position_model_score', 'higher_port_y_position_model_score',
-    'lower_port_x_position_model_score', 'lower_port_y_position_model_score'
+    'lower_port_damage_done_with_combo_model_score', 'higher_port_damage_done_with_combo_model_score', 'higher_port_x_position_model_score', 
+    'higher_port_y_position_model_score','lower_port_x_position_model_score', 'lower_port_y_position_model_score'
 ]
 
 combo_features_and_labels = []
@@ -200,8 +200,6 @@ for epoch in range(num_epochs):
         avg_val_loss = val_loss / len(val_loader)
         print(f'Validation Loss: {avg_val_loss:.4f}')
 
-
-# Test the model after training
 test_loss = 0.0
 model.eval()
 with torch.no_grad():

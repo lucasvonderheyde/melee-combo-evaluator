@@ -23,8 +23,6 @@ def main(slippi_json_folder):
     Session = sessionmaker(bind=engine)
     session = Session() 
 
-    slippi_temp_file = 'data/temp_json_data/output_folder_Mango_20230911T191555.slp_1699640853897'
-
     settings_df, post_frames_df, pre_frames_df, metadata_df = get_slippi_game_output_data(slippi_json_folder)
 
 
