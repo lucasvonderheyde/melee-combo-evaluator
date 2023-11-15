@@ -1,11 +1,22 @@
 import pandas as pd
 from database_info import database, combo_table_columns_to_post_to_db, select_combo_data_for_table
 from constants import stage_ids
-import psycopg2
+import psycopg2, os, sys
+
+
+def posting_for_training(cursor, connection):
+
+    get_game_ids = 'SELECT game_id FROM melee_metadata'
+    cursor.execute(get_game_ids)
+    rows = cursor.fetchall()
+
+    for game_id in list(rows):
+        move_combo_data_to_proper_stage(game_id, cursor)
+        connection.commit()
+
 
 def move_combo_data_to_proper_stage(game_id, cursor):
     try:
-
         cursor.execute("SELECT stage_id FROM settings WHERE game_id = %s", (game_id,))
         result = cursor.fetchone()
 
@@ -18,8 +29,7 @@ def move_combo_data_to_proper_stage(game_id, cursor):
             if key == stage_id:
                 combo_table = f"combos_for_{value}"
                 break
-                
-
+            
         select_query = f'''
             INSERT INTO {combo_table} (
                 higher_post_id,
@@ -247,17 +257,18 @@ def move_combo_data_to_proper_stage(game_id, cursor):
 
     except Exception as e:
         print(f"An error occurred: {e}")
-   
-connection = psycopg2.connect(database)
-cursor = connection.cursor()
 
-get_game_ids = 'SELECT game_id FROM melee_metadata'
-cursor.execute(get_game_ids)
-rows = cursor.fetchall()
+if __name__ == '__main__':
 
-for game_id in list(rows):
-    move_combo_data_to_proper_stage(game_id, cursor)
-    connection.commit()
+    connection = psycopg2.connect(database)
+    cursor = connection.cursor()
 
-cursor.close()
-connection.close()
+    if os.environ.get('CALLED_FROM_FLASK') == '1':
+        passed_game_id = sys.argv[1]
+        move_combo_data_to_proper_stage(passed_game_id, cursor)
+    
+    else:
+        posting_for_training(cursor, connection)
+
+    cursor.close()
+    connection.close()

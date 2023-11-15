@@ -1,16 +1,15 @@
 import json
 import uuid
 import os
-
 import pandas as pd
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-
 from database_info import database
 from sql_models import Metadata, GameInfo, MatchInfo, PlayersInfo, Settings, HigherPortPlayerPostFrames, LowerPortPlayerPostFrames, HigherPortPlayerPreFrames, LowerPortPlayerPreFrames
-
+import pdb
 
 json_directories = "../data/temp_json_data"
+user_slippi_upload_directory = 'player_uploads/user_temp_slp_data'
 
 def main(slippi_json_folder):
     pd.set_option('display.max_colwidth', None)
@@ -19,6 +18,8 @@ def main(slippi_json_folder):
 
     game_id = uuid.uuid4()
     engine = create_engine(database)
+
+    print(game_id)
 
     Session = sessionmaker(bind=engine)
     session = Session() 
@@ -286,11 +287,8 @@ def main(slippi_json_folder):
     session.add(game_info)
     session.add(game_metadata)
     session.commit()
-    
-    # alphabetical_sort_into_matchup = sorted([get_lower_port_character_name_for_sorting(filtered_lower_port_player_df), get_lower_port_character_name_for_sorting(filtered_higher_port_player_df)])
 
-    # schema_name = f"{alphabetical_sort_into_matchup[0]}_vs_{alphabetical_sort_into_matchup[1]}"
-
+    return str(game_id)
 
 def get_slippi_game_output_data(slippi_json_folder):
     settings_df = pd.DataFrame()
@@ -340,18 +338,7 @@ def filter_metadata(df_metadata):
 
     filtered_metadata_df = df_metadata[['startAt', 'lastFrame', 'playedOn']].copy()
 
-    return filtered_metadata_df
-   
-
-def get_lower_port_character_name_for_sorting(filtered_lower_port_player_df):
-    lower_port_character_id = filtered_lower_port_player_df['internalCharacterId'].iloc[0]
-    
-    return internal_character_ids.get(lower_port_character_id, "Unknown")    
-
-def get_lower_port_character_name_for_sorting(filtered_higher_port_player_df):
-    higher_port_character_id = filtered_higher_port_player_df['internalCharacterId'].iloc[0]
-    
-    return internal_character_ids.get(higher_port_character_id, "Unknown")
+    return filtered_metadata_df   
 
 def insert_in_batches(df, table_name, engine, batch_size=1000):
     start_index = 0
@@ -374,8 +361,15 @@ def add_batch(session, batch):
         return batch
 
 if __name__ == "__main__":
+    print('script started')
+    if os.environ.get('CALLED_FROM_FLASK') == '1':
+        game_id_for_combos = main(user_slippi_upload_directory)
+        
+    else:
+        for folder_name in os.listdir(json_directories):
+            path_to_folders = os.path.join(json_directories, folder_name)
+            if os.path.isdir(path_to_folders):
+                main(path_to_folders)
     
-    for folder_name in os.listdir(json_directories):
-        path_to_folders = os.path.join(json_directories, folder_name)
-        if os.path.isdir(path_to_folders):
-            main(path_to_folders)
+    if game_id_for_combos is not None:
+        print(game_id_for_combos)

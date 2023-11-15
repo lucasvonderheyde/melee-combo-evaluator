@@ -2,8 +2,8 @@ const { SlippiGame } = require("@slippi/slippi-js");
 const fs = require("fs");
 const path = require('path');
 
-const slippiFilesDirectory = "../player_uploads/slp_games"; // Directory containing Slippi files
-const outputBaseDir = "../player_uploads/user_temp_slp_data"; // Base directory for outputs
+const slippiFilesDirectory = "player_uploads/slp_games"; // Directory containing Slippi files
+const outputBaseDir = "player_uploads/user_temp_slp_data"; // Base directory for outputs
 
 // Ensure the output base directory exists
 if (!fs.existsSync(outputBaseDir)) {
