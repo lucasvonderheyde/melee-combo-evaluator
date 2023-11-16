@@ -1,7 +1,7 @@
 import pandas as pd
 from database_info import database, combo_table_columns_to_post_to_db, select_combo_data_for_table
 from constants import stage_ids
-import psycopg2, os, sys
+import psycopg2, os, sys, pdb
 
 
 def posting_for_training(cursor, connection):
@@ -266,9 +266,13 @@ if __name__ == '__main__':
     if os.environ.get('CALLED_FROM_FLASK') == '1':
         passed_game_id = sys.argv[1]
         move_combo_data_to_proper_stage(passed_game_id, cursor)
+        
+        connection.commit()
+        cursor.close()
+        connection.close()
     
     else:
         posting_for_training(cursor, connection)
 
-    cursor.close()
-    connection.close()
+        cursor.close()
+        connection.close()

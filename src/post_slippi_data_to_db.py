@@ -361,7 +361,6 @@ def add_batch(session, batch):
         return batch
 
 if __name__ == "__main__":
-    print('script started')
     if os.environ.get('CALLED_FROM_FLASK') == '1':
         game_id_for_combos = main(user_slippi_upload_directory)
         
@@ -371,5 +370,3 @@ if __name__ == "__main__":
             if os.path.isdir(path_to_folders):
                 main(path_to_folders)
     
-    if game_id_for_combos is not None:
-        print(game_id_for_combos)

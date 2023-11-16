@@ -43,8 +43,7 @@ def upload_file():
         try:
             subprocess.run(["node", "user_data_utilities/userSlippi.js", file_path], check=True)
 
-            result = subprocess.run(["python3", "post_slippi_data_to_db.py"], check=True, stdout=subprocess.PIPE, text=True)
-        
+            result = subprocess.run(["python3", '-u', "post_slippi_data_to_db.py"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)  
             game_id = result.stdout.strip()
 
             subprocess.run(["python3", "get_combos_from_games.py", game_id], check=True)
