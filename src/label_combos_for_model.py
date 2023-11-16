@@ -1,12 +1,36 @@
 import pandas as pd
 from sqlalchemy import create_engine
-import sys, os
+import sys, os, pdb, json
 sys.path.append('..')
 from src.database_info import database
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+pd.set_option('display.max_colwidth', None)
+pd.set_option('display.width', 1000)
+pd.set_option('display.max_columns', 100)
+pd.set_option('display.max_rows', 1000)
+
+json_data_filepath = 'player_uploads/d3_json_flowchart/json_data_for_frontend_visual.json'
+
 def label_combos_for_model(game_id, engine, query):
+
+    battlefield_x_axis = 228
+    battlefield_y_axis_top_blastzone = 208
+    battlefield_y_axis_bottom_blastzone = 113
+
+
+    action_state_id_to_check_getting_hit = [0, 1, 2, 4, 8, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 227, 228, 239, 240, 241, 242]
+    death_action_state_ids = [0, 1, 2, 4, 8]
+
+    last_frame = None
+    current_combo_id = 0
+    higher_port_post_percent = 0.0
+    lower_port_post_percent = 0.0
+
+    successful_l_cancel = 1
+    unsuccessful_l_cancel = 0
+    no_l_cancel_on_frame = None
     
     df = pd.read_sql(query, engine, params=(game_id,))
     df['combo_block_for_model'] = None
@@ -220,31 +244,22 @@ def label_combos_for_model(game_id, engine, query):
     return df
 
 
+def transform_to_d3_json(df):
+    d3_data = {'combos': {}}
+
+    for combo_id, combo_group in df.groupby('combo_block_for_model'):
+        nodes = combo_group.to_dict('records')
+
+        links = [{'source': i, 'target': i+1} for i in range(len(nodes)-1)]
+
+        d3_data['combos'][combo_id] = {'nodes': nodes, 'links': links}
+
+    return d3_data
+
+
 if __name__ == "__main__":
 
-    pd.set_option('display.max_colwidth', None)
-    pd.set_option('display.width', 1000)
-    pd.set_option('display.max_columns', 100)
-    pd.set_option('display.max_rows', 1000)
-
     engine = create_engine(database)
-
-    battlefield_x_axis = 228
-    battlefield_y_axis_top_blastzone = 208
-    battlefield_y_axis_bottom_blastzone = 113
-
-
-    action_state_id_to_check_getting_hit = [0, 1, 2, 4, 8, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 227, 228, 239, 240, 241, 242]
-    death_action_state_ids = [0, 1, 2, 4, 8]
-
-    last_frame = None
-    current_combo_id = 0
-    higher_port_post_percent = 0.0
-    lower_port_post_percent = 0.0
-
-    successful_l_cancel = 1
-    unsuccessful_l_cancel = 0
-    no_l_cancel_on_frame = None
 
     query = '''SELECT higher_post_game_id, higher_post_frame, higher_post_internal_character_id, higher_post_action_state_id, higher_post_position_x, higher_post_position_y, 
         higher_post_facing_direction,higher_post_percent, higher_post_action_state_counter, higher_post_misc_action_state, higher_post_last_ground_id, higher_post_jumps_remaining,
@@ -259,8 +274,13 @@ if __name__ == "__main__":
     if os.environ.get('CALLED_FROM_FLASK') == '1':
         passed_game_id = sys.argv[1]
         df = label_combos_for_model(passed_game_id, engine, query)
-        print(df)
+
+        json_data_for_frontend_visual = transform_to_d3_json(df)
         
+        with open(json_data_filepath, 'w') as f:
+            json.dump(json_data_for_frontend_visual, f)
+
+
     else:
         meta_data_game_ids_query = 'SELECT game_id FROM melee_metadata'
 

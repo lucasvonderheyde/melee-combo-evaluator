@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from database_info import database
 from werkzeug.utils import secure_filename
-import os, subprocess
+import os, subprocess, json
 from flask_cors import CORS
 from sql_models import Metadata, GameInfo, MatchInfo, PlayersInfo, Settings, HigherPortPlayerPostFrames, LowerPortPlayerPostFrames, HigherPortPlayerPreFrames, LowerPortPlayerPreFrames
 
@@ -14,6 +14,7 @@ CORS(app)
 UPLOAD_FOLDER = 'player_uploads/slp_games' 
 ALLOWED_EXTENSIONS = {'slp'}
 temp_slippi_json_folder = 'player_uploads/user_temp_slp_data'
+temp_json_data_for_d3 = 'player_uploads/d3_json_flowchart/json_data_for_frontend_visual.json'
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SQLALCHEMY_DATABASE_URI'] = database
@@ -48,6 +49,12 @@ def upload_file():
             game_id = result.stdout.strip()
 
             subprocess.run(["python3", "get_combos_from_games.py", game_id], check=True)
+            subprocess.run(["python3", "label_combos_for_model.py", game_id], check=True)
+
+            with open(temp_json_data_for_d3, 'r') as file:
+                d3_json_data = json.load(file)
+
+            print('data uploaded')
 
             clear_folder(UPLOAD_FOLDER)
             clear_folder(temp_slippi_json_folder)
@@ -55,7 +62,7 @@ def upload_file():
         except subprocess.CalledProcessError as e:
             return jsonify({"error": "Failed to process file"}), 500
 
-        return jsonify({"message": "File successfully uploaded and processed"}), 200
+        return d3_json_data, 200
     else:
         return jsonify({"error": "File type not allowed"}), 400
 
