@@ -13,6 +13,7 @@ CORS(app)
 
 UPLOAD_FOLDER = 'player_uploads/slp_games' 
 ALLOWED_EXTENSIONS = {'slp'}
+temp_slippi_json_folder = 'player_uploads/user_temp_slp_data'
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SQLALCHEMY_DATABASE_URI'] = database
@@ -47,12 +48,26 @@ def upload_file():
             game_id = result.stdout.strip()
 
             subprocess.run(["python3", "get_combos_from_games.py", game_id], check=True)
+
+            clear_folder(UPLOAD_FOLDER)
+            clear_folder(temp_slippi_json_folder)
+
         except subprocess.CalledProcessError as e:
             return jsonify({"error": "Failed to process file"}), 500
 
         return jsonify({"message": "File successfully uploaded and processed"}), 200
     else:
         return jsonify({"error": "File type not allowed"}), 400
+
+def clear_folder(folder_path):
+    for filename in os.listdir(folder_path):
+        file_path = os.path.join(folder_path, filename)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.remove(file_path)
+                print(f"Deleted file: {file_path}")
+        except Exception as e:
+            print(f"Failed to delete {file_path}. Reason: {e}")
 
 if __name__ == "__main__":
     app.run()
