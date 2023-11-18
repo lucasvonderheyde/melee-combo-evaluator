@@ -1,4 +1,4 @@
-import SlippiUpload from "../../components/FIleUpload"
+import SlippiUpload from "../../components/FileUpload/FIleUpload"
 import "./HomePage.css"
 
 export default function HomePage() {

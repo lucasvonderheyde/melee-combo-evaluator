@@ -244,17 +244,17 @@ def label_combos_for_model(game_id, engine, query):
     return df
 
 
-def transform_to_d3_json(df):
-    d3_data = {'combos': {}}
+# def transform_to_d3_json(df):
+#     d3_data = {'combos': {}}
 
-    for combo_id, combo_group in df.groupby('combo_block_for_model'):
-        nodes = combo_group.to_dict('records')
+#     for combo_id, combo_group in df.groupby('combo_block_for_model'):
+#         nodes = combo_group.to_dict('records')
 
-        links = [{'source': i, 'target': i+1} for i in range(len(nodes)-1)]
+#         links = [{'source': i, 'target': i+1} for i in range(len(nodes)-1)]
 
-        d3_data['combos'][combo_id] = {'nodes': nodes, 'links': links}
+#         d3_data['combos'][combo_id] = {'nodes': nodes, 'links': links}
 
-    return d3_data
+#     return d3_data
 
 
 if __name__ == "__main__":
@@ -275,10 +275,10 @@ if __name__ == "__main__":
         passed_game_id = sys.argv[1]
         df = label_combos_for_model(passed_game_id, engine, query)
 
-        json_data_for_frontend_visual = transform_to_d3_json(df)
-        
+        json_data = df.to_json(orient='records')
+
         with open(json_data_filepath, 'w') as f:
-            json.dump(json_data_for_frontend_visual, f)
+            f.write(json_data)
 
 
     else:

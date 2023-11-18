@@ -15,6 +15,7 @@ UPLOAD_FOLDER = 'player_uploads/slp_games'
 ALLOWED_EXTENSIONS = {'slp'}
 temp_slippi_json_folder = 'player_uploads/user_temp_slp_data'
 temp_json_data_for_d3 = 'player_uploads/d3_json_flowchart/json_data_for_frontend_visual.json'
+previous_json_frontend_data = 'player_uploads/d3_json_flowchart'
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SQLALCHEMY_DATABASE_URI'] = database
@@ -42,6 +43,8 @@ def upload_file():
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
 
+        clear_folder(previous_json_frontend_data)
+
         try:
             subprocess.run(["node", "user_data_utilities/userSlippi.js", file_path], check=True)
 
@@ -62,7 +65,7 @@ def upload_file():
         except subprocess.CalledProcessError as e:
             return jsonify({"error": "Failed to process file"}), 500
 
-        return d3_json_data, 200
+        return jsonify(d3_json_data), 200
     else:
         return jsonify({"error": "File type not allowed"}), 400
 

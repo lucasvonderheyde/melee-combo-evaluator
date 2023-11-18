@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import ComboVisuals from './ComboVisuals'
+import ComboVisuals from '../ComboVisuals/ComboVisuals';
+
 
 const FileUpload = () => {
     const [file, setFile] = useState(null);
@@ -21,7 +22,7 @@ const FileUpload = () => {
                 });
                 if(response.ok) {
                     const data = await response.json();
-                    setCombos(data); 
+                    setCombos(data);
                 } else {
                     console.error('Error in response:', await response.text());
                 }
@@ -35,7 +36,7 @@ const FileUpload = () => {
         <div>
             <input type="file" onChange={handleFileChange} />
             <button onClick={handleFileUpload}>Upload</button>
-            {combos && <ComboVisuals data={combos} />} 
+            {combos && <ComboVisuals combos={combos} />}
         </div>
     );
 }
