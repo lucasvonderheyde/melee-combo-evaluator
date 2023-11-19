@@ -33,3 +33,14 @@
 .combo-block:hover {
     background-color: #f0f0f0; /* Slightly change background color on hover for visual feedback */
 }
+
+.combo-block.expanded {
+    /* Styles for expanded block */
+    position: absolute;
+    z-index: 100;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%; /* Adjust as needed */
+    /* Other styling as needed */
+}

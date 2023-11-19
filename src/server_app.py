@@ -17,6 +17,8 @@ temp_slippi_json_folder = 'player_uploads/user_temp_slp_data'
 temp_json_data_for_d3 = 'player_uploads/d3_json_flowchart/json_data_for_frontend_visual.json'
 previous_json_frontend_data = 'player_uploads/d3_json_flowchart'
 
+csv_path_for_combo_model = 'player_uploads/combo_to_evaluate'
+
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SQLALCHEMY_DATABASE_URI'] = database
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -68,6 +70,27 @@ def upload_file():
         return jsonify(d3_json_data), 200
     else:
         return jsonify({"error": "File type not allowed"}), 400
+    
+@app.route('/api/score-combo', methods=['POST'])
+def get_result_from_model():
+    csv_data = request.data.decode('utf-8')
+
+    os.makedirs(csv_path_for_combo_model, exist_ok=True)
+
+    clear_folder(csv_path_for_combo_model)
+
+    from datetime import datetime
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    combo_csv_filename = f"combo_data_{timestamp}.csv"
+
+    file_path = os.path.join(csv_path_for_combo_model, combo_csv_filename)
+
+    with open(file_path, 'w') as file:
+        file.write(csv_data)
+
+    print(f"CSV data saved to {file_path}")
+
+    return jsonify({'test': "heres the data"}), 200
 
 def clear_folder(folder_path):
     for filename in os.listdir(folder_path):

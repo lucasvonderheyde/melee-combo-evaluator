@@ -4,6 +4,7 @@ import './ComboVisuals.css'
 
 const ComboVisuals = ({ combos }) => {
     const [groupedCombos, setGroupedCombos] = useState({ lowerPortPlayerCombos: {}, higherPortPlayerCombos: {} });
+    const [expandedComboBlock, setExpandedComboBlock] = useState(null)
 
     useEffect(() => {
         if (combos) {
@@ -32,22 +33,41 @@ const ComboVisuals = ({ combos }) => {
         }
     }, [combos]);
 
+    const handleComboBlockClick = (comboBlockId) => {
+        setExpandedComboBlock(expandedComboBlock === comboBlockId ? null : comboBlockId);
+    };
+
     return (
         <div className="combo-visuals-container">
             <div className="character-combos lower-port">
-                <img src='falcoStock.png'/>
+                <img src='falcoStock.png' alt='Falco'/>
                 {Object.entries(groupedCombos.lowerPortPlayerCombos).map(([comboBlock, frames]) => (
-                    <ComboBlock key={`lowerPort-${comboBlock}`} frames={frames} playerport='lowerportplayer' />
+                    <ComboBlock 
+                        key={`lowerPort-${comboBlock}`} 
+                        frames={frames}
+                        comboBlockId={`lowerPort-${comboBlock}`}
+                        expandedComboBlock={expandedComboBlock}
+                        setExpandedComboBlock={handleComboBlockClick} 
+                        playerport='lowerportplayer' 
+                    />
                 ))}
             </div>
             <div className="character-combos higher-port">
-                <img src='foxStock.png'/>
+                <img src='foxStock.png' alt='Fox'/>
                 {Object.entries(groupedCombos.higherPortPlayerCombos).map(([comboBlock, frames]) => (
-                    <ComboBlock key={`higherPort-${comboBlock}`} frames={frames} playerport='higherportplayer' />
+                    <ComboBlock 
+                        key={`higherPort-${comboBlock}`} 
+                        frames={frames}
+                        comboBlockId={`higherPort-${comboBlock}`}
+                        expandedComboBlock={expandedComboBlock}
+                        setExpandedComboBlock={handleComboBlockClick} 
+                        playerport='higherportplayer' 
+                    />
                 ))}
             </div>
         </div>
     );
 };
+
 
 export default ComboVisuals;
