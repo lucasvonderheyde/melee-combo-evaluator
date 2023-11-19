@@ -57,6 +57,7 @@ def label_combos_for_model(game_id, engine, query):
         if last_frame is not None and (current_frame - last_frame > 1):
             current_combo_id += 1
 
+
         # Label based on action_state_id
         if row["lower_post_action_state_id"] not in action_state_id_to_check_getting_hit:#lower port player creating combo
             df.at[index, 'combo_block_for_model'] = current_combo_id 
@@ -133,7 +134,8 @@ def label_combos_for_model(game_id, engine, query):
         # Calculate damage done in the combo for each player
         damage_done_to_higher = end_percent_higher - start_percent_higher
         damage_done_to_lower = end_percent_lower - start_percent_lower
-        
+    
+
         # Store the damage done in the last row of the combo block'
 
         if damage_done_to_higher < 0:
@@ -158,7 +160,7 @@ def label_combos_for_model(game_id, engine, query):
         # Update the previous end percent for the next iteration
         higher_port_previous_end_percent = end_percent_higher
         lower_port_previous_end_percent = end_percent_lower
-
+            
     #if the character creating the model is 0 then we grab the postion of the higher port, if the character creating the combo is 1 then grab the postion of the lower port
 
     for index, row in df.iterrows():
@@ -178,9 +180,6 @@ def label_combos_for_model(game_id, engine, query):
         else:
             df.at[index, 'higher_port_damage_done_with_combo_model_score'] = higher_port_percent_damage_done/100
 
-
-
-
     # Create masks to identify death state blocks
     df['higher_death_state_blocks'] = df['higher_post_action_state_id'].isin(death_action_state_ids)
     df['lower_death_state_blocks'] = df['lower_post_action_state_id'].isin(death_action_state_ids)
@@ -189,18 +188,20 @@ def label_combos_for_model(game_id, engine, query):
     df['higher_block_death_id'] = (~df['higher_death_state_blocks']).cumsum()
     df['lower_block_death_id'] = (~df['lower_death_state_blocks']).cumsum()
 
-    # Get the first index of each death block for higher and lower death states
-    first_higher_death_indices = df[df['higher_death_state_blocks']].groupby('higher_block_death_id').head(1).index
-    first_lower_death_indices = df[df['lower_death_state_blocks']].groupby('lower_block_death_id').head(1).index
+    # Identify the last frame of each death block for higher and lower death states
+    last_higher_death_indices = df[df['higher_death_state_blocks']].groupby('higher_block_death_id').tail(1).index
+    last_lower_death_indices = df[df['lower_death_state_blocks']].groupby('lower_block_death_id').tail(1).index
 
-    # Keep only the first occurrence of each block
-    df = df[(df.index.isin(first_higher_death_indices)) | (~df['higher_death_state_blocks'])]
-    df = df[(df.index.isin(first_lower_death_indices)) | (~df['lower_death_state_blocks'])]
+    # Keep only the last occurrence of each death state block
+    df = df[(df.index.isin(last_higher_death_indices)) | (~df['higher_death_state_blocks'])]
+    df = df[(df.index.isin(last_lower_death_indices)) | (~df['lower_death_state_blocks'])]
 
+    # Drop unused columns
     columns_to_drop = ['higher_death_state_blocks', 'lower_death_state_blocks', 'higher_block_death_id', 'lower_block_death_id']
-
-    # Drop the columns from the DataFrame
     df.drop(columns=columns_to_drop, inplace=True)
+
+# Continue with the rest of your processing logic...
+
 
     last_rows = df.groupby('combo_block_for_model').tail(1)
 
