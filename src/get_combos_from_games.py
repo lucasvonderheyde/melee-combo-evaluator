@@ -242,13 +242,11 @@ def move_combo_data_to_proper_stage(game_id, cursor):
                 higher_port_player_post_frames.game_id = %s
                 AND (
                     higher_port_player_post_frames.action_state_id IN (0, 1, 2, 4, 8, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 227, 228, 239, 240, 241, 242)
-                    OR higher_port_player_post_frames.hitlag_remaining > 0
                 )
                 OR (
                     lower_port_player_post_frames.game_id = %s
                     AND (
                         lower_port_player_post_frames.action_state_id IN (0, 1, 2, 4, 8, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 227, 228, 239, 240, 241, 242)
-                        OR lower_port_player_post_frames.hitlag_remaining > 0
                     )
                 )
         '''

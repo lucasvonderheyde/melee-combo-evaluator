@@ -275,6 +275,13 @@ if __name__ == "__main__":
         passed_game_id = sys.argv[1]
         df = label_combos_for_model(passed_game_id, engine, query)
 
+        df_html = df.copy()
+
+        html_data_filepath = 'player_uploads/test.html'  # Enure this is a valid file path
+
+        with open(html_data_filepath, 'w') as f:
+            f.write(df_html.to_html())
+
         json_data = df.to_json(orient='records')
 
         with open(json_data_filepath, 'w') as f:
