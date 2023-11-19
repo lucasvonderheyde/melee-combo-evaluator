@@ -5,9 +5,31 @@
 }
 
 .character-combos {
-    width: 45%;  /* Adjust the width as needed */
-    margin: 0 10px; /* Spacing between columns */
-    border: 1px solid #ddd; /* Optional border for visual separation */
+    width: 45%;
+    margin: 0 10px;
+    border: 1px solid #ddd;
     padding: 10px;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center-align the character images and combo blocks */
+}
+
+.character-combos img {
+    max-width: 100px; /* Adjust the size of the character images as needed */
+    margin-bottom: 20px; /* Space between the image and the first combo block */
+}
+
+.combo-block {
+    border: 1px solid #bbb; /* Border for each combo block */
+    margin-bottom: 10px; /* Space between each combo block */
+    padding: 10px;
+    width: 90%; /* Adjust the width as needed, relative to the character-combos container */
+    box-sizing: border-box;
+    background-color: #f8f8f8; /* Optional background color */
+    cursor: pointer; /* Change cursor on hover */
+}
+
+.combo-block:hover {
+    background-color: #f0f0f0; /* Slightly change background color on hover for visual feedback */
 }

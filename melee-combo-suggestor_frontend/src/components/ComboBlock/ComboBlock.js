@@ -2,6 +2,8 @@ import React from 'react';
 
 const ComboBlock = ({ frames, playerport }) => {
 
+    const deathActionStateIds = [0, 1, 2, 4, 8]
+
     const handleClick = () => {
         console.log('ComboBlock clicked:', frames);
     };
@@ -19,6 +21,12 @@ const ComboBlock = ({ frames, playerport }) => {
             {isLowerPlayer 
             ? <p>Damage Done: {frames[frames.length - 1].lower_port_damage_done_with_combo}</p>
             : <p>Damage Done: {frames[frames.length - 1].higher_port_damage_done_with_combo}</p>}
+            {isLowerPlayer && frames[frames.length - 1].higher_post_action_state_id in deathActionStateIds
+            ? <p>Stock Taken</p>
+            : null}
+            {!isLowerPlayer && frames[frames.length - 1].lower_post_action_state_id in deathActionStateIds
+            ? <p>Stock Taken</p>
+            : null}
         </div>
     );
 };
