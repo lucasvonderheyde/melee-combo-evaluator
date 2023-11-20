@@ -5,6 +5,7 @@ sys.path.append('..')
 from src.database_info import database
 import matplotlib.pyplot as plt
 import seaborn as sns
+from constants import labels
 
 pd.set_option('display.max_colwidth', None)
 pd.set_option('display.width', 1000)
@@ -275,6 +276,8 @@ if __name__ == "__main__":
     if os.environ.get('CALLED_FROM_FLASK') == '1':
         passed_game_id = sys.argv[1]
         df = label_combos_for_model(passed_game_id, engine, query)
+
+        df = df.drop(columns=labels)
 
         df_html = df.copy()
 

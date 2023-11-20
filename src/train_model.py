@@ -7,6 +7,7 @@ from sklearn.model_selection import train_test_split
 import pandas as pd
 import torch.optim as optim
 import pdb
+from constants import features, labels
 
 def custom_loss(outputs, targets):
 
@@ -15,34 +16,12 @@ def custom_loss(outputs, targets):
     masked_loss = mse_loss * mask
     return masked_loss.mean()
 
-data = pd.read_csv('../Jupyter/falco_vs_fox_csv_battlefield')
+csv_file_location = '../Jupyter/falco_vs_fox_csv_battlefield'
+
+data = pd.read_csv(csv_file_location)
 data.fillna(-999, inplace=True)
 
 data = data.astype({col: 'int' for col in data.select_dtypes(['bool']).columns})
-
-features = [
-    'higher_post_frame', 'higher_post_internal_character_id', 'higher_post_action_state_id',
-    'higher_post_position_x', 'higher_post_position_y', 'higher_post_facing_direction',
-    'higher_post_percent', 'higher_post_action_state_counter', 'higher_post_misc_action_state',
-    'higher_post_last_ground_id', 'higher_post_jumps_remaining','higher_post_l_cancel_status', 
-    'higher_post_hitlag_remaining', 'higher_post_animation_index', 'higher_post_self_induced_speeds_air_x', 
-    'higher_post_self_induced_speeds_y', 'higher_post_self_induced_speeds_attack_x', 'higher_post_self_induced_speeds_attack_y', 
-    'higher_post_self_induced_speeds_ground_x',  
-    'lower_post_frame', 'lower_post_internal_character_id', 'lower_post_action_state_id', 
-    'lower_post_position_x', 'lower_post_position_y', 'lower_post_facing_direction',
-    'lower_post_percent', 'lower_post_action_state_counter', 'lower_post_misc_action_state', 
-    'lower_post_last_ground_id', 'lower_post_jumps_remaining',
-    'lower_post_l_cancel_status', 'lower_post_hitlag_remaining', 'lower_post_animation_index', 
-    'lower_post_self_induced_speeds_air_x', 'lower_post_self_induced_speeds_y', 'lower_post_self_induced_speeds_attack_x',
-    'lower_post_self_induced_speeds_attack_y', 'lower_post_self_induced_speeds_ground_x', 
-    'combo_block_for_model', 'attack_state_to_hit_in_combo_for_model', 'character_creating_combo_for_model', 'lower_port_l_cancel_for_model',
-    'higher_port_l_cancel_for_model', 'lower_port_damage_done_with_combo', 'higher_port_damage_done_with_combo'
-]
-
-labels = [
-    'lower_port_damage_done_with_combo_model_score', 'higher_port_damage_done_with_combo_model_score', 'higher_port_x_position_model_score', 
-    'higher_port_y_position_model_score','lower_port_x_position_model_score', 'lower_port_y_position_model_score'
-]
 
 combo_features_and_labels = []
 
@@ -221,4 +200,6 @@ with torch.no_grad():
     avg_test_loss = test_loss / len(test_loader)
     print(f'Test Loss: {avg_test_loss:.4f}')
 
+
+# torch.save(model.state_dict(), './model_weights.pth')
 

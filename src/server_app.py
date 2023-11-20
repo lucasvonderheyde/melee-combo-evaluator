@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 import os, subprocess, json
 from flask_cors import CORS
 from sql_models import Metadata, GameInfo, MatchInfo, PlayersInfo, Settings, HigherPortPlayerPostFrames, LowerPortPlayerPostFrames, HigherPortPlayerPreFrames, LowerPortPlayerPreFrames
-
+from constants import features, labels
 
 
 app = Flask(__name__)
@@ -79,9 +79,7 @@ def get_result_from_model():
 
     clear_folder(csv_path_for_combo_model)
 
-    from datetime import datetime
-    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-    combo_csv_filename = f"combo_data_{timestamp}.csv"
+    combo_csv_filename = 'user_combo_data.csv'
 
     file_path = os.path.join(csv_path_for_combo_model, combo_csv_filename)
 
