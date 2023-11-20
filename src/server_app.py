@@ -6,10 +6,17 @@ import os, subprocess, json
 from flask_cors import CORS
 from sql_models import Metadata, GameInfo, MatchInfo, PlayersInfo, Settings, HigherPortPlayerPostFrames, LowerPortPlayerPostFrames, HigherPortPlayerPreFrames, LowerPortPlayerPreFrames
 from constants import features, labels
+from user_data_utilities.user_model_data_prep import prep_user_model_data
+from combo_evaluator_model import BidirectionalComboLSTM
+import torch
 
 
 app = Flask(__name__)
 CORS(app)
+
+model = BidirectionalComboLSTM()
+model.load_state_dict(torch.load('model_weights.pth', map_location=torch.device('cpu')))
+model.eval()
 
 UPLOAD_FOLDER = 'player_uploads/slp_games' 
 ALLOWED_EXTENSIONS = {'slp'}
@@ -81,14 +88,28 @@ def get_result_from_model():
 
     combo_csv_filename = 'user_combo_data.csv'
 
-    file_path = os.path.join(csv_path_for_combo_model, combo_csv_filename)
+    combo_file_path = os.path.join(csv_path_for_combo_model, combo_csv_filename)
 
-    with open(file_path, 'w') as file:
+    with open(combo_file_path, 'w') as file:
         file.write(csv_data)
 
-    print(f"CSV data saved to {file_path}")
+    print(f"CSV data saved to {combo_file_path}")
 
-    return jsonify({'test': "heres the data"}), 200
+    input_tensor = prep_user_model_data(combo_file_path, features)
+
+    print("Shape after unsqueeze:", input_tensor.shape)
+    
+    with torch.no_grad():
+        prediction = model(input_tensor)
+    
+    prediction_list = prediction.tolist()
+    
+    if len(prediction_list) == 1:
+        prediction_list = prediction_list[0]
+
+    score_pairs = {label: score for label, score in zip(labels, prediction_list)}
+
+    return jsonify(score_pairs), 200
 
 def clear_folder(folder_path):
     for filename in os.listdir(folder_path):

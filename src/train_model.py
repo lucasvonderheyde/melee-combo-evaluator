@@ -201,5 +201,5 @@ with torch.no_grad():
     print(f'Test Loss: {avg_test_loss:.4f}')
 
 
-# torch.save(model.state_dict(), './model_weights.pth')
+torch.save(model.state_dict(), './model_weights.pth')
 
