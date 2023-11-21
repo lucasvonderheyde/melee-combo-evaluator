@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import Papa from 'papaparse';
+import moveImages from '../../moveImages'
+import './ComboBlock.css'
 
 const ComboBlock = ({ frames, setExpandedComboBlock, expandedComboBlock, playerport }) => {
     const deathActionStateIds = [0, 1, 2, 4, 8];
@@ -18,8 +20,22 @@ const ComboBlock = ({ frames, setExpandedComboBlock, expandedComboBlock, playerp
     const renderActionStates = () => {
         return frames.map((frame, index) => {
             const actionState = frame.attack_state_to_hit_in_combo_for_model;
+            const character = isLowerPlayer ? 'falco' : 'fox';
+            
+            // Only proceed if actionState is not null
             if (actionState !== null && actionState !== undefined) {
-                return <p key={index}>Action State to Hit: {actionState}</p>;
+                const imagePath = moveImages[character][actionState] || `Action State ${actionState} image not available`;
+    
+                if (typeof imagePath === 'string') {
+                    return (
+                        <div key={index}>
+                            <p>Action State to Hit: {actionState}</p>
+                            <img src={imagePath} alt={`Move ${actionState}`} />
+                        </div>
+                    );
+                } else {
+                    return <p key={index}>Action State to Hit: {actionState} (image not available)</p>;
+                }
             }
             return null;
         });
@@ -45,9 +61,9 @@ const ComboBlock = ({ frames, setExpandedComboBlock, expandedComboBlock, playerp
             console.error('Error scoring combo:', error);
         }
     };
-
+    
     const renderScores = () => {
-        if (!score) return null;
+        if (!score || expandedComboBlock !== comboBlockId) return null;  // Only show scores for the expanded block
 
         return (
             <div>

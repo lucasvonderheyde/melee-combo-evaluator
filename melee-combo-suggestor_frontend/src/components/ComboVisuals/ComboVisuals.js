@@ -42,14 +42,14 @@ const ComboVisuals = ({ combos }) => {
             <div className="character-combos lower-port">
                 <img src='falcoStock.png' alt='Falco'/>
                 {Object.entries(groupedCombos.lowerPortPlayerCombos).map(([comboBlock, frames]) => (
-                    <ComboBlock 
-                        key={`lowerPort-${comboBlock}`} 
-                        frames={frames}
-                        comboBlockId={`lowerPort-${comboBlock}`}
-                        expandedComboBlock={expandedComboBlock}
-                        setExpandedComboBlock={handleComboBlockClick} 
-                        playerport='lowerportplayer' 
-                    />
+                <ComboBlock 
+                    key={`lowerPort-${comboBlock}`} 
+                    frames={frames}
+                    comboBlockId={comboBlock}  // Pass the comboBlockId
+                    expandedComboBlock={expandedComboBlock}
+                    setExpandedComboBlock={handleComboBlockClick} 
+                    playerport='lowerportplayer' 
+                />
                 ))}
             </div>
             <div className="character-combos higher-port">
