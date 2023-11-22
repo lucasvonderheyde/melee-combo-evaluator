@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import create_engine
 from database_info import database
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 Base = declarative_base()
@@ -24,6 +25,7 @@ class Metadata(Base):
     lower_port_player_post_frames = relationship("LowerPortPlayerPostFrames", back_populates="metadata_relationship")
     higher_port_player_pre_frames = relationship("HigherPortPlayerPreFrames", back_populates="metadata_relationship")
     lower_port_player_pre_frames = relationship("LowerPortPlayerPreFrames", back_populates="metadata_relationship")
+    user_id = Column(Integer, ForeignKey('users.id'))
 
 class GameInfo(Base):
     __tablename__ = 'game_info'
@@ -249,6 +251,25 @@ class LowerPortPlayerPreFrames(Base):
     metadata_relationship = relationship("Metadata", back_populates="lower_port_player_pre_frames")
     __table_args__ = (UniqueConstraint('game_id', 'frame', name='lower_port_pre_frames_to_metadata'),)
 
+class User(Base):
+    __tablename__ = 'users'
+
+    id = Column(Integer, primary_key=True)
+    username = Column(String(80), unique=True, nullable=False)
+    email = Column(String(120), unique=True, nullable=False)
+    password_hash = Column(String(128))
+    profile_picture = Column(String)
+
+    uploaded_games = relationship('Metadata', backref='user', lazy=True)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+
 engine = create_engine(database)
 
 Base.metadata.create_all(engine)
+
