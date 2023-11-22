@@ -1,14 +1,14 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
-from database_info import database
+from database_info import database, secret_key
 from werkzeug.utils import secure_filename
 import os, subprocess, json
 from flask_cors import CORS
-from sql_models import Metadata, GameInfo, MatchInfo, PlayersInfo, Settings, HigherPortPlayerPostFrames, LowerPortPlayerPostFrames, HigherPortPlayerPreFrames, LowerPortPlayerPreFrames
 from constants import features, labels
 from user_data_utilities.user_model_data_prep import prep_user_model_data
 from combo_evaluator_model import BidirectionalComboLSTM
 import torch
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 app = Flask(__name__)
@@ -26,6 +26,7 @@ previous_json_frontend_data = 'player_uploads/d3_json_flowchart'
 
 csv_path_for_combo_model = 'player_uploads/combo_to_evaluate'
 
+app.config['SECRET_KEY'] = secret_key
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SQLALCHEMY_DATABASE_URI'] = database
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -110,6 +111,49 @@ def get_result_from_model():
     score_pairs = {label: score for label, score in zip(labels, prediction_list)}
 
     return jsonify(score_pairs), 200
+
+@app.route('/register', methods=['POST'])
+def register():
+    from sql_models import User  # Local import
+
+    data = request.get_json()
+    username = data.get('username')
+    email = data.get('email')
+    password = data.get('password')
+
+    # Check if user already exists
+    existing_user = combo_db.session.query(User).filter_by(username=username).first()
+    if existing_user:
+        return jsonify({"message": "Username already taken"}), 400
+
+    hashed_password = generate_password_hash(password)
+    new_user = User(username=username, email=email, password_hash=hashed_password)
+
+    combo_db.session.add(new_user)
+    combo_db.session.commit()
+
+    return jsonify({"message": "User registered successfully"}), 201
+
+@app.route('/login', methods=['POST'])
+def login():
+    from sql_models import User  # Local import
+
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+
+    user = combo_db.session.query(User).filter_by(username=username).first()
+
+    if user and check_password_hash(user.password_hash, password):
+        session['user_id'] = user.id
+        return jsonify({"message": "Login successful"}), 200
+
+    return jsonify({"message": "Invalid username or password"}), 401
+
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    return jsonify({"message": "Logged out"}), 200
 
 def clear_folder(folder_path):
     for filename in os.listdir(folder_path):
