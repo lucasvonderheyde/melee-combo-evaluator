@@ -1,0 +1,40 @@
+nav {
+    background-color: #333;
+    padding: 0.75rem 0; /* Increase padding (vertical) for the navbar */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    font-size: 1.5rem; /* Increase font size by 50% */
+    line-height: 1.5; /* Increase line height for better spacing */
+}
+
+nav ul {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav li {
+    margin: 0;
+}
+
+nav a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 1.65rem; /* Increase font size by 50% (original: 1.1rem) */
+    padding: 0.25rem 0.5rem;
+    transition: background-color 0.3s;
+}
+
+/* Style the active link */
+nav a.active {
+    background-color: #333;
+    color: #fff;
+    border-radius: 5px;
+}
+
+nav a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}

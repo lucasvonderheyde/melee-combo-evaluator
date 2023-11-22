@@ -7,6 +7,8 @@ falco_vs_fox_csv_battlefield
 node_modules
 player_uploads
 Jupyter
+test
+migrations
 
 # dependencies
 melee_combo_suggestpr_frontend/node_modules

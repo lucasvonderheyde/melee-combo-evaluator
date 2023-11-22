@@ -9,6 +9,7 @@ import {
 import HomePage from './Pages/HomePage/HomePage';
 import ErrorPage from './Pages/ErrorPage/ErrorPage';
 import Evaluator from './Pages/Evaluator/Evaluator';
+import LoginPage from './Pages/LoginPage/LoginPage';
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,11 @@ const router = createBrowserRouter([
   {
     path: "/evaluator",
     element: <Evaluator />, 
+    errorElement: <ErrorPage />
+  },
+  {
+    path: "/login",
+    element: <LoginPage />, 
     errorElement: <ErrorPage />
   }
 ]);

@@ -44,7 +44,7 @@ const ComboBlock = ({ frames, setExpandedComboBlock, expandedComboBlock, playerp
     const handleComboAiClick = async () => {
         const csv = Papa.unparse(frames);
         try {
-            const response = await fetch('http://127.0.0.1:5000/api/score-combo', {
+            const response = await fetch('http://127.0.0.1:5555/api/score-combo', {
                 method: 'POST',
                 headers: { 'Content-Type': 'text/csv' },
                 body: csv
