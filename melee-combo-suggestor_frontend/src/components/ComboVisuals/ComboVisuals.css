@@ -9,7 +9,7 @@
     width: 100%;
     padding: 20px;
     box-sizing: border-box;
-    overflow-y: auto; /* Allows for scrolling within the container */
+    /* Removed overflow-y from here */
 }
 
 .character-combos {
@@ -24,6 +24,8 @@
     margin: 0 5px; /* Adjust margin as needed for spacing */
     min-width: 500px; /* Or any other value that suits your design */
     width: 45%; /* Adjust width as needed */
+    overflow-y: auto; /* Makes this column individually scrollable */
+    max-height: calc(100vh - 60px); /* Maximum height to prevent overflow into navbar */
 }
 
 .combo-block {
