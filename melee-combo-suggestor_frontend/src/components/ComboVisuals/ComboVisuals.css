@@ -1,46 +1,44 @@
+/* ComboVisuals.css */
+/* Import the Orbitron font */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
 .combo-visuals-container {
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    justify-content: space-evenly; /* This ensures even spacing around items */
+    height: calc(100vh - 60px); /* Adjust based on your navbar height */
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto; /* Allows for scrolling within the container */
 }
 
 .character-combos {
-    width: 45%;
-    margin: 0 10px;
-    border: 1px solid #ddd;
+    flex-grow: 1; /* Grow to use available space */
     padding: 10px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center-align the character images and combo blocks */
-}
-
-.character-combos img {
-    max-width: 100px; /* Adjust the size of the character images as needed */
-    margin-bottom: 20px; /* Space between the image and the first combo block */
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white background */
+    backdrop-filter: blur(10px); /* Optional: Apply a blur to the content behind the blocks */
+    margin: 0 5px; /* Adjust margin as needed for spacing */
+    min-width: 500px; /* Or any other value that suits your design */
+    width: 45%; /* Adjust width as needed */
 }
 
 .combo-block {
-    border: 1px solid #bbb; /* Border for each combo block */
-    margin-bottom: 10px; /* Space between each combo block */
+    width: 100%; /* Make the combo blocks fill the container */
+    margin-bottom: 10px;
     padding: 10px;
-    width: 90%; /* Adjust the width as needed, relative to the character-combos container */
-    box-sizing: border-box;
-    background-color: #f8f8f8; /* Optional background color */
-    cursor: pointer; /* Change cursor on hover */
+    background-color: rgba(255, 255, 255, 0.3); /* More transparency for combo blocks */
+    border: 1px solid #bbb;
+    border-radius: 8px; /* Rounded corners for a more modern look */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    cursor: pointer;
+    transition: all 0.2s ease-in-out; /* Smooth transition for interactions */
 }
 
 .combo-block:hover {
-    background-color: #f0f0f0; /* Slightly change background color on hover for visual feedback */
-}
-
-.combo-block.expanded {
-    /* Styles for expanded block */
-    position: absolute;
-    z-index: 100;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 80%; /* Adjust as needed */
-    /* Other styling as needed */
+    background-color: rgba(255, 255, 255, 0.4); /* Slightly less transparent on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Larger shadow on hover */
 }

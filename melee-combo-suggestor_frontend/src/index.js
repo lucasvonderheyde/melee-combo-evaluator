@@ -10,10 +10,17 @@ import HomePage from './Pages/HomePage/HomePage';
 import ErrorPage from './Pages/ErrorPage/ErrorPage';
 import Evaluator from './Pages/Evaluator/Evaluator';
 import LoginPage from './Pages/LoginPage/LoginPage';
+import { AuthProvider } from './AuthContext';
+import LandingPage from './Pages/LandingPage/LandingPage';
 
 const router = createBrowserRouter([
   {
     path: "/",
+    element: <LandingPage />, 
+    errorElement: <ErrorPage />
+  },
+  {
+    path: "/homepage",
     element: <HomePage />, 
     errorElement: <ErrorPage />
   },
@@ -32,7 +39,12 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-      <RouterProvider router={router} />
+    <AuthProvider>
+      <div className="app-background">
+        <div className="app-overlay"></div>
+        <RouterProvider router={router} />
+      </div>
+    </AuthProvider>
   </React.StrictMode>
 );
 

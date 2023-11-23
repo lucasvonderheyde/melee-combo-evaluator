@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+/* LandingPage.css */
+.landing-container {
+    height: 100vh;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative; /* For z-index stacking context */
+    font-family: 'Orbitron', sans-serif; /* Futuristic font */
+}
+
+.centered-content button {
+    padding: 15px 40px;
+    font-size: 1.5rem;
+    font-family: inherit; /* Ensures the button inherits Orbitron font */
+    cursor: pointer;
+    border: none;
+    background-color: #5c5c5c; /* A futuristic grey color */
+    color: #ffffff; /* White color for the text */
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    outline: none;
+    z-index: 2; /* Ensures button is above any other content */
+}
+
+.centered-content button:hover {
+    background-color: #4a4a4a; /* A slightly darker grey on hover */
+    transform: scale(1.05); /* Scales the button up slightly */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.centered-content button:active {
+    background-color: #383838; /* Even darker grey when the button is clicked */
+    transform: scale(0.95); /* Scales the button down slightly */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Optional: Add a subtle animation to the button to draw attention */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.centered-content button {
+    animation: pulse 2s infinite;
+}

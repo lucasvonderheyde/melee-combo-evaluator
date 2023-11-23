@@ -1,0 +1,44 @@
+/* Import the Orbitron font */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+/* HomePage.css */
+.home-container {
+    height: 100vh;
+    background-size: cover;
+    position: relative;
+    font-family: 'Orbitron', sans-serif; /* Consistent font family */
+    color: #000; /* Set text color to dark for better contrast */
+}
+
+/* Use a semi-transparent overlay for better text readability if needed */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.1); /* Light overlay for text readability */
+    z-index: 1; /* Below the text */
+}
+
+.content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the content */
+    text-align: center; /* Center the text within the content div */
+    z-index: 2; /* Above the overlay */
+}
+
+.welcome-message {
+    font-size: 3rem; /* Larger font size for main message */
+    color: #1E90FF; /* Pleasing blue color consistent with the active state in the navbar */
+    margin: 0; /* Reset default margin */
+    padding: 0; /* Reset default padding */
+}
+
+.user-greeting {
+    font-size: 1.5rem; /* Smaller font size for the user greeting */
+    color: #000; /* Dark color for contrast */
+    margin-top: 1rem; /* Space above the user greeting */
+}
