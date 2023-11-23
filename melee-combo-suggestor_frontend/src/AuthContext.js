@@ -19,14 +19,14 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = (userData) => {
-        console.log("Logged in user data:", userData); // Log to check structure
+        console.log("Logged in user data:", userData); 
         localStorage.setItem('user', JSON.stringify(userData));
         setUser(userData);
     };
 
     const logout = () => {
-        localStorage.removeItem('user');
-        setUser(null);
+        localStorage.removeItem('user'); 
+        setUser(null); 
     };
 
     return (

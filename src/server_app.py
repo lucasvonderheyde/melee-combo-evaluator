@@ -119,7 +119,7 @@ def register():
     data = request.get_json()
     username = data.get('username')
     email = data.get('email')
-    password = data.get('password')
+    password = data.get('password') 
 
     # Check if user already exists
     existing_user = combo_db.session.query(User).filter_by(username=username).first()
@@ -156,10 +156,11 @@ def login():
 
     return jsonify({"message": "Invalid username or password"}), 401
 
-@app.route('/logout')
+@app.route('/logout', methods=['POST'])
 def logout():
-    session.pop('user_id', None)
+    session.pop('user_id', None) 
     return jsonify({"message": "Logged out"}), 200
+
 
 def clear_folder(folder_path):
     for filename in os.listdir(folder_path):

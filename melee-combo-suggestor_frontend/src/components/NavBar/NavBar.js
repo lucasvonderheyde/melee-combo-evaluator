@@ -1,14 +1,29 @@
-import { NavLink } from "react-router-dom";
-import "./NavBar.css";
+import React, { useContext } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { AuthContext } from '../../AuthContext';
+import './NavBar.css'; 
 
-export default function Navbar() {
+const NavBar = () => {
+    const { user } = useContext(AuthContext);
+    const location = useLocation();
+
+    const isActive = (path) => location.pathname === path;
+
     return (
         <nav>
             <ul>
-                <li><NavLink exact to="/homepage" activeClassName="active">Home</NavLink></li>
-                <li><NavLink to="/evaluator" activeClassName="active">Evaluator</NavLink></li>
-                <li><NavLink to="/login" activeClassName="active">Login</NavLink></li>
+                <li>
+                    <Link to="/homepage" className={isActive('/homepage') ? 'active' : ''}>Home</Link>
+                </li>
+                <li>
+                    <Link to="/evaluator" className={isActive('/evaluator') ? 'active' : ''}>Evaluator</Link>
+                </li>
+                {user 
+                    ? <li><Link to="/login" className={isActive('/login') ? 'active' : ''}>Profile</Link></li> 
+                    : <li><Link to="/login" className={isActive('/login') ? 'active' : ''}>Login</Link></li>}
             </ul>
         </nav>
     );
-}
+};
+
+export default NavBar;

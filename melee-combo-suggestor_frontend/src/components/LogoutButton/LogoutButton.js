@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import axios from 'axios';
-import './LogoutButton.css'; // Import the CSS here
+import { AuthContext } from '../../AuthContext'; 
+import './LogoutButton.css'; 
 
 const LogoutButton = () => {
+    const { logout } = useContext(AuthContext); 
+
     const handleLogout = async () => {
         try {
             await axios.post('http://localhost:5000/logout');
-            // Handle successful logout (e.g., update state, redirect)
+            logout(); 
         } catch (error) {
-            // Handle error
+            console.error('Logout failed:', error);
         }
     };
 

@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import NavBar from '../../components/NavBar/NavBar';
 import { AuthContext } from '../../AuthContext';
+import LogoutButton from '../../components/LogoutButton/LogoutButton';
 
 const ProfilePage = () => {
     const { user } = useContext(AuthContext);
@@ -17,6 +18,7 @@ const ProfilePage = () => {
                     </div>
                 )}
             </div>
+            <LogoutButton />
         </div>
     );
 };
