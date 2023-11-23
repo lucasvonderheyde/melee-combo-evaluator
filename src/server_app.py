@@ -12,7 +12,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 model = BidirectionalComboLSTM()
 model.load_state_dict(torch.load('model_weights.pth', map_location=torch.device('cpu')))
@@ -149,7 +149,6 @@ def login():
             "id": user.id,
             "username": user.username,
             "email": user.email
-            # Add other fields as needed, excluding sensitive data
         }
         session['user_id'] = user.id
         return jsonify({"message": "Login successful", "user": user_data}), 200
