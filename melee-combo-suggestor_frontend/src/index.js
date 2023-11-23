@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
@@ -10,8 +10,15 @@ import HomePage from './Pages/HomePage/HomePage';
 import ErrorPage from './Pages/ErrorPage/ErrorPage';
 import Evaluator from './Pages/Evaluator/Evaluator';
 import LoginPage from './Pages/LoginPage/LoginPage';
-import { AuthProvider } from './AuthContext';
+import { AuthContext, AuthProvider } from './AuthContext';
 import LandingPage from './Pages/LandingPage/LandingPage';
+import ProfilePage from './Pages/ProfilePage/ProfilePage';
+
+const ConditionalLoginOrProfile = () => {
+  const { user } = useContext(AuthContext);
+
+  return user ? <ProfilePage /> : <LoginPage />;
+};
 
 const router = createBrowserRouter([
   {
@@ -31,9 +38,10 @@ const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <LoginPage />, 
+    element: <ConditionalLoginOrProfile />,
     errorElement: <ErrorPage />
-  }
+}
+  
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
