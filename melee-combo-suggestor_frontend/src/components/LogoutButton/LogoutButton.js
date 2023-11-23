@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import './LogoutButton.css'; // Import the CSS here
 
 const LogoutButton = () => {
     const handleLogout = async () => {
@@ -11,7 +12,7 @@ const LogoutButton = () => {
         }
     };
 
-    return <button onClick={handleLogout}>Logout</button>;
+    return <button className="logout-button" onClick={handleLogout}>Logout</button>;
 };
 
 export default LogoutButton;

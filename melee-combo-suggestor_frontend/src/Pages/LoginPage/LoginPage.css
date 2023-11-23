@@ -1,0 +1,70 @@
+/* LoginPage.css */
+.login-page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    position: relative; /* Added for overlay positioning */
+}
+
+.login-register-buttons {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px; /* Space between buttons */
+}
+
+.login-register-buttons button {
+    /* Common styles for both buttons */
+    padding: 10px 20px;
+    margin: 5px;
+    background-color: #f8f9fa; /* Light grey background */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login-register-buttons button.active {
+    background-color: #e9ecef; /* Slightly darker grey for active button */
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px; /* Space between form elements */
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+    backdrop-filter: blur(10px); /* Blur effect for background content */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.form-group input {
+    width: calc(100% - 20px); /* Full width minus padding */
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.submit-button {
+    width: calc(100% - 20px); /* Full width minus padding */
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    background-color: #1E90FF;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: #0B5ED7;
+}
+
+.login-message {
+    color: #D8000C;
+    margin-top: 10px;
+}

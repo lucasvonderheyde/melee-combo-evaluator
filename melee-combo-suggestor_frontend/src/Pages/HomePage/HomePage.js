@@ -5,7 +5,7 @@ import { AuthContext } from '../../AuthContext';
 
 export default function HomePage() {
     const { user } = useContext(AuthContext);
-
+    console.log("User in HomePage:", user)
     return (
         <div className="home-container">
             <NavBar />

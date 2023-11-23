@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import axios from 'axios'; // Import axios here
+import React, { useState, useContext } from 'react';
+import axios from 'axios';
+import { AuthContext } from '../../AuthContext';
 import Navbar from '../../components/NavBar/NavBar';
-import LogoutButton from '../../components/LogoutButton/LogoutButton';
 import './LoginPage.css';
 
 function LoginPage() {
@@ -11,17 +11,20 @@ function LoginPage() {
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
 
+    const { login } = useContext(AuthContext);
+
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
             const response = await axios.post('http://127.0.0.1:5555/login', { username, password });
-            localStorage.setItem('userId', response.data.userId);
+            console.log("Full Login response:", response); 
+            login(response.data.user); // Pass the entire user object
             setMessage(response.data.message);
-        
         } catch (error) {
             setMessage(error.response.data.message || 'Login failed');
         }
     };
+    
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -37,8 +40,16 @@ function LoginPage() {
         <div className="login-page-container">
             <Navbar />
             <div className="login-register-buttons">
-                <button onClick={() => setIsLogin(true)}>Log In</button>
-                <button onClick={() => setIsLogin(false)}>Register</button>
+                <button 
+                    onClick={() => setIsLogin(true)}
+                    className={isLogin ? 'active' : ''}>
+                    Log In
+                </button>
+                <button 
+                    onClick={() => setIsLogin(false)}
+                    className={!isLogin ? 'active' : ''}>
+                    Register
+                </button>
             </div>
 
             <form className="login-form" onSubmit={isLogin ? handleLogin : handleRegister}>
@@ -72,12 +83,11 @@ function LoginPage() {
                     />
                 </div>
                 <button type="submit" className="submit-button">
-                    {isLogin ? 'Log In' : 'Register'}
+                    {isLogin ? 'Enter' : 'Start Evaluating'}
                 </button>
             </form>
 
             {message && <p className="login-message">{message}</p>}
-            <LogoutButton />
         </div>
     );
 }

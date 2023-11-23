@@ -136,7 +136,7 @@ def register():
 
 @app.route('/login', methods=['POST'])
 def login():
-    from sql_models import User  # Local import
+    from sql_models import User  # Local import of User
 
     data = request.get_json()
     username = data.get('username')
@@ -144,9 +144,15 @@ def login():
 
     user = combo_db.session.query(User).filter_by(username=username).first()
 
-    if user and check_password_hash(user.password_hash, password):
+    if user and user.check_password(password):
+        user_data = {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email
+            # Add other fields as needed, excluding sensitive data
+        }
         session['user_id'] = user.id
-        return jsonify({"message": "Login successful"}), 200
+        return jsonify({"message": "Login successful", "user": user_data}), 200
 
     return jsonify({"message": "Invalid username or password"}), 401
 
