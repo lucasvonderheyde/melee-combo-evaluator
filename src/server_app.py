@@ -11,6 +11,7 @@ import torch
 from werkzeug.security import generate_password_hash, check_password_hash
 from post_slippi_data_to_db import main
 
+test_secret_key = os.urandom(24)
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://localhost:3000"}})
@@ -27,7 +28,7 @@ previous_json_frontend_data = 'player_uploads/d3_json_flowchart'
 
 csv_path_for_combo_model = 'player_uploads/combo_to_evaluate'
 
-app.config['SECRET_KEY'] = secret_key
+app.config['SECRET_KEY'] = test_secret_key
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SQLALCHEMY_DATABASE_URI'] = database
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -37,10 +38,6 @@ combo_db = SQLAlchemy(app)
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-@app.route("/")
-def home():
-    return '<h1>test the flask server</h1>', 200
 
 @app.route('/players-uploads', methods=['POST'])
 def upload_file():
@@ -55,13 +52,14 @@ def upload_file():
         file.save(file_path)
 
         clear_folder(previous_json_frontend_data)
-        user_id = session.get('user_id')
-        print('this is the user', user_id)
+        
+        user_id = request.form.get('userId')
+        print('Received user ID:', user_id)
 
         try:
             subprocess.run(["node", "user_data_utilities/userSlippi.js", file_path], check=True)
 
-            game_id = main(temp_slippi_json_folder, user_id) 
+            game_id = main(temp_slippi_json_folder, user_id)  # Pass user_id to main
 
             subprocess.run(["python3", "get_combos_from_games.py", game_id], check=True)
             subprocess.run(["python3", "label_combos_for_model.py", game_id], check=True)
@@ -69,7 +67,7 @@ def upload_file():
             with open(temp_json_data_for_d3, 'r') as file:
                 d3_json_data = json.load(file)
 
-            print('data uploaded')
+            print('Data uploaded')
 
             clear_folder(UPLOAD_FOLDER)
             clear_folder(temp_slippi_json_folder)
@@ -80,6 +78,7 @@ def upload_file():
         return jsonify(d3_json_data), 200
     else:
         return jsonify({"error": "File type not allowed"}), 400
+
     
 @app.route('/api/score-combo', methods=['POST'])
 def get_result_from_model():

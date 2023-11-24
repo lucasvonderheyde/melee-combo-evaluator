@@ -1,20 +1,22 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react';
+import { AuthContext } from '../../AuthContext'; 
 import ComboVisuals from '../ComboVisuals/ComboVisuals';
-
 
 const FileUpload = () => {
     const [file, setFile] = useState(null);
     const [combos, setCombos] = useState(null);
+    const { user } = useContext(AuthContext);
 
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
     };
 
     const handleFileUpload = async () => {
-        if (file) {
+        if (file && user) {
             const formData = new FormData();
             formData.append('slpFile', file);
-    
+            formData.append('userId', user.id); 
+
             try {
                 const response = await fetch('http://127.0.0.1:5555/players-uploads', {
                     method: 'POST',
@@ -40,6 +42,6 @@ const FileUpload = () => {
             {combos && <ComboVisuals combos={combos} />}
         </div>
     );
-}
+};
 
 export default FileUpload;
