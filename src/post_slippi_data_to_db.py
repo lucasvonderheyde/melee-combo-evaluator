@@ -6,12 +6,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_info import database
 from sql_models import Metadata, GameInfo, MatchInfo, PlayersInfo, Settings, HigherPortPlayerPostFrames, LowerPortPlayerPostFrames, HigherPortPlayerPreFrames, LowerPortPlayerPreFrames
-import pdb
 
 json_directories = "../data/temp_json_data"
-user_slippi_upload_directory = 'player_uploads/user_temp_slp_data'
 
-def main(slippi_json_folder):
+def main(slippi_json_folder, user_id=None):
     pd.set_option('display.max_colwidth', None)
     pd.set_option('display.width', 1000)
     pd.set_option('display.max_columns', 35)
@@ -53,7 +51,8 @@ def main(slippi_json_folder):
         game_id = str(game_id),
         start_at = filtered_metadata_df['startAt'].iloc[0],
         last_frame = int(filtered_metadata_df['lastFrame'].iloc[0]),
-        played_on = filtered_metadata_df['playedOn'].iloc[0] 
+        played_on = filtered_metadata_df['playedOn'].iloc[0], 
+        user_id = user_id
     )
 
     session.add(game_metadata)
@@ -361,12 +360,9 @@ def add_batch(session, batch):
         return batch
 
 if __name__ == "__main__":
-    if os.environ.get('CALLED_FROM_FLASK') == '1':
-        game_id_for_combos = main(user_slippi_upload_directory)
         
-    else:
-        for folder_name in os.listdir(json_directories):
-            path_to_folders = os.path.join(json_directories, folder_name)
-            if os.path.isdir(path_to_folders):
-                main(path_to_folders)
+    for folder_name in os.listdir(json_directories):
+        path_to_folders = os.path.join(json_directories, folder_name)
+        if os.path.isdir(path_to_folders):
+            main(path_to_folders)
     

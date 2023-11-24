@@ -9,10 +9,11 @@ from user_data_utilities.user_model_data_prep import prep_user_model_data
 from combo_evaluator_model import BidirectionalComboLSTM
 import torch
 from werkzeug.security import generate_password_hash, check_password_hash
+from post_slippi_data_to_db import main
 
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 model = BidirectionalComboLSTM()
 model.load_state_dict(torch.load('model_weights.pth', map_location=torch.device('cpu')))
@@ -54,12 +55,13 @@ def upload_file():
         file.save(file_path)
 
         clear_folder(previous_json_frontend_data)
+        user_id = session.get('user_id')
+        print('this is the user', user_id)
 
         try:
             subprocess.run(["node", "user_data_utilities/userSlippi.js", file_path], check=True)
 
-            result = subprocess.run(["python3", '-u', "post_slippi_data_to_db.py"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)  
-            game_id = result.stdout.strip()
+            game_id = main(temp_slippi_json_folder, user_id) 
 
             subprocess.run(["python3", "get_combos_from_games.py", game_id], check=True)
             subprocess.run(["python3", "label_combos_for_model.py", game_id], check=True)
@@ -145,15 +147,17 @@ def login():
     user = combo_db.session.query(User).filter_by(username=username).first()
 
     if user and user.check_password(password):
+        session['user_id'] = user.id
+        print(f"User ID set in session: {session['user_id']}")  # Print statement to verify
         user_data = {
             "id": user.id,
             "username": user.username,
             "email": user.email
         }
-        session['user_id'] = user.id
         return jsonify({"message": "Login successful", "user": user_data}), 200
 
     return jsonify({"message": "Invalid username or password"}), 401
+
 
 @app.route('/logout', methods=['POST'])
 def logout():

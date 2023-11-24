@@ -14,13 +14,14 @@ const FileUpload = () => {
         if (file) {
             const formData = new FormData();
             formData.append('slpFile', file);
-
+    
             try {
                 const response = await fetch('http://127.0.0.1:5555/players-uploads', {
                     method: 'POST',
                     body: formData,
+                    credentials: 'include'
                 });
-                if(response.ok) {
+                if (response.ok) {
                     const data = await response.json();
                     setCombos(data);
                 } else {
