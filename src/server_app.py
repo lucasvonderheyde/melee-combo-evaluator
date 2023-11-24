@@ -163,6 +163,25 @@ def logout():
     session.pop('user_id', None) 
     return jsonify({"message": "Logged out"}), 200
 
+@app.route('/user-games', methods=['GET'])
+def get_user_games():
+    from sql_models import Metadata
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({"error": "User not logged in"}), 401
+
+    user_games = combo_db.session.query(Metadata).filter_by(user_id=user_id).all()
+    games_data = [{'game_id': game.game_id, 'start_at': game.start_at} for game in user_games]
+
+    return jsonify(games_data), 200
+
+@app.route('/all-games', methods=['GET'])
+def get_all_games():
+    from sql_models import Metadata
+    all_games = combo_db.session.query(Metadata).all()
+    games_data = [{'game_id': game.game_id, 'start_at': game.start_at} for game in all_games]
+
+    return jsonify(games_data), 200
 
 def clear_folder(folder_path):
     for filename in os.listdir(folder_path):
