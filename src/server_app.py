@@ -193,14 +193,28 @@ def get_all_games():
 
 @app.route('/api/games/<game_id>')
 def games_by_id(game_id):
-    from sql_models import Metadata, Combo  
+    from sql_models import Metadata
+
     game = combo_db.session.query(Metadata).filter_by(game_id=game_id).first()
     if not game:
         return jsonify({"error": "Game not found"}), 404
 
-    combos = [{"combo_id": combo.id, "details": combo.details} for combo in game.combos]
+    try:
+        subprocess.run(["python3", "label_combos_for_model.py", game_id], check=True)
 
-    return jsonify({"combos": combos})
+        with open(temp_json_data_for_d3, 'r') as file:
+            d3_json_data = json.load(file)
+
+        print('Data for game ID {} retrieved'.format(game_id))
+
+        clear_folder(UPLOAD_FOLDER)
+        clear_folder(temp_slippi_json_folder)
+
+        return jsonify(d3_json_data), 200
+
+    except subprocess.CalledProcessError as e:
+        return jsonify({"error": "Failed to process game data"}), 500
+
 
 def clear_folder(folder_path):
     for filename in os.listdir(folder_path):
