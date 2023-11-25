@@ -1,38 +1,40 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { AuthContext } from '../../AuthContext';
+import React, { useState, useEffect } from 'react';
 
-// UserGamesDropdown.js
-const UserGamesDropdown = ({ onSelect }) => {
-    const [games, setGames] = useState([]);
+const UserGamesDropdown = ({ userId, onGameSelect }) => {
+    const [userGames, setUserGames] = useState([]);
 
     useEffect(() => {
-        // Fetch user games from the API
-        const fetchGames = async () => {
+        const fetchUserGames = async () => {
             try {
-                const response = await fetch('/api/user-games');
-                if (response.ok) {
-                    const data = await response.json();
-                    setGames(data);
+                const response = await fetch(`http://127.0.0.1:5555/api/user-games/${userId}`);
+                if(response.ok) {
+                    const games = await response.json();
+                    setUserGames(games);
                 } else {
-                    console.error("Failed to fetch user games");
+                    console.error('Failed to fetch user games');
                 }
             } catch (error) {
-                console.error("Error fetching user games:", error);
+                console.error('Error fetching user games:', error);
             }
         };
-        fetchGames();
-    }, []);
+
+        if (userId) {
+            fetchUserGames();
+        }
+    }, [userId]);
+
+    const handleGameSelection = (event) => {
+        onGameSelect(event.target.value);
+    };
 
     return (
-        <select onChange={e => onSelect(e.target.value)}>
-            {games.map(game => (
-                <option key={game.id} value={game.id}>{game.description}</option>
+        <select onChange={handleGameSelection} defaultValue="">
+            <option value="" disabled>Select a game</option>
+            {userGames.map((game) => (
+                <option key={game.id} value={game.id}>{game.name}</option>
             ))}
         </select>
     );
 };
-
-// Similar structure for AllGamesDropdown.js
-
 
 export default UserGamesDropdown;

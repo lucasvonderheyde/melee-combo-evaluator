@@ -157,23 +157,31 @@ def login():
 
     return jsonify({"message": "Invalid username or password"}), 401
 
-
 @app.route('/logout', methods=['POST'])
 def logout():
     session.pop('user_id', None) 
     return jsonify({"message": "Logged out"}), 200
 
-@app.route('/user-games', methods=['GET'])
-def get_user_games():
+@app.route('/api/user-games')
+def user_games():
     from sql_models import Metadata
     user_id = session.get('user_id')
     if not user_id:
         return jsonify({"error": "User not logged in"}), 401
 
-    user_games = combo_db.session.query(Metadata).filter_by(user_id=user_id).all()
-    games_data = [{'game_id': game.game_id, 'start_at': game.start_at} for game in user_games]
+    games = combo_db.session.query(Metadata).filter_by(user_id=user_id).all()
+    games_data = [{'id': game.game_id, 'name': game.name} for game in games] 
 
-    return jsonify(games_data), 200
+    return jsonify(games_data)
+
+@app.route('/api/user-games/<int:user_id>')
+def user_games_by_id(user_id):
+    from sql_models import Metadata
+    games = combo_db.session.query(Metadata).filter_by(user_id=user_id).all()
+    games_data = [{'id': game.game_id, 'name': game.start_at} for game in games] 
+
+    return jsonify(games_data)
+
 
 @app.route('/all-games', methods=['GET'])
 def get_all_games():
@@ -182,6 +190,17 @@ def get_all_games():
     games_data = [{'game_id': game.game_id, 'start_at': game.start_at} for game in all_games]
 
     return jsonify(games_data), 200
+
+@app.route('/api/games/<game_id>')
+def games_by_id(game_id):
+    from sql_models import Metadata, Combo  
+    game = combo_db.session.query(Metadata).filter_by(game_id=game_id).first()
+    if not game:
+        return jsonify({"error": "Game not found"}), 404
+
+    combos = [{"combo_id": combo.id, "details": combo.details} for combo in game.combos]
+
+    return jsonify({"combos": combos})
 
 def clear_folder(folder_path):
     for filename in os.listdir(folder_path):

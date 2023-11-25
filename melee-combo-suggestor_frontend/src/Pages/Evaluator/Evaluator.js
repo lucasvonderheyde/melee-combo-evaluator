@@ -1,18 +1,37 @@
-import React, { useState, useContext } from 'react';
+// Evaluator.js
+
+import React, { useState, useEffect, useContext } from 'react';
 import FileUpload from "../../components/FileUpload/FileUpload";
 import LogoutButton from "../../components/LogoutButton/LogoutButton";
 import NavBar from "../../components/NavBar/NavBar";
-import { AuthContext } from '../../AuthContext';
-import './Evaluator.css';
 import UserGamesDropdown from '../../components/UserGameDropdown/UserGamesDropdown';
 import AllGamesDropdown from '../../components/AllGamesDropdown/AllGamesDropdown';
+import ComboVisuals from '../../components/ComboVisuals/ComboVisuals';
+import { AuthContext } from '../../AuthContext';
+import './Evaluator.css';
 
 export default function Evaluator() {
     const { user } = useContext(AuthContext);
     const [selectedGameId, setSelectedGameId] = useState(null);
-    const [combos, setCombos] = useState([]);
+    const [combos, setCombos] = useState(null);
 
-    const handleGameSelection = async (gameId) => {
+    useEffect(() => {
+        const fetchGameData = async () => {
+            if (selectedGameId) {
+                try {
+                    const response = await fetch(`/api/games/${selectedGameId}`);
+                    const data = await response.json();
+                    setCombos(data.combos); // Assuming the data contains 'combos'
+                } catch (error) {
+                    console.error('Error fetching game data:', error);
+                }
+            }
+        };
+
+        fetchGameData();
+    }, [selectedGameId]);
+
+    const handleGameSelection = (gameId) => {
         setSelectedGameId(gameId);
     };
 
@@ -22,16 +41,17 @@ export default function Evaluator() {
             <div className="content">
                 <div className="file-upload-container">
                     <FileUpload />
-                    <AllGamesDropdown onSelect={handleGameSelection} />
+                    <AllGamesDropdown onGameSelect={setSelectedGameId} />
+                    <h3>Current Game Id: {selectedGameId}</h3>
                 </div>
-                {user && ( 
-                    <div className="logout-button-container">
-                        <UserGamesDropdown onSelect={handleGameSelection} />
+                {user && (
+                <div className="user-games-dropdown-container">
+                        <UserGamesDropdown userId={user.id} onGameSelect={handleGameSelection} />
                         <LogoutButton />
                     </div>
                 )}
+                {combos && <ComboVisuals combos={combos} />}
             </div>
         </div>
     );
 }
-
