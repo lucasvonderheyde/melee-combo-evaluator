@@ -19,18 +19,22 @@ export default function Evaluator() {
         const fetchGameData = async () => {
             if (selectedGameId) {
                 try {
-                    const response = await fetch(`/api/games/${selectedGameId}`);
-                    const data = await response.json();
-                    setCombos(data.combos); // Assuming the data contains 'combos'
+                    const response = await fetch(`http://127.0.0.1:5555/api/games/${selectedGameId}`); 
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    const data = await response.json()
+                    console.log(data)
+                    setCombos(data);
                 } catch (error) {
                     console.error('Error fetching game data:', error);
                 }
             }
         };
-
+    
         fetchGameData();
     }, [selectedGameId]);
-
+    
     const handleGameSelection = (gameId) => {
         setSelectedGameId(gameId);
     };

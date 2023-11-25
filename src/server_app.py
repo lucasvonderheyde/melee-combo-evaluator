@@ -194,6 +194,7 @@ def get_all_games():
 @app.route('/api/games/<game_id>')
 def games_by_id(game_id):
     from sql_models import Metadata
+    print(game_id)
 
     game = combo_db.session.query(Metadata).filter_by(game_id=game_id).first()
     if not game:
@@ -201,19 +202,17 @@ def games_by_id(game_id):
 
     try:
         subprocess.run(["python3", "label_combos_for_model.py", game_id], check=True)
+    except subprocess.CalledProcessError as e:
+        return jsonify({"error": f"Failed to process combos: {e}"}), 500
 
+    try:
         with open(temp_json_data_for_d3, 'r') as file:
             d3_json_data = json.load(file)
+    except Exception as e:
+        return jsonify({"error": f"Failed to read combo data: {e}"}), 500
 
-        print('Data for game ID {} retrieved'.format(game_id))
+    return jsonify(d3_json_data)
 
-        clear_folder(UPLOAD_FOLDER)
-        clear_folder(temp_slippi_json_folder)
-
-        return jsonify(d3_json_data), 200
-
-    except subprocess.CalledProcessError as e:
-        return jsonify({"error": "Failed to process game data"}), 500
 
 
 def clear_folder(folder_path):
