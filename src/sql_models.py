@@ -62,6 +62,50 @@ class MatchInfo(Base):
     metadata_relationship = relationship("Metadata", back_populates="match_info")
 
 
+class Settings(Base):
+    __tablename__ = 'settings'
+
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    slp_version = Column(String)
+    timer_type = Column(BigInteger)
+    in_game_mode = Column(BigInteger)
+    friendly_fire_enabled = Column(Boolean)
+    is_teams = Column(Boolean)
+    item_spawn_behavior = Column(BigInteger)
+    stage_id = Column(BigInteger)
+    starting_timer_seconds = Column(BigInteger)
+    enabled_items = Column(BigInteger)
+    scene = Column(BigInteger)
+    game_mode = Column(BigInteger)
+    language = Column(BigInteger)
+    random_seed = Column(BigInteger)
+    is_pal = Column(Boolean)
+    is_frozen_ps = Column(Boolean)
+    game_id = Column(String, ForeignKey('melee_metadata.game_id'))
+
+    metadata_relationship = relationship("Metadata", back_populates="settings")
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'slp_version': self.slp_version,
+            'timer_type': self.timer_type,
+            'in_game_mode': self.in_game_mode,
+            'friendly_fire_enabled': self.friendly_fire_enabled,
+            'is_teams': self.is_teams,
+            'item_spawn_behavior': self.item_spawn_behavior,
+            'stage_id': self.stage_id,
+            'starting_timer_seconds': self.starting_timer_seconds,
+            'enabled_items': self.enabled_items,
+            'scene': self.scene,
+            'game_mode': self.game_mode,
+            'language': self.language,
+            'random_seed': self.random_seed,
+            'is_pal': self.is_pal,
+            'is_frozen_ps': self.is_frozen_ps,
+            'game_id': self.game_id
+        }
+
 class PlayersInfo(Base):
     __tablename__ = 'players_info'
 
@@ -95,30 +139,39 @@ class PlayersInfo(Base):
     game_id = Column(String, ForeignKey('melee_metadata.game_id'))
     
     metadata_relationship = relationship("Metadata", back_populates="players_info")
-    
 
-class Settings(Base):
-    __tablename__ = 'settings'
+    def serialize(self):
+        return {
+            'id': self.id,
+            'player_index': self.player_index,
+            'port': self.port,
+            'character_id': self.character_id,
+            'player_type': self.player_type,
+            'start_stocks': self.start_stocks,
+            'character_color': self.character_color,
+            'team_shade': self.team_shade,
+            'handicap': self.handicap,
+            'team_id': self.team_id,
+            'stamina_mode': self.stamina_mode,
+            'silent_character': self.silent_character,
+            'low_gravity': self.low_gravity,
+            'invisible': self.invisible,
+            'black_stock_icon': self.black_stock_icon,
+            'metal': self.metal,
+            'start_on_angel_platform': self.start_on_angel_platform,
+            'rumble_enabled': self.rumble_enabled,
+            'cpu_level': self.cpu_level,
+            'offense_ratio': self.offense_ratio,
+            'defense_ratio': self.defense_ratio,
+            'model_scale': self.model_scale,
+            'controller_fix': self.controller_fix,
+            'name_tag': self.name_tag,
+            'display_name': self.display_name,
+            'connect_code': self.connect_code,
+            'user_id': self.user_id,
+            'game_id': self.game_id
+        }
 
-    id = Column(BigInteger, primary_key=True, autoincrement=True)   
-    slp_version = Column(String)
-    timer_type = Column(BigInteger)
-    in_game_mode = Column(BigInteger)
-    friendly_fire_enabled = Column(Boolean)
-    is_teams = Column(Boolean)
-    item_spawn_behavior = Column(BigInteger)
-    stage_id = Column(BigInteger)
-    starting_timer_seconds = Column(BigInteger)
-    enabled_items = Column(BigInteger)
-    scene = Column(BigInteger)
-    game_mode = Column(BigInteger)
-    language = Column(BigInteger)
-    random_seed = Column(BigInteger)
-    is_pal = Column(Boolean)
-    is_frozen_ps = Column(Boolean)
-    game_id = Column(String, ForeignKey('melee_metadata.game_id'))
-
-    metadata_relationship = relationship("Metadata", back_populates="settings")
 
 class HigherPortPlayerPostFrames(Base):
     __tablename__ = "higher_port_player_post_frames"

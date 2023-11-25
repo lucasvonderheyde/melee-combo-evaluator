@@ -41,6 +41,8 @@ def allowed_file(filename):
 
 @app.route('/players-uploads', methods=['POST'])
 def upload_file():
+    from sql_models import Settings, PlayersInfo
+
     if 'slpFile' not in request.files:
         return jsonify({"error": "No file part"}), 400
     file = request.files['slpFile']
@@ -69,17 +71,34 @@ def upload_file():
 
             print('Data uploaded')
 
+            # Fetch settings and player info for the game
+            settings = combo_db.session.query(Settings).filter_by(game_id=game_id).first()
+            players_info = combo_db.session.query(PlayersInfo).filter_by(game_id=game_id).all()
+
+            # Serialize the data
+            settings_data = settings.serialize() if settings else None
+            players_info_data = [player.serialize() for player in players_info] if players_info else []
+
+            # Prepare response data
+            response_data = {
+                "combos": d3_json_data,
+                "settings": settings_data,
+                "players_info": players_info_data
+            }
+
             clear_folder(UPLOAD_FOLDER)
             clear_folder(temp_slippi_json_folder)
 
+            return jsonify(response_data), 200
+
         except subprocess.CalledProcessError as e:
             return jsonify({"error": "Failed to process file"}), 500
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
 
-        return jsonify(d3_json_data), 200
     else:
         return jsonify({"error": "File type not allowed"}), 400
-
-    
+ 
 @app.route('/api/score-combo', methods=['POST'])
 def get_result_from_model():
     csv_data = request.data.decode('utf-8')
@@ -193,12 +212,15 @@ def get_all_games():
 
 @app.route('/api/games/<game_id>')
 def games_by_id(game_id):
-    from sql_models import Metadata
+    from sql_models import Metadata, Settings, PlayersInfo
     print(game_id)
 
     game = combo_db.session.query(Metadata).filter_by(game_id=game_id).first()
     if not game:
         return jsonify({"error": "Game not found"}), 404
+    
+    settings = combo_db.session.query(Settings).filter_by(game_id=game_id).first()
+    players_info = combo_db.session.query(PlayersInfo).filter_by(game_id=game_id).all()
 
     try:
         subprocess.run(["python3", "label_combos_for_model.py", game_id], check=True)
@@ -210,10 +232,17 @@ def games_by_id(game_id):
             d3_json_data = json.load(file)
     except Exception as e:
         return jsonify({"error": f"Failed to read combo data: {e}"}), 500
+    
+    settings_data = settings.serialize() if settings else None
+    players_info_data = [player.serialize() for player in players_info] if players_info else []
 
-    return jsonify(d3_json_data)
+    response_data = {
+        "combos": d3_json_data,
+        "settings": settings_data,
+        "players_info": players_info_data
+    }
 
-
+    return jsonify(response_data)
 
 def clear_folder(folder_path):
     for filename in os.listdir(folder_path):

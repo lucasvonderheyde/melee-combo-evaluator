@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+.game-sidebar {
+  position: fixed;
+  top: 50%; /* Center vertically */
+  left: 0; /* Align to the left side of the page */
+  transform: translateY(-50%); /* Adjust for true vertical centering */
+  width: 20%;
+  max-width: 300px; /* Adjust width as needed */
+  box-sizing: border-box;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+  backdrop-filter: blur(10px);
+  color: #333;
+  font-family: 'Orbitron', sans-serif;
+  overflow-y: auto;
+  z-index: 500;
+  border: 2px solid #1E90FF; /* Blue border */
+}
+
+.game-sidebar h3 {
+  color: #1E90FF;
+  text-align: center; /* Center the text */
+  margin-bottom: 15px;
+}
+
+.game-sidebar .stage-container img {
+  width: 100%; /* Full width */
+  height: auto; /* Maintain aspect ratio */
+  margin-bottom: 15px;
+}
+
+.game-sidebar .stage-container {
+  margin-bottom: 30px; /* More space after the stage image */
+}
+
+.game-sidebar .player-container {
+  text-align: center; /* Center the player content */
+  margin-bottom: 20px;
+}
+
+.game-sidebar .player-container img {
+  width: 50%; /* Smaller width than the stage image */
+  height: auto; /* Maintain aspect ratio */
+  margin: 0 auto; /* Center the image */
+}
+
+.stage-name, .display-name {
+  display: block;
+}
+
+/* Hide stage and character IDs */
+.stage-id, .character-id {
+  display: none;
+}
+
+/* Adjust the top positioning if you need to see the background above the sidebar */
+.game-sidebar:before {
+  content: '';
+  position: absolute;
+  top: -20px; /* Adjust as needed to create space above */
+  left: 0;
+  right: 0;
+  height: 20px; /* Adjust as needed for desired space */
+  background-color: rgba(255, 255, 255, 0.8); /* Match the sidebar background */
+  border-top: 2px solid #1E90FF; /* Continue the blue border above */
+}

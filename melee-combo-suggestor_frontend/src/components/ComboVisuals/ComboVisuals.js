@@ -7,6 +7,7 @@ const ComboVisuals = ({ combos }) => {
     const [expandedComboBlock, setExpandedComboBlock] = useState(null)
 
     useEffect(() => {
+        console.log(combos)
         if (combos) {
             const lowerPortPlayerCombos = {};
             const higherPortPlayerCombos = {};
