@@ -4,43 +4,55 @@
 
 .combo-visuals-container {
     display: flex;
-    justify-content: space-evenly; /* This ensures even spacing around items */
-    height: calc(100vh - 60px); /* Adjust based on your navbar height */
+    justify-content: space-evenly;
     width: 100%;
-    padding: 20px;
+    padding: 20px; /* Padding for all sides */
+    padding-top: 60px; /* Additional padding-top to push content down */
     box-sizing: border-box;
-    /* Removed overflow-y from here */
+    margin-top: 80px; /* Adjust if necessary to give space below the navbar */
+    margin-bottom: 10px; /* Space at the bottom */
+    height: auto; /* Allow container to grow with content */
+    max-height: 880px; /* Adjusted to include padding and margins */
+    background-color: transparent; /* Make the container fully transparent */
 }
 
 .character-combos {
-    flex-grow: 1; /* Grow to use available space */
-    padding: 10px;
+    flex-grow: 1;
+    padding: 20px; /* More padding for spacing */
+    padding-top: 15px; /* Space between character image and first combo block */
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white background */
-    backdrop-filter: blur(10px); /* Optional: Apply a blur to the content behind the blocks */
-    margin: 0 5px; /* Adjust margin as needed for spacing */
-    min-width: 500px; /* Or any other value that suits your design */
-    width: 45%; /* Adjust width as needed */
-    overflow-y: auto; /* Makes this column individually scrollable */
-    max-height: calc(100vh - 60px); /* Maximum height to prevent overflow into navbar */
+    margin: 0 5px;
+    min-width: 500px;
+    width: 45%;
+    overflow-y: auto;
+    max-height: calc(100vh - 180px); /* Adjusted to include padding and margins */
+}
+
+.character-combos::-webkit-scrollbar {
+    display: none; /* Hide scrollbars for Webkit browsers */
+}
+
+.character-combos {
+    -ms-overflow-style: none; /* Hide scrollbars for IE and Edge */
+    scrollbar-width: none; /* Hide scrollbars for Firefox */
 }
 
 .combo-block {
-    width: 100%; /* Make the combo blocks fill the container */
-    margin-bottom: 10px;
-    padding: 10px;
-    background-color: rgba(255, 255, 255, 0.3); /* More transparency for combo blocks */
+    width: 100%;
+    margin-bottom: 20px; /* More space after each combo block */
+    padding: 15px; /* More padding inside combo blocks */
+    background-color: #ffffff; /* Solid white background for combo blocks */
     border: 1px solid #bbb;
-    border-radius: 8px; /* Rounded corners for a more modern look */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-    transition: all 0.2s ease-in-out; /* Smooth transition for interactions */
+    transition: all 0.2s ease-in-out;
 }
 
 .combo-block:hover {
-    background-color: rgba(255, 255, 255, 0.4); /* Slightly less transparent on hover */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Larger shadow on hover */
+    background-color: #f0f0f0; /* Light grey background on hover for a subtle effect */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
