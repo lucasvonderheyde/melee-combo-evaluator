@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import './AllGamesDropdown.css'
 
 const AllGamesDropdown = ({ onGameSelect }) => {
     const [allGames, setAllGames] = useState([]);
@@ -26,8 +27,8 @@ const AllGamesDropdown = ({ onGameSelect }) => {
     };
 
     return (
-        <select onChange={handleGameSelection} defaultValue="">
-            <option value="" disabled>Select a game</option>
+        <select className='dropdown' onChange={handleGameSelection} defaultValue="">
+            <option value="" disabled>All games</option>
             {allGames.map((game) => (
                 <option key={game.game_id} value={game.game_id}>{game.start_at}</option> 
             ))}

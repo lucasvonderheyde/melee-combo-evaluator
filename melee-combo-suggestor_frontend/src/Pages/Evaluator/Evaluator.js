@@ -1,5 +1,3 @@
-// Evaluator.js
-
 import React, { useState, useEffect, useContext } from 'react';
 import FileUpload from "../../components/FileUpload/FileUpload";
 import LogoutButton from "../../components/LogoutButton/LogoutButton";
@@ -42,18 +40,19 @@ export default function Evaluator() {
     return (
         <div className="evaluator-container">
             <NavBar />
-            <div className="content">
-                <div className="file-upload-container">
-                    <FileUpload />
-                    <AllGamesDropdown onGameSelect={setSelectedGameId} />
-                    <h3>Current Game Id: {selectedGameId}</h3>
-                </div>
+            <div className="banner-container"> 
+                <FileUpload />
+                <AllGamesDropdown onGameSelect={setSelectedGameId} />
                 {user && (
-                <div className="user-games-dropdown-container">
-                        <UserGamesDropdown userId={user.id} onGameSelect={handleGameSelection} />
+                    <UserGamesDropdown userId={user.id} onGameSelect={handleGameSelection} />
+                )}
+                {user && (
+                    <div className="logout-button-container">
                         <LogoutButton />
                     </div>
                 )}
+            </div>
+            <div className="content">
                 {combos && <ComboVisuals combos={combos} />}
             </div>
         </div>

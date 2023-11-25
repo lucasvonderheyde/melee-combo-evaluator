@@ -1,0 +1,36 @@
+/* Dropdown.css */
+
+/* General dropdown styles */
+.dropdown {
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: 2px solid #1E90FF; /* Blue border to match your theme */
+    background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent background */
+    color: #000; /* Text color */
+    font-family: 'Orbitron', sans-serif; /* Consistent font family */
+    cursor: pointer;
+    outline: none;
+    width: 100%; /* Full width to fill the container */
+    box-sizing: border-box; /* Border and padding included in the width */
+  }
+  
+  /* Dropdown hover styles */
+  .dropdown:hover {
+    background-color: rgba(255, 255, 255, 0.3); /* Slightly darker on hover */
+  }
+  
+  /* Dropdown focus styles */
+  .dropdown:focus {
+    border-color: #0B5ED7; /* Darker blue border for focus */
+    background-color: rgba(255, 255, 255, 0.25); /* Slightly darker for focus */
+  }
+  
+  /* Dropdown option styles */
+  .dropdown option {
+    background-color: white; /* White background for options */
+    color: #000; /* Text color for options */
+  }
+  
+  /* You may include this CSS in a separate file and import it into your component files,
+     or include it in your main CSS file if you prefer */
+  

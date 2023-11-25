@@ -1,1 +1,93 @@
+/* Evaluator.css */
 
+/* Import the Orbitron font */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-size: cover;
+    font-family: 'Orbitron', sans-serif;
+    overflow: hidden; /* Prevent scrolling of the entire page */
+}
+
+.navbar {
+    height: 60px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 1000; /* High z-index to stay on top */
+    background-color: #333; /* Navbar color */
+}
+
+.evaluator-container {
+    padding-top: 60px; /* Height of the navbar, plus space for the banner */
+}
+
+.banner-container {
+    display: flex;
+    justify-content: space-between; /* Evenly space elements */
+    align-items: center;
+    position: fixed; /* Fixed position to stay at top */
+    top: 60px; /* Directly below the navbar */
+    left: 0;
+    width: 100%;
+    padding: 10px 20px;
+    z-index: 999; /* Just below the navbar's z-index */
+    background-color: #e8e8e8; /* Banner background */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.file-input-container {
+    flex: 1; /* Allows the container to grow and take available space */
+    display: flex;
+    justify-content: start; /* Align to the start of the flex container */
+    gap: 10px; /* Space between file input and button */
+}
+
+.file-input, .upload-button {
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    background-color: #1E90FF; /* Button color */
+    color: white; /* Button text color */
+}
+
+.file-input {
+    width: 100%; /* Allows the input to take available space */
+}
+
+.upload-button:hover {
+    background-color: #0B5ED7; /* Darker shade on hover */
+}
+
+.game-select-container {
+    flex: 2; /* Gives the dropdowns more space relative to file input */
+    display: flex;
+    justify-content: center; /* Centers the dropdowns within their container */
+}
+
+.logout-button-container {
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+}
+
+.logout-button:hover {
+    background-color: #d9534f; /* Darker red on hover */
+}
+
+.content {
+    flex-grow: 1;
+    padding-top: 140px; /* Height of navbar plus banner */
+    padding: 20px;
+    overflow-y: auto; /* Enable scrolling for the content */
+}
+
+/* Additional global styles */
+* {
+    box-sizing: border-box;
+}

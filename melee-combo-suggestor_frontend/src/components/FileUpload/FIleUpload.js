@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../../AuthContext'; 
 import ComboVisuals from '../ComboVisuals/ComboVisuals';
+import './FileUpload.css'
 
 const FileUpload = () => {
     const [file, setFile] = useState(null);
@@ -36,9 +37,9 @@ const FileUpload = () => {
     };
 
     return (
-        <div>
-            <input type="file" onChange={handleFileChange} />
-            <button onClick={handleFileUpload}>Upload</button>
+        <div className="file-upload-container">
+            <input type="file" onChange={handleFileChange} className="file-input" />
+            <button onClick={handleFileUpload} className="upload-button">Upload</button>
             {combos && <ComboVisuals combos={combos} />}
         </div>
     );

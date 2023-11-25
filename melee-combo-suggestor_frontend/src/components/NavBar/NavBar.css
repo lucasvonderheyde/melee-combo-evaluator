@@ -1,13 +1,13 @@
 /* Navbar.css */
 nav {
-    position: absolute;
+    position: fixed; /* Changed from absolute to fixed */
     top: 0;
-    left: 0; /* Ensure the nav starts at the left edge */
-    right: 0; /* Ensure the nav spans to the right edge */
+    left: 0;
+    right: 0;
     padding: 1rem 0;
-    background-color: rgba(255, 255, 255, 0.1); /* Light background for readability */
-    backdrop-filter: blur(10px); /* Soften the background image behind the navbar */
-    z-index: 3;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    z-index: 1000; /* High z-index to ensure it's above other content */
     font-family: 'Orbitron', sans-serif;
 }
 

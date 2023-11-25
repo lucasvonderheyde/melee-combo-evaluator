@@ -1,0 +1,39 @@
+/* FileUpload.css */
+
+.file-upload-container {
+    display: flex; /* Aligns children (input and button) in a row */
+    align-items: center; /* Centers children vertically */
+    gap: 10px; /* Adds space between the file input and the upload button */
+  }
+  
+  /* Style your file input to match the theme */
+  .file-input {
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-family: 'Orbitron', sans-serif;
+    cursor: pointer;
+  }
+  
+  /* Style the upload button */
+  .upload-button {
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: none;
+    background-color: #1E90FF; /* Theme blue for upload button */
+    color: white;
+    font-family: 'Orbitron', sans-serif;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .upload-button:hover {
+    background-color: #0B5ED7; /* A darker blue on hover */
+  }
+  
+  /* If you wish to maintain the logout button as red */
+  .logout-button {
+    background-color: red; /* Or any shade of red that you prefer */
+    /* Rest of your styles for the logout button */
+  }
+  
