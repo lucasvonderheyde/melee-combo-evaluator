@@ -22,11 +22,11 @@ const moveImages = {
         "21": "/gifs/falco_gifs/falco_shine.gif",
         "32": "Get Up Attack (From Back)",
         "51": "Get Up Attack (From Front)",
-        "52": "Pummel",
-        "53": "Forward Throw",
-        "54": "Back Throw",
-        "55": "Up Throw",
-        "56": "Down Throw"
+        "52": "/pummel.png",
+        "53": "/fthrow.png",
+        "54": "/bthrow.png",
+        "55": "/upthrow.png",
+        "56": "/dthrow.png"
     },
     fox: {
         "2": "/gifs/fox_gifs/foxjab.gif",
@@ -51,11 +51,11 @@ const moveImages = {
         "21": "/gifs/fox_gifs/foxshine.gif",
         "32": "Get Up Attack (From Back)",
         "51": "Get Up Attack (From Front)",
-        "52": "Pummel",
-        "53": "Forward Throw",
-        "54": "Back Throw",
-        "55": "Up Throw",
-        "56": "Down Throw"
+        "52": "/pummel.png",
+        "53": "/fthrow.png",
+        "54": "/bthrow.png",
+        "55": "/upthrow.png",
+        "56": "/dthrow.png"
     },
     marth: {
         "2": "/gifs/marth_gifs/marthjab.gif",
@@ -80,11 +80,11 @@ const moveImages = {
         "21": "/gifs/marth_gifs/marthdownb.gif",
         "32": "Get Up Attack (From Back)",
         "51": "Get Up Attack (From Front)",
-        "52": "Pummel",
-        "53": "Forward Throw",
-        "54": "Back Throw",
-        "55": "Up Throw",
-        "56": "Down Throw"
+        "52": "/pummel.png",
+        "53": "/fthrow.png",
+        "54": "/bthrow.png",
+        "55": "/upthrow.png",
+        "56": "/dthrow.png"
     }
 }
 

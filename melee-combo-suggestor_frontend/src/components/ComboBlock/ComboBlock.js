@@ -81,7 +81,7 @@ const ComboBlock = ({ frames, setExpandedComboBlock, expandedComboBlock, playerp
 
     return (
         <div className="combo-block">
-            <h3>Combo Block: {comboBlockId}</h3>
+            <h3>Combo: {comboBlockId}</h3>
             <p>Number of Frames: {frames.length}</p>
             {isLowerPlayer 
                 ? <p>Damage Done: {frames[frames.length - 1].lower_port_damage_done_with_combo}</p>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { charactersIdsFromPlayersInfoTable } from '../../gameIds'; // Import the character ID mappings
-import stageImages from '../../stageImages'; // Import the stage images
-import './GameSidebar.css'; // Ensure this path is correct
+import { charactersIdsFromPlayersInfoTable, stageIds } from '../../gameIds'; // Import character and stage ID mappings
+import stageImages from '../../stageImages'; // Import stage images
+import './GameSidebar.css';
 
 const GameSidebar = ({ settings, playerInfo }) => {
     const [stageDetails, setStageDetails] = useState({
@@ -18,14 +18,17 @@ const GameSidebar = ({ settings, playerInfo }) => {
 
     const getCharacterIcon = (characterId) => {
         const characterName = charactersIdsFromPlayersInfoTable[characterId];
-        return `/character_data/${characterName}/${characterName}cssicon.png`; // Path assumes a consistent naming convention
+        return `/character_data/${characterName}/${characterName}cssicon.png`; // Assumes a consistent naming convention
     };
 
     // Function to get stage details based on stageId
     const getStageDetails = (stageId) => {
+        const stageName = stageIds[stageId];
         const stageImage = stageImages.Stages[stageId];
-        const stageName = stageId in stageImages.Stages ? 'Battlefield' : 'Unknown Stage'; // Temporary logic, needs proper mapping
-        return { name: stageName, image: stageImage || '/defaultstage.png' };
+        return { 
+            name: stageName || 'Unknown Stage',
+            image: stageImage || '/defaultstage.png' 
+        };
     };
 
     return (
@@ -38,7 +41,7 @@ const GameSidebar = ({ settings, playerInfo }) => {
             )}
             {playerInfo.map((player, index) => (
                 <div className="player-container" key={index}>
-                    <h3>{player.display_name}</h3>
+                    <h3>Port {player.port}: {player.display_name}</h3>
                     <img src={getCharacterIcon(player.character_id)} alt={`${player.display_name}'s character`} />
                 </div>
             ))}
