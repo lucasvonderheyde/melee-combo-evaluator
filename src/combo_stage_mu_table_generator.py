@@ -29,4 +29,23 @@ def generate_stage_table_for_database():
     cursor.close()
     connection.close()
 
-generate_stage_table_for_database()
+
+def generate_generic_combo_table(game_id):
+    
+    connection = psycopg2.connect(database)
+    cursor = connection.cursor()
+
+    # This creates a general combos table
+    combo_table = "combos"
+
+    # Using the game_id in the SQL query  # Make sure combo_table_generator is designed to accept a game_id parameter
+
+    cursor.execute(f"CREATE TABLE IF NOT EXISTS {combo_table} AS SELECT {combo_table_generator}", [game_id])
+
+    connection.commit()
+
+    cursor.close()
+    connection.close()
+
+generate_generic_combo_table(game_id)
+

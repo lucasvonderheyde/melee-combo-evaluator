@@ -31,7 +31,7 @@ def move_combo_data_to_proper_stage(game_id, cursor):
                 break
             
         select_query = f'''
-            INSERT INTO {combo_table} (
+            INSERT INTO combos (
                 higher_post_id,
                 higher_post_frame,
                 higher_post_player_index, 

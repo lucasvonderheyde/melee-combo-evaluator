@@ -1,12 +1,83 @@
+/* ComboBlock.css */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+.combo-block {
+  background-color: white;
+  border: 2px solid #1E90FF; /* Blue border to match your theme */
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-family: 'Orbitron', sans-serif;
+}
+
 .combo-block.expanded {
-    position: fixed;  /* Use fixed to position relative to the viewport */
-    z-index: 1000;    /* Ensure it's on top of other elements */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 80%;       /* Adjust width as needed */
-    max-width: 600px; /* Optional: max-width to avoid overly wide blocks on large screens */
-    background-color: white;
-    border: 2px solid #333;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: adds shadow for better focus */
+  position: fixed;
+  z-index: 1000;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 600px;
+  overflow-y: auto;
+  max-height: 80vh; /* Limit the height of the expanded combo block */
+}
+
+.combo-block.expanded img {
+  max-width: 150px; /* Smaller maximum width for images */
+  max-height: 150px; /* Smaller maximum height for images */
+  margin: 10px; /* Space around images */
+}
+
+.combo-block.expanded .action-state-arrow {
+  display: inline-block;
+  margin: 0 10px; /* Space around the arrow */
+  height: 24px;
+  width: 24px;
+  background: url('./transparent-arrow-images-5.jpg') no-repeat center center; /* Path to your arrow icon */
+  background-size: contain;
+}
+
+.combo-block h3, .combo-block p {
+  margin: 5px 0;
+}
+
+.combo-block p {
+  font-size: 0.9em; /* Smaller font size for paragraphs */
+}
+
+.combo-block p.damage-done {
+  font-weight: bold;
+}
+
+.combo-block button {
+  padding: 10px 20px;
+  background-color: #1E90FF; /* Blue background to match your theme */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.combo-block button:hover {
+  background-color: #0B5ED7; /* Darker blue on hover */
+}
+
+/* Utility class to format numbers with two decimal places and add % sign */
+.percentage-format::after {
+  content: "%";
+}
+
+/* Hide the scrollbar when combo block is not expanded */
+.combo-block:not(.expanded) .action-states {
+  overflow-y: hidden;
+}
+
+/* Show the scrollbar when combo block is expanded */
+.combo-block.expanded .action-states {
+  overflow-y: auto;
 }
