@@ -56,7 +56,7 @@ const Evaluator = () => {
                 <FileUpload onUploadComplete={handleFileUploadComplete} />
                 <AllGamesDropdown onGameSelect={setSelectedGameId} />
                 {user && <UserGamesDropdown userId={user.id} onGameSelect={handleGameSelection} />}
-                {user && <LogoutButton />} {/* Show LogoutButton only if user is logged in */}
+                {user && <LogoutButton />} 
             </div>
             {gameData.settings && gameData.playerInfo && (
                 <GameSidebar 

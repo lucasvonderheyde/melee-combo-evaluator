@@ -1,35 +1,31 @@
 import React, { useEffect, useState } from 'react';
+import { charactersIdsFromPlayersInfoTable } from '../../gameIds'; // Import the character ID mappings
+import stageImages from '../../stageImages'; // Import the stage images
 import './GameSidebar.css'; // Ensure this path is correct
 
 const GameSidebar = ({ settings, playerInfo }) => {
-    // useState for stageName and stageImage
     const [stageDetails, setStageDetails] = useState({
         name: '',
         image: ''
     });
 
     useEffect(() => {
-        if (settings) {
-            // Assuming getStageDetails is a function that returns an object with name and image
+        if (settings && settings.stage_id !== undefined) {
             const details = getStageDetails(settings.stage_id);
             setStageDetails(details);
         }
     }, [settings]);
 
     const getCharacterIcon = (characterId) => {
-        switch (characterId) {
-            case 20: return '/falcocssicon.png';
-            case 2: return '/foxcssicon.png';
-            default: return '/defaulticon.png';
-        }
+        const characterName = charactersIdsFromPlayersInfoTable[characterId];
+        return `/character_data/${characterName}/${characterName}cssicon.png`; // Path assumes a consistent naming convention
     };
 
     // Function to get stage details based on stageId
     const getStageDetails = (stageId) => {
-        switch (stageId) {
-            case 31: return { name: 'Battlefield', image: '/Battlefieldssbm.webp' };
-            default: return { name: 'Unknown Stage', image: '/defaultstage.png' };
-        }
+        const stageImage = stageImages.Stages[stageId];
+        const stageName = stageId in stageImages.Stages ? 'Battlefield' : 'Unknown Stage'; // Temporary logic, needs proper mapping
+        return { name: stageName, image: stageImage || '/defaultstage.png' };
     };
 
     return (

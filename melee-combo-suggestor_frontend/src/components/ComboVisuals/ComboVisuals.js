@@ -1,13 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import ComboBlock from '../ComboBlock/ComboBlock';
-import './ComboVisuals.css'
+import characterImages from '../../characterImages';  // Import the character images
+import  {characterIdsFromCombosTable} from '../../gameIds'; // Import the character ID mappings
+import './ComboVisuals.css';
+
+const getCharacterImageFromId = (characterId) => {
+    // Check if characterId is in the table, else return a default image
+    if (characterId in characterIdsFromCombosTable) {
+        const characterName = characterIdsFromCombosTable[characterId].toLowerCase();
+        return characterImages[characterName]?.stockIcon || '/defaultCharacterIcon.png';
+    }
+    return '/defaultCharacterIcon.png'; // Default image if ID not found
+};
 
 const ComboVisuals = ({ combos }) => {
     const [groupedCombos, setGroupedCombos] = useState({ lowerPortPlayerCombos: {}, higherPortPlayerCombos: {} });
-    const [expandedComboBlock, setExpandedComboBlock] = useState(null)
+    const [expandedComboBlock, setExpandedComboBlock] = useState(null);
 
     useEffect(() => {
-        console.log(combos)
         if (combos) {
             const lowerPortPlayerCombos = {};
             const higherPortPlayerCombos = {};
@@ -41,34 +51,35 @@ const ComboVisuals = ({ combos }) => {
     return (
         <div className="combo-visuals-container">
             <div className="character-combos lower-port">
-                <img src='falcoStock.png' alt='Falco'/>
+                <img src={getCharacterImageFromId(combos[0]?.lower_post_internal_character_id)} alt='Lower Port Character' />
                 {Object.entries(groupedCombos.lowerPortPlayerCombos).map(([comboBlock, frames]) => (
-                <ComboBlock 
-                    key={`lowerPort-${comboBlock}`} 
-                    frames={frames}
-                    comboBlockId={comboBlock}  // Pass the comboBlockId
-                    expandedComboBlock={expandedComboBlock}
-                    setExpandedComboBlock={handleComboBlockClick} 
-                    playerport='lowerportplayer' 
-                />
+                    <ComboBlock 
+                        key={`lowerPort-${comboBlock}`}
+                        frames={frames}
+                        comboBlockId={comboBlock}
+                        expandedComboBlock={expandedComboBlock}
+                        setExpandedComboBlock={handleComboBlockClick}
+                        playerport='lowerportplayer'
+                        characterId={combos[0]?.lower_post_internal_character_id}
+                    />
                 ))}
             </div>
             <div className="character-combos higher-port">
-                <img src='foxStock.png' alt='Fox'/>
+                <img src={getCharacterImageFromId(combos[0]?.higher_post_internal_character_id)} alt='Higher Port Character' />
                 {Object.entries(groupedCombos.higherPortPlayerCombos).map(([comboBlock, frames]) => (
                     <ComboBlock 
-                        key={`higherPort-${comboBlock}`} 
+                        key={`higherPort-${comboBlock}`}
                         frames={frames}
                         comboBlockId={`higherPort-${comboBlock}`}
                         expandedComboBlock={expandedComboBlock}
-                        setExpandedComboBlock={handleComboBlockClick} 
-                        playerport='higherportplayer' 
+                        setExpandedComboBlock={handleComboBlockClick}
+                        playerport='higherportplayer'
+                        characterId={combos[0]?.higher_post_internal_character_id}
                     />
                 ))}
             </div>
         </div>
     );
 };
-
 
 export default ComboVisuals;

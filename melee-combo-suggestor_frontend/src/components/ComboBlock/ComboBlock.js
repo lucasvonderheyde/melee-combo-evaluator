@@ -1,13 +1,19 @@
 import { useState } from 'react';
 import Papa from 'papaparse';
-import moveImages from '../../moveImages'
-import './ComboBlock.css'
+import moveImages from '../../moveImages';
+import { characterIdsFromCombosTable } from '../../gameIds'; // Import the character ID mappings
+import './ComboBlock.css';
 
-const ComboBlock = ({ frames, setExpandedComboBlock, expandedComboBlock, playerport }) => {
+const ComboBlock = ({ frames, setExpandedComboBlock, expandedComboBlock, playerport, characterId }) => {
     const deathActionStateIds = [0, 1, 2, 4, 8];
     const comboBlockId = frames[0]?.combo_block_for_model;
     let isLowerPlayer = playerport === 'higherportplayer' ? false : true;
     const [score, setScore] = useState(null);
+
+    // Function to get character name from ID
+    const getCharacterName = (id) => {
+        return characterIdsFromCombosTable[id]?.toLowerCase().replace(/\s/g, '');
+    };
 
     const handleClick = () => {
         setExpandedComboBlock(comboBlockId);
@@ -18,13 +24,13 @@ const ComboBlock = ({ frames, setExpandedComboBlock, expandedComboBlock, playerp
     }
 
     const renderActionStates = () => {
+        const characterName = getCharacterName(characterId);
         return frames.map((frame, index) => {
             const actionState = frame.attack_state_to_hit_in_combo_for_model;
-            const character = isLowerPlayer ? 'falco' : 'fox';
             
-            // Only proceed if actionState is not null
+            // Check if actionState is not null and actionState image exists
             if (actionState !== null && actionState !== undefined) {
-                const imagePath = moveImages[character][actionState] || `Action State ${actionState} image not available`;
+                const imagePath = moveImages[characterName]?.[actionState.toString()] || `Action State ${actionState} image not available`;
     
                 if (typeof imagePath === 'string') {
                     return (
@@ -55,7 +61,6 @@ const ComboBlock = ({ frames, setExpandedComboBlock, expandedComboBlock, playerp
             }
     
             const result = await response.json();
-            console.log('Score:', result);
             setScore(result);  // Update the score state
         } catch (error) {
             console.error('Error scoring combo:', error);
@@ -63,7 +68,7 @@ const ComboBlock = ({ frames, setExpandedComboBlock, expandedComboBlock, playerp
     };
     
     const renderScores = () => {
-        if (!score || expandedComboBlock !== comboBlockId) return null;  // Only show scores for the expanded block
+        if (!score || expandedComboBlock !== comboBlockId) return null;
 
         return (
             <div>
@@ -76,7 +81,7 @@ const ComboBlock = ({ frames, setExpandedComboBlock, expandedComboBlock, playerp
 
     return (
         <div className="combo-block">
-            <h3>Combo Block: {frames[0].combo_block_for_model}</h3>
+            <h3>Combo Block: {comboBlockId}</h3>
             <p>Number of Frames: {frames.length}</p>
             {isLowerPlayer 
                 ? <p>Damage Done: {frames[frames.length - 1].lower_port_damage_done_with_combo}</p>

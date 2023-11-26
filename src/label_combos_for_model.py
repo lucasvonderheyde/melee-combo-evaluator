@@ -271,7 +271,7 @@ if __name__ == "__main__":
         lower_post_percent, lower_post_action_state_counter, lower_post_misc_action_state, lower_post_last_ground_id, lower_post_jumps_remaining,
         lower_post_l_cancel_status, lower_post_hitlag_remaining, lower_post_animation_index, lower_post_self_induced_speeds_air_x, lower_post_self_induced_speeds_y, 
         lower_post_self_induced_speeds_attack_x, lower_post_self_induced_speeds_attack_y, lower_post_self_induced_speeds_ground_x, lower_post_last_attack_landed 
-        FROM combos_for_battlefield WHERE higher_post_game_id = %s ORDER BY higher_post_frame'''
+        FROM combos WHERE higher_post_game_id = %s ORDER BY higher_post_frame'''
 
     if os.environ.get('CALLED_FROM_FLASK') == '1':
         passed_game_id = sys.argv[1]
