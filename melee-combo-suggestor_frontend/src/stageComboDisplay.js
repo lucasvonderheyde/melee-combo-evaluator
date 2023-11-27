@@ -1,7 +1,7 @@
 const stageData = [
 
     {
-        "id": "2",
+        "id": 2,
         "name": "Fountain of Dreams",
         "imagePath": "/comboStages/fodcomponent.png",
         "dimensions": {
@@ -9,6 +9,8 @@ const stageData = [
             "blastzonebottom": -146.25,
             "blastzoneleft": -198.75,
             "blastzoneright": 198.75,
+            'gameunitsheight': 348.75,
+            'gameunitswidth': 397.5,
             "imageheightpx": 4075,
             "imagewidthpx": 3588,
             "scaleX": 9.027,
@@ -18,7 +20,7 @@ const stageData = [
         }
     },
     {
-        "id": "3",
+        "id": 3,
         "name": "Pokémon Stadium",
         "imagePath": "/comboStages/pscomponent.png",
         "dimensions": {
@@ -26,6 +28,8 @@ const stageData = [
             "blastzonebottom": -111,
             "blastzoneleft": -230,
             "blastzoneright": 230,
+            'gameunitsheight': 291,
+            'gameunitswidth': 460,
             "imageheightpx": 4700,
             "imagewidthpx": 3010,
             "scaleX": 6.543,
@@ -35,7 +39,7 @@ const stageData = [
         }
     },
     {
-        "id": "8",
+        "id": 8,
         "name": "Yoshi's Story",
         "imagePath": "/comboStages/yscomponent.png",
         "dimensions": {
@@ -43,6 +47,8 @@ const stageData = [
             "blastzonebottom": -91,
             "blastzoneleft": -175.7,
             "blastzoneright": 173.6,
+            'gameunitsheight': 259,
+            'gameunitswidth': 349.3,
             "imageheightpx": 3593,
             "imagewidthpx": 2690,
             "scaleX": 7.690,
@@ -52,7 +58,7 @@ const stageData = [
         }
     },
     {
-        "id": "28",
+        "id": 28,
         "name": "Dream Land N64",
         "imagePath": "/comboStages/dlcomponent.png",
         "dimensions": {
@@ -60,6 +66,8 @@ const stageData = [
             "blastzonebottom": -123,
             "blastzoneleft": -255,
             "blastzoneright": 255,
+            'gameunitsheight': 373,
+            'gameunitswidth': 510,
             "imageheightpx": 5200,
             "imagewidthpx": 3830,
             "scaleX": 7.529,
@@ -69,7 +77,7 @@ const stageData = [
         }
     },
     {
-        "id": "31",
+        "id": 31,
         "name": "Battlefield",
         "imagePath": "/comboStages/bfcomponent.png",
         "dimensions": {
@@ -77,6 +85,8 @@ const stageData = [
             "blastzonebottom": -108.8,
             "blastzoneleft": -224,
             "blastzoneright": 224,
+            'gameunitsheight': 308.8,
+            'gameunitswidth': 448,
             "imageheightpx": 4580,
             "imagewidthpx": 3188,
             "scaleX": 7.107,
@@ -86,7 +96,7 @@ const stageData = [
         }
     },
     {
-        "id": "32",
+        "id": 32,
         "name": "Final Destination",
         "imagePath": "/comboStages/fdcomponent.png",
         "dimensions": {
@@ -94,6 +104,8 @@ const stageData = [
             "blastzonebottom": -140,
             "blastzoneleft": -246,
             "blastzoneright": 246,
+            'gameunitsheight': 328,
+            'gameunitswidth': 492,
             "imageheightpx": 4970,
             "imagewidthpx": 3380,
             "scaleX": 6.829,

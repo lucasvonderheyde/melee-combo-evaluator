@@ -35,8 +35,7 @@ const ComboBlock = ({ frames, setExpandedComboBlock, expandedComboBlock, playerp
     
                 if (typeof imagePath === 'string') {
                     return (
-                        <div key={index}>
-                            <p>Action State to Hit: {actionState}</p>
+                        <div key={index} className="action-state-container">
                             <img src={imagePath} alt={`Move ${actionState}`} />
                         </div>
                     );
@@ -47,6 +46,18 @@ const ComboBlock = ({ frames, setExpandedComboBlock, expandedComboBlock, playerp
             return null;
         });
     };
+
+    const countActionStates = () => {
+        const actionStateList = []
+        frames.forEach(frame => {
+            if (frame.attack_state_to_hit_in_combo_for_model != null) {
+                actionStateList.push(frame.attack_state_to_hit_in_combo_for_model);
+            }
+        });
+        return actionStateList.length;
+    };
+
+    const numberOfMoves = countActionStates();
 
     const handleComboAiClick = async () => {
         const csv = Papa.unparse(frames);
@@ -80,13 +91,18 @@ const ComboBlock = ({ frames, setExpandedComboBlock, expandedComboBlock, playerp
         );
     };
 
+    const formatDamage = (damage) => {
+        return `${parseFloat(damage).toFixed(2)}%`; // Convert to float, format, and add '%'
+    };
+
     return (
         <div className="combo-block">
             <h3>Combo: {comboBlockId}</h3>
             <p>Number of Frames: {frames.length}</p>
+            <p>Number of Moves: {numberOfMoves}</p>
             {isLowerPlayer 
-                ? <p>Damage Done: {frames[frames.length - 1].lower_port_damage_done_with_combo}</p>
-                : <p>Damage Done: {frames[frames.length - 1].higher_port_damage_done_with_combo}</p>}
+                ? <p>Damage Done: {formatDamage(frames[frames.length - 1].lower_port_damage_done_with_combo)}</p>
+                : <p>Damage Done: {formatDamage(frames[frames.length - 1].higher_port_damage_done_with_combo)}</p>}
             {isLowerPlayer && frames[frames.length - 1].higher_post_action_state_id in deathActionStateIds
                 ? <p>Stock Taken</p>
                 : null}

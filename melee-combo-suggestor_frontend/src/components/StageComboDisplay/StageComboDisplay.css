@@ -1,0 +1,23 @@
+.stage-combo-display {
+    position: relative; /* This positions the SVG absolutely relative to this container */
+    display: inline-block; /* This makes the div only as big as its contents */
+    line-height: 0; /* This removes any extra line-height space below the image */
+    width: 100%; /* Set the width to a specific value or percentage as required */
+    max-width: 600px; /* Example: max-width to constrain the image and SVG */
+    /* Optionally, you can set a height or max-height here if needed */
+}
+
+.stage-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%; /* SVG fills the width of its container */
+    height: 100%; /* SVG fills the height of its container */
+    z-index: 10; /* Ensure SVG is above the image */
+}
+
+.stage-image {
+    display: block; /* This removes any extra space below the image */
+    width: 100%; /* Image fills the width of its container */
+    height: auto; /* Keep the aspect ratio of the image */
+}
