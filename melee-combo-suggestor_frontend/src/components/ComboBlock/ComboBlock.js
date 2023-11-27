@@ -3,8 +3,9 @@ import Papa from 'papaparse';
 import moveImages from '../../moveImages';
 import { characterIdsFromCombosTable } from '../../gameIds'; // Import the character ID mappings
 import './ComboBlock.css';
+import StageComboDisplay from '../StageComboDisplay/StageComboDisplay';
 
-const ComboBlock = ({ frames, setExpandedComboBlock, expandedComboBlock, playerport, characterId }) => {
+const ComboBlock = ({ frames, setExpandedComboBlock, expandedComboBlock, playerport, characterId, settings }) => {
     const deathActionStateIds = [0, 1, 2, 4, 8];
     const comboBlockId = frames[0]?.combo_block_for_model;
     let isLowerPlayer = playerport === 'higherportplayer' ? false : true;
@@ -93,12 +94,17 @@ const ComboBlock = ({ frames, setExpandedComboBlock, expandedComboBlock, playerp
                 ? <p>Stock Taken</p>
                 : null}
             {expandedComboBlock === comboBlockId && (
-                <div className="action-states">
-                    {renderActionStates()}
-                    <button onClick={handleComboAiClick}>Score Combo</button>
+                <div className="expanded-content">
+                {renderActionStates()}
+                <button onClick={handleComboAiClick}>Score Combo</button>
+                {renderScores()}
+                <StageComboDisplay
+                    frames={frames}
+                    settings={settings}
+                    playerport={playerport}
+                />
                 </div>
             )}
-            {renderScores()}
             <button onClick={handleClick}>Details</button>
         </div>
     );

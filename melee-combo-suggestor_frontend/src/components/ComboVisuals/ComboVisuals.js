@@ -13,7 +13,7 @@ const getCharacterImageFromId = (characterId) => {
     return '/defaultCharacterIcon.png'; // Default image if ID not found
 };
 
-const ComboVisuals = ({ combos }) => {
+const ComboVisuals = ({ combos, settings }) => {
     const [groupedCombos, setGroupedCombos] = useState({ lowerPortPlayerCombos: {}, higherPortPlayerCombos: {} });
     const [expandedComboBlock, setExpandedComboBlock] = useState(null);
 
@@ -61,6 +61,7 @@ const ComboVisuals = ({ combos }) => {
                         setExpandedComboBlock={handleComboBlockClick}
                         playerport='lowerportplayer'
                         characterId={combos[0]?.lower_post_internal_character_id}
+                        settings={settings}
                     />
                 ))}
             </div>
@@ -75,6 +76,7 @@ const ComboVisuals = ({ combos }) => {
                         setExpandedComboBlock={handleComboBlockClick}
                         playerport='higherportplayer'
                         characterId={combos[0]?.higher_post_internal_character_id}
+                        settings={settings}
                     />
                 ))}
             </div>

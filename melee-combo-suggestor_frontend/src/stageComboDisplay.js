@@ -1,4 +1,5 @@
-[
+const stageData = [
+
     {
         "id": "2",
         "name": "Fountain of Dreams",
@@ -102,3 +103,5 @@
         }
     }
 ]
+
+export default stageData

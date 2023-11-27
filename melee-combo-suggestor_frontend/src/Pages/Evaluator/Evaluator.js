@@ -65,7 +65,7 @@ const Evaluator = () => {
                 />
             )}
             <div className="content">
-                {gameData.combos && <ComboVisuals combos={gameData.combos} />}
+                {gameData.combos && <ComboVisuals combos={gameData.combos} settings={gameData.settings} />}
             </div>
         </div>
     );
