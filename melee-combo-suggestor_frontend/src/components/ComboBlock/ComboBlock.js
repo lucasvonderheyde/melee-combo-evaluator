@@ -17,7 +17,7 @@ const ComboBlock = ({ frames, setExpandedComboBlock, expandedComboBlock, playerp
     };
 
     const handleClick = () => {
-        setExpandedComboBlock(comboBlockId);
+        setExpandedComboBlock(expandedComboBlock === comboBlockId ? null : comboBlockId);
     };
 
     if (expandedComboBlock !== null && expandedComboBlock !== comboBlockId) {
@@ -26,6 +26,8 @@ const ComboBlock = ({ frames, setExpandedComboBlock, expandedComboBlock, playerp
 
     const renderActionStates = () => {
         const characterName = getCharacterName(characterId);
+        let moveCounter = 1;
+
         return frames.map((frame, index) => {
             const actionState = frame.attack_state_to_hit_in_combo_for_model;
             
@@ -96,7 +98,7 @@ const ComboBlock = ({ frames, setExpandedComboBlock, expandedComboBlock, playerp
     };
 
     return (
-        <div className="combo-block">
+        <div className={`combo-block ${expandedComboBlock === comboBlockId ? 'expanded-fullscreen' : ''}`}>
             <h3>Combo: {comboBlockId}</h3>
             <p>Number of Frames: {frames.length}</p>
             <p>Number of Moves: {numberOfMoves}</p>

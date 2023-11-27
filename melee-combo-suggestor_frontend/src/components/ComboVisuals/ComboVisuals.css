@@ -4,31 +4,32 @@
 
 .combo-visuals-container {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
     width: 100%;
     padding: 20px; /* Padding for all sides */
     padding-top: 60px; /* Additional padding-top to push content down */
     box-sizing: border-box;
     margin-top: 80px; /* Adjust if necessary to give space below the navbar */
-    margin-bottom: 10px; /* Space at the bottom */
+    margin-bottom: 10px;
+    margin-left: 160px; /* Space at the bottom */
     height: auto; /* Allow container to grow with content */
     max-height: 880px; /* Adjusted to include padding and margins */
     background-color: transparent; /* Make the container fully transparent */
 }
 
 .character-combos {
-    flex-grow: 1;
-    padding: 20px; /* More padding for spacing */
-    padding-top: 15px; /* Space between character image and first combo block */
+    flex-grow: 1; 
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
     margin: 0 5px;
-    min-width: 500px;
+    min-width: 550px;
     width: 45%;
     overflow-y: auto;
-    max-height: calc(100vh - 180px); /* Adjusted to include padding and margins */
+    flex: 1 1 auto; /* flex-grow, flex-shrink, flex-basis */
+    max-width: 45%;
+    padding-top: 30px;
 }
 
 .character-combos::-webkit-scrollbar {

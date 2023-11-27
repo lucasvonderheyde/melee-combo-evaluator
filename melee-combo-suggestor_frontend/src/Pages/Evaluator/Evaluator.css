@@ -21,10 +21,6 @@ body {
     background-color: #333; /* Navbar color */
 }
 
-.evaluator-container {
-    padding-top: 60px; /* Height of the navbar, plus space for the banner */
-}
-
 .banner-container {
     display: flex;
     justify-content: space-between; /* Evenly space elements */
@@ -78,13 +74,6 @@ body {
 
 .logout-button:hover {
     background-color: #d9534f; /* Darker red on hover */
-}
-
-.content {
-    flex-grow: 1;
-    padding-top: 140px; /* Height of navbar plus banner */
-    padding: 20px;
-    overflow-y: auto; /* Enable scrolling for the content */
 }
 
 /* Additional global styles */

@@ -16,32 +16,10 @@
   height: auto; /* Adjusted for initial height */
 }
 
-.combo-block.expanded {
-  position: fixed;
-  z-index: 1000;
-  top: 10%;
-  left: 10%;
-  right: 10%; /* Added to maintain margins on the sides */
-  bottom: 10%; /* Added to maintain margins from the bottom */
-  width: auto; /* Adjusted to auto to fill the space */
-  max-height: 80vh; /* Limit the height of the expanded combo block */
-  transform: none; /* Removed translate as we're using top/left/right/bottom */
-  overflow: auto; /* Ensure that the entire block scrolls */
-  border-radius: 0; /* Optional: remove border-radius for full-screen effect */
-}
-
 .combo-block.expanded img {
   max-width: 100%; /* Allow images to fill the width */
   height: auto; /* Maintain aspect ratio */
   margin: 10px 0; /* Adjusted margin */
-}
-
-/* Additional styles for stage-combo-display within an expanded combo block */
-.combo-block.expanded .stage-combo-display {
-  display: block; /* Ensure it's a block element */
-  max-width: 100%; /* Maximum width set to 100% */
-  max-height: 60vh; /* Limit the height to 60% of the viewport height */
-  margin: 0 auto; /* Center it horizontally */
 }
 
 .combo-block h3, .combo-block p {
@@ -95,13 +73,9 @@
   overflow-y: hidden;
 }
 
-/* Show the scrollbar when combo block is expanded */
-.combo-block.expanded .action-states {
-  overflow-y: auto;
-}
-
 .action-state-container img {
   width: 100px; /* Set a fixed width for all action state images */
   height: 100px; /* Set a fixed height for all action state images */
   object-fit: cover; /* This will cover the area without stretching the image */
 }
+
