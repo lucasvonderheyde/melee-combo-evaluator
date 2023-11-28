@@ -45,6 +45,7 @@ const Evaluator = () => {
     const handleGameSelection = (gameId) => {
         setSelectedGameId(gameId);
         setIsActionInitiated(true);
+        setIsLoading(true);
     };
 
     const handleFileUploadComplete = (data) => {
@@ -53,16 +54,22 @@ const Evaluator = () => {
             settings: data.settings,
             playerInfo: data.players_info
         });
+        setIsLoading(false);
+        setIsActionInitiated(true);
+    };
+
+    const handleUploadStart = () => {
+        setIsLoading(true);
         setIsActionInitiated(true);
     };
 
     return (
         <div className="evaluator-container">
-            <div className="fixed-background"></div> 
             <NavBar />
+            <div className="fixed-background"></div>
             <div className="banner-container">
-                <FileUpload onUploadComplete={handleFileUploadComplete} />
-                <AllGamesDropdown onGameSelect={setSelectedGameId} />
+                <FileUpload onUploadComplete={handleFileUploadComplete} onUploadStart={handleUploadStart} />
+                <AllGamesDropdown onGameSelect={handleGameSelection} />
                 {user && <UserGamesDropdown userId={user.id} onGameSelect={handleGameSelection} />}
                 {user && <LogoutButton />}
             </div>

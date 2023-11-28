@@ -11,6 +11,8 @@ const ComboBlock = ({ frames, setExpandedComboBlock, expandedComboBlock, playerp
     let isLowerPlayer = playerport === 'higherportplayer' ? false : true;
     const [score, setScore] = useState(null);
 
+    console.log(frames)
+    console.log(settings)
     // Function to get character name from ID
     const getCharacterName = (id) => {
         return characterIdsFromCombosTable[id]?.toLowerCase().replace(/\s/g, '');

@@ -85,6 +85,35 @@ const moveImages = {
         "54": "throws/bthrow.png",
         "55": "throws/upthrow.png",
         "56": "throws/dthrow.png"
+    },
+    captainfalcon: {
+        "2": "/gifs/captainfalcon_gifs/jab1.gif",
+        "3": "/gifs/captainfalcon_gifs/jab2.gif",
+        "4": "/gifs/captainfalcon_gifs/jab3.gif",
+        "5": "/gifs/captainfalcon_gifs/jab3.gif",
+        "6": "/gifs/captainfalcon_gifs/dattack.gif",
+        "7": "/gifs/captainfalcon_gifs/ftilt.gif",
+        "8": "/gifs/captainfalcon_gifs/utilt.gif",
+        "9": "/gifs/captainfalcon_gifs/dtilt.gif",
+        "10": "/gifs/captainfalcon_gifs/fsmash.gif",
+        "11": "/gifs/captainfalcon_gifs/usmash.gif",
+        "12": "/gifs/captainfalcon_gifs/dsmash.gif",
+        "13": "/gifs/captainfalcon_gifs/nair.gif",
+        "14": "/gifs/captainfalcon_gifs/fair.gif",
+        "15": "/gifs/captainfalcon_gifs/bair.gif",
+        "16": "/gifs/captainfalcon_gifs/uair.gif",
+        "17": "/gifs/captainfalcon_gifs/dair.gif",
+        "18": "/gifs/captainfalcon_gifs/neutralb.gif",
+        "19": "/gifs/captainfalcon_gifs/sideb.gif",
+        "20": "/gifs/captainfalcon_gifs/upb.gif",
+        "21": "/gifs/captainfalcon_gifs/downb.gif",
+        "32": "Get Up Attack (From Back)",
+        "51": "Get Up Attack (From Front)",
+        "52": "throws/pummel.png",
+        "53": "throws/fthrow.png",
+        "54": "throws/bthrow.png",
+        "55": "throws/upthrow.png",
+        "56": "throws/dthrow.png"
     }
 }
 

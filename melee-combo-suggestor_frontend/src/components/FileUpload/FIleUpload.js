@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { AuthContext } from '../../AuthContext';
 import './FileUpload.css';
 
-const FileUpload = ({ onUploadComplete }) => {
+const FileUpload = ({ onUploadComplete, onUploadStart }) => {
     const [file, setFile] = useState(null);
     const { user } = useContext(AuthContext);
 
@@ -12,9 +12,10 @@ const FileUpload = ({ onUploadComplete }) => {
 
     const handleFileUpload = async () => {
         if (file) {
+            onUploadStart(); // Notify Evaluator component that upload has started
             const formData = new FormData();
             formData.append('slpFile', file);
-            
+
             // Add user ID to form data if a user is logged in
             if (user && user.id) {
                 formData.append('userId', user.id);
