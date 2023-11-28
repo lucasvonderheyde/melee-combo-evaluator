@@ -13,10 +13,13 @@ const Evaluator = () => {
     const { user } = useContext(AuthContext);
     const [selectedGameId, setSelectedGameId] = useState(null);
     const [gameData, setGameData] = useState({ combos: null, settings: null, playerInfo: null });
+    const [isActionInitiated, setIsActionInitiated] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        const fetchGameData = async () => {
-            if (selectedGameId) {
+        if (selectedGameId) {
+            setIsLoading(true);
+            const fetchGameData = async () => {
                 try {
                     const response = await fetch(`http://127.0.0.1:5555/api/games/${selectedGameId}`);
                     if (!response.ok) {
@@ -30,15 +33,18 @@ const Evaluator = () => {
                     });
                 } catch (error) {
                     console.error('Error fetching game data:', error);
+                } finally {
+                    setIsLoading(false);
                 }
-            }
-        };
+            };
 
-        fetchGameData();
+            fetchGameData();
+        }
     }, [selectedGameId]);
 
     const handleGameSelection = (gameId) => {
         setSelectedGameId(gameId);
+        setIsActionInitiated(true);
     };
 
     const handleFileUploadComplete = (data) => {
@@ -47,6 +53,7 @@ const Evaluator = () => {
             settings: data.settings,
             playerInfo: data.players_info
         });
+        setIsActionInitiated(true);
     };
 
     return (
@@ -56,8 +63,19 @@ const Evaluator = () => {
                 <FileUpload onUploadComplete={handleFileUploadComplete} />
                 <AllGamesDropdown onGameSelect={setSelectedGameId} />
                 {user && <UserGamesDropdown userId={user.id} onGameSelect={handleGameSelection} />}
-                {user && <LogoutButton />} 
+                {user && <LogoutButton />}
             </div>
+            {!isActionInitiated && (
+                <div className="placeholder-container">
+                    <p className="overlay-message">Upload or select a game</p>
+                    <img src="/backendimages/Blank_2_Grids_Collage-removebg-preview.png" alt="Placeholder" />
+                </div>
+            )}
+            {isLoading && (
+                <div className="loading-container">
+                    <img src="/backendimages/180px-MultiShine.gif" alt="Loading..." />
+                </div>
+            )}
             {gameData.settings && gameData.playerInfo && (
                 <GameSidebar 
                     settings={gameData.settings} 

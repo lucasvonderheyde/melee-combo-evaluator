@@ -1,44 +1,55 @@
-/* Import the Orbitron font */
+/* HomePage.css */
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
-/* HomePage.css */
 .home-container {
     height: 100vh;
     background-size: cover;
     position: relative;
-    font-family: 'Orbitron', sans-serif; /* Consistent font family */
-    color: #000; /* Set text color to dark for better contrast */
-}
-
-/* Use a semi-transparent overlay for better text readability if needed */
-.overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(255, 255, 255, 0.1); /* Light overlay for text readability */
-    z-index: 1; /* Below the text */
+    font-family: 'Orbitron', sans-serif;
+    /* Using a light text color to contrast against a presumably darker background */
+    color: #f0f0f0; 
 }
 
 .content {
     position: absolute;
-    top: 50%;
+    /* Positioning the content lower on the page */
+    top: 60%;
     left: 50%;
-    transform: translate(-50%, -50%); /* Center the content */
-    text-align: center; /* Center the text within the content div */
-    z-index: 2; /* Above the overlay */
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 2;
 }
 
 .welcome-message {
-    font-size: 3rem; /* Larger font size for main message */
-    color: #1E90FF; /* Pleasing blue color consistent with the active state in the navbar */
-    margin: 0; /* Reset default margin */
-    padding: 0; /* Reset default padding */
+    font-size: 3rem;
+    /* Using a drop shadow to enhance legibility */
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7); 
 }
 
 .user-greeting {
-    font-size: 1.5rem; /* Smaller font size for the user greeting */
-    color: #000; /* Dark color for contrast */
-    margin-top: 1rem; /* Space above the user greeting */
+    font-size: 1.5rem;
+    /* A lighter drop shadow for subtler text */
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7); 
+    margin-top: 1rem;
+}
+
+.background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .welcome-message {
+        font-size: 2rem;
+    }
+
+    .user-greeting {
+        font-size: 1rem;
+    }
 }

@@ -1,0 +1,31 @@
+/* ProfilePage.css */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+.profile-container {
+    font-family: 'Orbitron', sans-serif;
+    color: #333; /* Adjust the color to match your theme */
+    max-width: 600px; /* Or your preferred max width */
+    margin: 0 auto; /* Center the container */
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8); /* Slight transparency can be adjusted */
+    border-radius: 8px; /* Match the border-radius to other elements */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    margin-top: 60px; /* Space from the top */
+}
+
+.profile-container h1 {
+    text-align: center;
+    color: #1E90FF; /* Your theme blue */
+}
+
+.profile-container p {
+    font-size: 1.1em;
+    margin: 10px 0; /* Space between paragraphs */
+    line-height: 1.6; /* For better readability */
+}
+
+/* Specific styles for strong tag to make text bold and potentially a different color */
+.profile-container strong {
+    font-weight: bold;
+    color: #1E90FF; /* You can use the theme color here as well */
+}

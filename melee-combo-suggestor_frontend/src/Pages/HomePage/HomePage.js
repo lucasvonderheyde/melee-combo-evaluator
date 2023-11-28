@@ -8,6 +8,7 @@ export default function HomePage() {
     console.log("User in HomePage:", user)
     return (
         <div className="home-container">
+            <img src="/backendimages/combofox-removebg.png" alt="Background Image" className="background-image"/>
             <NavBar />
             <div className="overlay"></div>
             <div className="content">
