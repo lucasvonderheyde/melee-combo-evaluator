@@ -58,6 +58,7 @@ const Evaluator = () => {
 
     return (
         <div className="evaluator-container">
+            <div className="fixed-background"></div> 
             <NavBar />
             <div className="banner-container">
                 <FileUpload onUploadComplete={handleFileUploadComplete} />

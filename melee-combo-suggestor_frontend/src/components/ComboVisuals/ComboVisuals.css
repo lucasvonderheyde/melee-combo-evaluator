@@ -7,9 +7,9 @@
     justify-content: space-between;
     width: 100%;
     padding: 20px; /* Padding for all sides */
-    padding-top: 60px; /* Additional padding-top to push content down */
+    padding-top: 0; /* Additional padding-top to push content down */
     box-sizing: border-box;
-    margin-top: 80px; /* Adjust if necessary to give space below the navbar */
+    margin-top: 15px; /* Adjust if necessary to give space below the navbar */
     margin-bottom: 10px;
     margin-left: 160px; /* Space at the bottom */
     height: auto; /* Allow container to grow with content */
@@ -43,8 +43,8 @@
 
 .combo-block {
     width: 100%;
-    margin-bottom: 20px; /* More space after each combo block */
-    padding: 15px; /* More padding inside combo blocks */
+    margin-bottom: 10px; /* More space after each combo block */
+    padding: 5px; /* More padding inside combo blocks */
     background-color: #ffffff; /* Solid white background for combo blocks */
     border: 1px solid #bbb;
     border-radius: 8px;
