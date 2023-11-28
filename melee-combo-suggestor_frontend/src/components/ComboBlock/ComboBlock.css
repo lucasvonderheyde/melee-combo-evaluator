@@ -3,9 +3,9 @@
 
 .combo-block {
   background-color: white;
-  border: 3px solid #1E90FF; /* Slightly thicker blue border to match your theme */
+  border: 3px solid #1E90FF; /* Blue border to match your theme */
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Slightly stronger shadow for depth */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Shadow for depth */
   padding: 20px;
   margin-bottom: 20px;
   transition: all 0.3s ease;
@@ -14,30 +14,21 @@
   position: relative;
   width: 480px;
   height: auto;
-
-  /* Additional hover effect for the border */
-  &:hover {
-    border-color: #0B5ED7; /* Darker blue on hover */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Stronger shadow on hover */
-  }
-}
-
-.combo-block.expanded img {
-  max-width: 100%; /* Allow images to fill the width */
-  height: auto; /* Maintain aspect ratio */
-  margin: 10px 0; /* Adjusted margin */
 }
 
 .combo-block h3, .combo-block p {
   margin: 5px 0;
-}
-
-.combo-block p {
-  font-size: 0.9em; /* Smaller font size for paragraphs */
+  color: #333; /* Dark color for better readability against light background */
 }
 
 .combo-block p.damage-done {
   font-weight: bold;
+  color: #28A745; /* Green color indicating the damage percentage */
+}
+
+.combo-block p.stock-taken {
+  font-weight: bold;
+  color: #DC3545; /* Red color indicating stock taken */
 }
 
 .combo-block button {
@@ -49,39 +40,19 @@
   cursor: pointer;
   margin-top: 10px;
   transition: background-color 0.3s ease;
-}
-
-.combo-block button {
-  padding: 10px 20px;
-  background-color: #1E90FF; /* Blue background to match your theme */
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-family: 'Orbitron', sans-serif; /* Apply the Orbitron font to buttons */
-  font-size: 1em; /* Adjust the font size as needed */
-  margin-top: 10px;
-  transition: background-color 0.3s ease;
-  outline: none; /* Remove the outline to match the theme better */
 }
 
 .combo-block button:hover {
   background-color: #0B5ED7; /* Darker blue on hover */
 }
 
-/* Utility class to format numbers with two decimal places and add % sign */
 .percentage-format::after {
   content: "%";
-}
-
-/* Hide the scrollbar when combo block is not expanded */
-.combo-block:not(.expanded) .action-states {
-  overflow-y: hidden;
+  color: #333; /* Dark color for the percentage symbol */
 }
 
 .action-state-container img {
-  width: 100px; /* Set a fixed width for all action state images */
-  height: 100px; /* Set a fixed height for all action state images */
-  object-fit: cover; /* This will cover the area without stretching the image */
+  width: 100px; /* Fixed width for all action state images */
+  height: 100px; /* Fixed height for all action state images */
+  object-fit: cover; /* Cover the area without stretching the image */
 }
-

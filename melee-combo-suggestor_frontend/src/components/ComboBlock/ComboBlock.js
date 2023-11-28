@@ -5,14 +5,45 @@ import { characterIdsFromCombosTable } from '../../gameIds'; // Import the chara
 import './ComboBlock.css';
 import StageComboDisplay from '../StageComboDisplay/StageComboDisplay';
 
+const darkenColor = (color, factor) => {
+    let hex = color.replace('#', '');
+    let r = parseInt(hex.substring(0,2), 16);
+    let g = parseInt(hex.substring(2,4), 16);
+    let b = parseInt(hex.substring(4,6), 16);
+
+    r = Math.floor(r * (1 - factor));
+    g = Math.floor(g * (1 - factor));
+    b = Math.floor(b * (1 - factor));
+
+    r = r.toString(16).padStart(2, '0');
+    g = g.toString(16).padStart(2, '0');
+    b = b.toString(16).padStart(2, '0');
+
+    return `#${r}${g}${b}`;
+};
+
+const getBackgroundColor = (damage, stockTaken, isLowerPlayer) => {
+    if (stockTaken) return '#DC3545'; // Dark green for stock taken
+    const damagePercent = parseFloat(damage);
+    const baseColor = isLowerPlayer ? '#80e27e' : '#ffb74d'; // Light green for lower port, light orange for higher port
+    const darkeningFactor = Math.min(damagePercent / 100, 1); // Cap at 100%
+    return darkenColor(baseColor, darkeningFactor);
+};
+
 const ComboBlock = ({ frames, setExpandedComboBlock, expandedComboBlock, playerport, characterId, settings }) => {
     const deathActionStateIds = [0, 1, 2, 4, 8];
     const comboBlockId = frames[0]?.combo_block_for_model;
     let isLowerPlayer = playerport === 'higherportplayer' ? false : true;
     const [score, setScore] = useState(null);
 
-    console.log(frames)
-    console.log(settings)
+    const stockTaken = isLowerPlayer 
+        ? frames[frames.length - 1].higher_post_action_state_id in deathActionStateIds
+        : frames[frames.length - 1].lower_post_action_state_id in deathActionStateIds;
+
+    const damageDone = isLowerPlayer 
+        ? frames[frames.length - 1].lower_port_damage_done_with_combo
+        : frames[frames.length - 1].higher_port_damage_done_with_combo;
+
     // Function to get character name from ID
     const getCharacterName = (id) => {
         return characterIdsFromCombosTable[id]?.toLowerCase().replace(/\s/g, '');
@@ -100,7 +131,9 @@ const ComboBlock = ({ frames, setExpandedComboBlock, expandedComboBlock, playerp
     };
 
     return (
-        <div className={`combo-block ${expandedComboBlock === comboBlockId ? 'expanded-fullscreen' : ''}`}>
+        
+        <div className={`combo-block ${expandedComboBlock === comboBlockId ? 'expanded-fullscreen' : ''}`} style={{
+            backgroundColor: getBackgroundColor(damageDone, stockTaken, isLowerPlayer)}}>
             <h3>Combo: {comboBlockId}</h3>
             <p>Number of Frames: {frames.length}</p>
             <p>Number of Moves: {numberOfMoves}</p>
