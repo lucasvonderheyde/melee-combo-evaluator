@@ -6,7 +6,7 @@ import AllGamesDropdown from '../../components/AllGamesDropdown/AllGamesDropdown
 import ComboVisuals from '../../components/ComboVisuals/ComboVisuals';
 import GameSidebar from '../../components/GameSidebar/GameSidebar';
 import { AuthContext } from '../../AuthContext';
-import FileUpload from '../../components/FileUpload/FileUpload';
+import FileUpload from '../../components/FileUpload/FIleUpload';
 import './Evaluator.css';
 
 const Evaluator = () => {
