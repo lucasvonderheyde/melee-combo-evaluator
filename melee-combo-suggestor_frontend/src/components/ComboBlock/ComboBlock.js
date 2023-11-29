@@ -59,7 +59,6 @@ const ComboBlock = ({ frames, setExpandedComboBlock, expandedComboBlock, playerp
 
     const renderActionStates = () => {
         const characterName = getCharacterName(characterId);
-        let moveCounter = 1;
 
         return frames.map((frame, index) => {
             const actionState = frame.attack_state_to_hit_in_combo_for_model;

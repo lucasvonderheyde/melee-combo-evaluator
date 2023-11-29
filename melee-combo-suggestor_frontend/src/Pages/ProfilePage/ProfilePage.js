@@ -6,7 +6,7 @@ import LogoutButton from '../../components/LogoutButton/LogoutButton';
 import './ProfilePage.css';
 
 const ProfilePage = () => {
-    const { user, setUser } = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
 
     // State for editing fields
     const [editing, setEditing] = useState(false);
