@@ -156,7 +156,7 @@ def register():
 
 @app.route('/login', methods=['POST'])
 def login():
-    from sql_models import User  # Local import of User
+    from sql_models import User
 
     data = request.get_json()
     username = data.get('username')
@@ -166,15 +166,11 @@ def login():
 
     if user and user.check_password(password):
         session['user_id'] = user.id
-        print(f"User ID set in session: {session['user_id']}")  # Print statement to verify
-        user_data = {
-            "id": user.id,
-            "username": user.username,
-            "email": user.email
-        }
+        user_data = user.serialize()  # Serialize user data
         return jsonify({"message": "Login successful", "user": user_data}), 200
 
     return jsonify({"message": "Invalid username or password"}), 401
+
 
 @app.route('/logout', methods=['POST'])
 def logout():
@@ -243,6 +239,59 @@ def games_by_id(game_id):
     }
 
     return jsonify(response_data)
+
+@app.route('/update-profile-picture', methods=['POST'])
+def update_profile_picture():
+    from sql_models import User  # Local import of User
+
+    user_id = request.form.get('user_id')
+    file = request.files.get('profile_picture')
+
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(file_path)
+
+        user = combo_db.session.query(User).filter_by(id=user_id).first()
+        if user:
+            user.profile_picture = file_path
+            combo_db.session.commit()
+            return jsonify({"message": "Profile picture updated successfully"}), 200
+        else:
+            return jsonify({"error": "User not found"}), 404
+
+    return jsonify({"error": "Invalid file or no file provided"}), 400
+
+@app.route('/update-account', methods=['POST'])
+def update_account():
+    from sql_models import User
+
+    data = request.get_json()
+    user_id = data.get('user_id')
+    new_username = data.get('new_username')
+    new_email = data.get('new_email')
+    new_favorite_combo = data.get('favorite_combo')
+    new_main_character = data.get('main_character')
+    new_secondary_character = data.get('secondary_character')
+
+    user = combo_db.session.query(User).filter_by(id=user_id).first()
+    if user:
+        if new_username:
+            user.username = new_username
+        if new_email:
+            user.email = new_email
+        if new_favorite_combo:
+            user.favorite_combo = new_favorite_combo
+        if new_main_character:
+            user.main_character = new_main_character
+        if new_secondary_character:
+            user.secondary_character = new_secondary_character
+        combo_db.session.commit()
+
+        updated_user_data = user.serialize()  # Serialize the updated user data
+        return jsonify({"message": "Account updated successfully", "user": updated_user_data}), 200
+
+    return jsonify({"error": "User not found"}), 404
 
 def clear_folder(folder_path):
     for filename in os.listdir(folder_path):

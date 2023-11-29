@@ -1,9 +1,10 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, Float, Boolean, UniqueConstraint, BigInteger, Double
+from sqlalchemy import Column, String, Integer, ForeignKey, Float, Boolean, UniqueConstraint, BigInteger, Double, event
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import create_engine
 from database_info import database
 from werkzeug.security import generate_password_hash, check_password_hash
+import re
 
 
 Base = declarative_base()
@@ -307,19 +308,51 @@ class LowerPortPlayerPreFrames(Base):
 class User(Base):
     __tablename__ = 'users'
 
+    # Existing fields
     id = Column(Integer, primary_key=True)
     username = Column(String(80), unique=True, nullable=False)
     email = Column(String(120), unique=True, nullable=False)
     password_hash = Column(String(255))
     profile_picture = Column(String)
+    favorite_combo = Column(String)
+    main_character = Column(String)
+    secondary_character = Column(String)
 
+    # Relationships
     uploaded_games = relationship('Metadata', backref='user', lazy=True)
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "username": self.username,
+            "email": self.email,
+            "profile_picture": self.profile_picture,
+            "favorite_combo": self.favorite_combo,
+            "main_character": self.main_character,
+            "secondary_character": self.secondary_character
+            # Add other fields as needed
+        }
+
+    # Password methods
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+# Email validation function
+def validate_email(target, value, oldvalue, initiator):
+    if not re.match(r"[^@]+@[^@]+\.[^@]+", value):
+        raise ValueError("Invalid email format")
+
+# Username validation function
+def validate_username(target, value, oldvalue, initiator):
+    if not re.match(r"^\w+$", value):  # Adjust regex as per your requirements
+        raise ValueError("Invalid username format")
+
+# Attaching listeners to the User model
+event.listen(User.email, 'set', validate_email, retval=False)
+event.listen(User.username, 'set', validate_username, retval=False)
     
 engine = create_engine(database)
 
