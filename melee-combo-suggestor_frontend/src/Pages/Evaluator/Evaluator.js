@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import FileUpload from "../../components/FileUpload/FileUpload";
 import LogoutButton from "../../components/LogoutButton/LogoutButton";
 import NavBar from "../../components/NavBar/NavBar";
 import UserGamesDropdown from '../../components/UserGameDropdown/UserGamesDropdown';
@@ -7,6 +6,7 @@ import AllGamesDropdown from '../../components/AllGamesDropdown/AllGamesDropdown
 import ComboVisuals from '../../components/ComboVisuals/ComboVisuals';
 import GameSidebar from '../../components/GameSidebar/GameSidebar';
 import { AuthContext } from '../../AuthContext';
+import FileUpload from '../../components/FileUpload/FileUpload';
 import './Evaluator.css';
 
 const Evaluator = () => {
