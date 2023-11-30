@@ -6,7 +6,7 @@ import LogoutButton from '../../components/LogoutButton/LogoutButton';
 import './ProfilePage.css';
 
 const ProfilePage = () => {
-    const { user } = useContext(AuthContext);
+    const { user, refreshUserData } = useContext(AuthContext);
 
     // State for editing fields
     const [editing, setEditing] = useState(false);
@@ -53,18 +53,19 @@ const ProfilePage = () => {
             return;
         }
 
-        // Set success message
         if (profileUpdated) {
             setMessage('Profile updated successfully!');
             setEditing(false);
+            await refreshUserData(); // Refresh user data
         }
     };
 
     return (
         <div>
             <NavBar />
+            <div className='fixed-background'></div>
             <div className="profile-container">
-                <h1>User Profile</h1>
+                <h1 className='user-heading' >User Profile</h1>
                 {user && (
                     <div>
                         <p><strong>Username:</strong> {user.username}</p>

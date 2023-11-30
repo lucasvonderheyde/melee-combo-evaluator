@@ -1,31 +1,142 @@
 /* ProfilePage.css */
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
-.profile-container {
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: none;
     font-family: 'Orbitron', sans-serif;
-    color: #333; /* Adjust the color to match your theme */
-    max-width: 600px; /* Or your preferred max width */
-    margin: 0 auto; /* Center the container */
-    padding: 20px;
-    background-color: rgba(255, 255, 255, 0.8); /* Slight transparency can be adjusted */
-    border-radius: 8px; /* Match the border-radius to other elements */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
-    margin-top: 60px; /* Space from the top */
 }
 
+.fixed-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Behind all other content */
+    background: url('../../backround4.webp') no-repeat center center;
+    background-size: cover;
+}
+
+/* Profile container positioned under the navbar and centered */
+.profile-container {
+    color: #333;
+    max-width: 600px;
+    margin: 60px auto; /* Centering the container, adjust for navbar */
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+/* Adjusting heading for better visibility */
 .profile-container h1 {
     text-align: center;
-    color: #1E90FF; /* Your theme blue */
+    color: #ffffff;
+    background-color: #1E90FF; /* Dark background for the title */
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin-top: -30px; /* Pull the title into the blue area */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Shadow for depth */
 }
 
-.profile-container p {
-    font-size: 1.1em;
-    margin: 10px 0; /* Space between paragraphs */
-    line-height: 1.6; /* For better readability */
+/* Ensuring form and paragraphs are styled uniformly */
+.profile-container p,
+.profile-container form {
+    background-color: #ffffff;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 8px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* Specific styles for strong tag to make text bold and potentially a different color */
-.profile-container strong {
+/* Style for the form fields and buttons */
+.profile-container input[type="text"],
+.profile-container input[type="email"],
+.profile-container button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.profile-container button[type="submit"] {
+    background-color: #1E90FF;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.profile-container button[type="submit"]:hover {
+    background-color: #0B5ED7;
+}
+
+.profile-container .profile-message {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Rest of your styles */
+
+/* Logout button specific styles */
+.logout-button {
+    background-color: #d9534f; /* Red color for logout button */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    margin-top: 20px;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.logout-button:hover {
+    background-color: #c9302c; /* Darker red on hover */
+}
+
+/* Style for the edit fields labels */
+.profile-container .edit-label {
+    display: block;
+    margin-top: 10px;
+    color: #1E90FF; /* Theme color for the label */
     font-weight: bold;
-    color: #1E90FF; /* You can use the theme color here as well */
+}
+
+/* Styling the form when editing */
+.profile-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.profile-form .input-group {
+    flex-basis: calc(50% - 10px); /* Subtract gap from 50% width */
+}
+
+.profile-form .input-group input {
+    width: calc(100% - 22px); /* Input width minus padding and border */
+}
+
+.profile-form button[type="submit"] {
+    flex-basis: 100%;
+}
+
+/* If you want to keep the edit button next to the labels */
+.edit-form-button {
+    padding: 7px 15px;
+    background-color: #1E90FF; /* Theme color for the button */
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.edit-form-button:hover {
+    background-color: #0B5ED7; /* Darker shade on hover */
 }

@@ -4,7 +4,7 @@ import { AuthContext } from '../../AuthContext';
 import './LogoutButton.css';
 import { useNavigate } from 'react-router-dom';  
 
-const LogoutButton = () => {
+const LogoutButton = ({ className }) => {
     const { logout } = useContext(AuthContext);
     const navigate = useNavigate(); 
 
@@ -18,7 +18,7 @@ const LogoutButton = () => {
         }
     };
 
-    return <button className="logout-button" onClick={handleLogout}>Logout</button>;
+    return <button className={`logout-button ${className}`} onClick={handleLogout}>Logout</button>;
 };
 
 export default LogoutButton;

@@ -74,16 +74,6 @@ body {
     justify-content: center; /* Centers the dropdowns within their container */
 }
 
-.logout-button-container {
-    padding: 10px 20px;
-    border-radius: 5px;
-    color: white;
-    cursor: pointer;
-}
-
-.logout-button:hover {
-    background-color: #d9534f; /* Darker red on hover */
-}
 
 /* Additional global styles */
 * {
@@ -128,3 +118,6 @@ body {
     font-family: 'Orbitron', sans-serif; /* Consistent font family */
     z-index: 11; /* Above the image */
 }
+
+
+

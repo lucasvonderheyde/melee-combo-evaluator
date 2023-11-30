@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
 export const AuthContext = createContext(null);
 
@@ -29,8 +30,20 @@ export const AuthProvider = ({ children }) => {
         setUser(null); 
     };
 
+    const refreshUserData = async () => {
+        try {
+            const response = await axios.get('http://127.0.0.1:5555/get-user', { params: { user_id: user.id } });
+            const updatedUserData = response.data.user;
+            localStorage.setItem('user', JSON.stringify(updatedUserData));
+            setUser(updatedUserData);
+        } catch (error) {
+            console.error('Error refreshing user data:', error);
+        }
+    };
+
+
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={{ user, login, logout, refreshUserData }}>
             {children}
         </AuthContext.Provider>
     );

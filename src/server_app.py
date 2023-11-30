@@ -10,10 +10,19 @@ from combo_evaluator_model import BidirectionalComboLSTM
 import torch
 from werkzeug.security import generate_password_hash, check_password_hash
 from post_slippi_data_to_db import main
+import boto3
+
 
 test_secret_key = os.urandom(24)
 
 app = Flask(__name__)
+
+s3_client = boto3.client(
+    's3',
+    aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
+    aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY')
+)
+
 CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 model = BidirectionalComboLSTM()
@@ -292,6 +301,19 @@ def update_account():
         return jsonify({"message": "Account updated successfully", "user": updated_user_data}), 200
 
     return jsonify({"error": "User not found"}), 404
+
+@app.route('/get-user', methods=['GET'])
+def get_user():
+    from sql_models import User
+
+    user_id = request.args.get('user_id')
+    user = combo_db.session.query(User).filter_by(id=user_id).first()
+
+    if user:
+        return jsonify({"user": user.serialize()}), 200
+    else:
+        return jsonify({"error": "User not found"}), 404
+
 
 def clear_folder(folder_path):
     for filename in os.listdir(folder_path):

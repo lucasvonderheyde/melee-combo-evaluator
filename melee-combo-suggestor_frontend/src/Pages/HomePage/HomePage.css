@@ -10,6 +10,17 @@
     color: #f0f0f0; 
 }
 
+.fixed-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Behind all other content */
+    background: url('../../backround4.webp') no-repeat center center;
+    background-size: cover;
+}
+
 .content {
     position: absolute;
     /* Positioning the content lower on the page */

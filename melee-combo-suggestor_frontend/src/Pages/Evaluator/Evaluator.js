@@ -9,6 +9,7 @@ import { AuthContext } from '../../AuthContext';
 import FileUpload from '../../components/FileUpload/FIleUpload';
 import './Evaluator.css';
 
+
 const Evaluator = () => {
     const { user } = useContext(AuthContext);
     const [selectedGameId, setSelectedGameId] = useState(null);
@@ -71,7 +72,7 @@ const Evaluator = () => {
                 <FileUpload onUploadComplete={handleFileUploadComplete} onUploadStart={handleUploadStart} />
                 <AllGamesDropdown onGameSelect={handleGameSelection} />
                 {user && <UserGamesDropdown userId={user.id} onGameSelect={handleGameSelection} />}
-                {user && <LogoutButton />}
+                {user && <LogoutButton className="small-logout-button" />}
             </div>
             {!isActionInitiated && (
                 <div className="placeholder-container">

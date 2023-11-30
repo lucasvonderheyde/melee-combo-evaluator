@@ -1,6 +1,8 @@
 /* LogoutButton.css */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
 .logout-button {
-    padding: 10px 20px;
+    padding: 10px 10px;
     background-color: #dc3545; /* Red color for logout */
     color: white;
     border: none;
@@ -8,8 +10,10 @@
     cursor: pointer;
     font-size: 1rem;
     transition: background-color 0.3s;
+    font-family: 'Orbitron', sans-serif;
 }
 
 .logout-button:hover {
     background-color: #c82333; /* Darker red on hover */
 }
+
